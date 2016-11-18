@@ -18,7 +18,7 @@ RN 是一個基於Javascript開發的前端框架，可以用來撰寫原生的�
 - wk7: 導覽設計Pattern + 手機內部資源利用
 - wk8: APP UI設計
 - wk9: 期中專題展示 
-- wk10: HTTP連線取得資料P ＋ Redux   
+- wk10: HTTP連線取得資料 ＋ Redux   
 - wk11: Firebase資料庫連線APP1 ＋ Router
 - wk12: APP UX設計
 - wk13: APP 專題解說
