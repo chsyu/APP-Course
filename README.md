@@ -1,4 +1,4 @@
-# 跨平台APP設計 [投影片下載](g)
+# 跨平台APP設計 [投影片下載](https://drive.google.com/drive/folders/0ByVfHLrANqS3RFNYSFJIdGc2RDQ?usp=sharing)
 >##Javascript
 本課程模組是JS的進階課程，內容涵蓋ES6的主要語法，是學習前端框架的重要基礎。
 ##React Native
