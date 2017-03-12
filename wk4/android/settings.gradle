@@ -1,0 +1,3 @@
+rootProject.name = 'wk4'
+
+include ':app'
