@@ -12,8 +12,15 @@ export const AlbumStack = StackNavigator({
   Albums: {
     screen: Albums,
     navigationOptions: {
-      header: () => ({
+      header: ({ navigate }) => ({
         title: 'ALBUMS',
+        left: (
+          <Icon
+            name='menu'
+            iconStyle={{ marginLeft: 10 }}
+            onPress={() => navigate('DrawerOpen')}
+          />
+        ),
       })
     },
   },
@@ -22,6 +29,12 @@ export const AlbumStack = StackNavigator({
     navigationOptions: {
       header: ({ state }) => ({
         title: `${state.params.title.toUpperCase()}`,
+        right: (
+          <Button
+            title='Buy'
+            onPress={() => Linking.openURL(state.params.url)}
+          />
+        ),
       })
     },
   },
@@ -31,8 +44,15 @@ export const MeStack = StackNavigator({
   Me: {
     screen: Me,
     navigationOptions: {
-      header: () => ({
+      header: ({ navigate }) => ({
         title: 'ME',
+        left: (
+          <Icon
+            name='menu'
+            iconStyle={{ marginLeft: 10 }}
+            onPress={() => navigate('DrawerOpen')}
+          />
+        ),
       })
     },
   },
@@ -46,8 +66,15 @@ export const SettingStack = StackNavigator({
   Setting: {
     screen: Setting,
     navigationOptions: {
-      header: () => ({
+      header: ({ navigate }) => ({
         title: 'SETTING',
+        left: (
+          <Icon
+            name='menu'
+            iconStyle={{ marginLeft: 10 }}
+            onPress={() => navigate('DrawerOpen')}
+          />
+        ),
       })
     },
   },
@@ -64,8 +91,8 @@ export const TabRouter = TabNavigator(
         },
       },
     },
-    MeStack: {
-      screen: MeStack,
+    Me: {
+      screen: Me,
       navigationOptions: {
         tabBar: {
           label: 'Me',
@@ -73,11 +100,11 @@ export const TabRouter = TabNavigator(
         },
       },
     },
-    SettingStack: {
-      screen: SettingStack,
+    Setting: {
+      screen: Setting,
       navigationOptions: {
         tabBar: {
-          label: 'Setting',
+          label: 'Contact Us',
           icon: ({ tintColor }) => <Icon name="build" size={35} color={tintColor} />
         },
       },
@@ -87,3 +114,56 @@ export const TabRouter = TabNavigator(
     animationEnabled: 'true',
   }
 );
+
+export const DrawerRouter = DrawerNavigator(
+  {
+    AlbumStack: {
+      screen: AlbumStack,
+      navigationOptions: {
+        drawer: {
+          label: 'Albums',
+          icon: ({ tintColor }) => <Icon name="list" size={25} color={tintColor} />
+        },
+      },
+    },
+
+    MeStack: {
+      screen: MeStack,
+      navigationOptions: {
+        drawer: {
+          label: 'Me',
+          icon: ({ tintColor }) => <Icon name="account-circle" size={25} color={tintColor} />
+        },
+      },
+    },
+    SettingStack: {
+      screen: SettingStack,
+      navigationOptions: {
+        drawer: {
+          label: 'Setting',
+          icon: ({ tintColor }) => <Icon name="build" size={25} color={tintColor} />
+        },
+      },
+    },
+  }, 
+  {
+    initialRouteName: 'AlbumStack',
+    contentOptions: {
+      activeTintColor: '#e91e63',
+    },
+    // drawerWidth: 200,
+    // drawerPosition: 'right',
+    contentComponent: 
+      props => (
+        <ScrollView>
+          <Tile
+            imageSrc={require('./assets/ntue.jpg')}
+            featured
+          />
+          <DrawerView.Items {...props} />
+        </ScrollView>
+      )
+  }
+);
+
+

@@ -1,9 +1,9 @@
 import React from 'react';
-import { TabRouter } from './Router';
+import { DrawerRouter } from './Router';
 
 
 const App = () => (
-      <TabRouter />
+      <DrawerRouter />
    );
 
 export default App;

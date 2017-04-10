@@ -1,7 +1,6 @@
 import React from 'react';
-import { Linking, Button, ScrollView } from 'react-native';
-import { DrawerNavigator, TabNavigator, StackNavigator, DrawerView } from 'react-navigation';
-import { Icon, Tile } from 'react-native-elements';
+import { TabNavigator, StackNavigator } from 'react-navigation';
+import { Icon } from 'react-native-elements';
 
 import Albums from './components/Albums';
 import Details from './components/Details';

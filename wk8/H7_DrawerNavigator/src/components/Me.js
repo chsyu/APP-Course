@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ScrollView } from 'react-native';
-import { Tile, List, ListItem, Button } from 'react-native-elements';
+import { Tile, List, ListItem } from 'react-native-elements';
 
 import me from '../json/me.json';
 
@@ -16,7 +16,7 @@ class Me extends Component {
     return (
       <ScrollView>
         <Tile
-          imageSrc={{ uri: this.state.me.picture.large }}
+          imageSrc={require('../assets/ntue.jpg')}
           featured
           title={`${this.state.me.name.first.toUpperCase()} ${this.state.me.name.last.toUpperCase()}`}
           caption={this.state.me.email}
