@@ -21,6 +21,11 @@ class Ubike extends Component {
     }
 
     componentWillMount() {
+        // axios.get(UBIKE_URL)
+        //     .then((response) => {
+        //         this.setState({ ubike: response.data });
+        //     });
+
         this._getUbikeAsync();
 
         if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -81,6 +86,10 @@ class Ubike extends Component {
                 <MapView
                     initialRegion={this.state.region}
                     style={{ flex: 1 }}
+                    // mapType='hybrid'
+                    // showsTraffic
+                    // provider='google'
+
                     onRegionChangeComplete={this.onRegionChangeComplete}
                 >
 

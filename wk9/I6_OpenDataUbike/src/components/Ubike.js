@@ -23,9 +23,9 @@ class Ubike extends Component {
     componentWillMount() {
         axios.get(UBIKE_URL)
             .then((response) => {
-                // console.log(response.data);
                 this.setState({ ubike: response.data });
             });
+            
         if (Platform.OS === 'android' && !Constants.isDevice) {
             this.setState({
                 errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',

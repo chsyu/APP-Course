@@ -17,7 +17,7 @@ class Metro extends Component {
             longitude: 121.544637,
             latitude: 25.024624
         },
-
+        errorMessage: null
     }
 
     componentWillMount() {

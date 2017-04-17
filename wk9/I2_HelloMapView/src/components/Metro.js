@@ -18,8 +18,11 @@ class Metro extends Component {
       return (
          <View style={{ flex: 1 }}>
             <MapView
-               region={this.state.region}
+               initialRegion={this.state.region}
                style={{ flex: 1 }}
+               // mapType='hybrid'
+               showsTraffic
+               provider='google'
             />
          </View>
       );

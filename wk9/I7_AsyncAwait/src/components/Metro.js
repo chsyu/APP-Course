@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Platform, View, ActivityIndicator } from 'react-native';
-import { MapView } from 'expo';
+import { MapView, Constants, Location, Permissions } from 'expo';
 import { Button, Icon } from 'react-native-elements';
 import metro from '../json/metro.json';
 
@@ -13,13 +13,6 @@ class Metro extends Component {
       latitude: 25.024624,
       longitudeDelta: 0.01,
       latitudeDelta: 0.02
-    },
-    marker: {
-      latlng: {
-        longitude: 121.544637,
-        latitude: 25.024624
-      },
-      description: 'This is NTUE'
     },
     metro: [],
     errorMessage: null
@@ -34,6 +27,15 @@ class Metro extends Component {
     } else {
       this._getLocationAsync();
     }
+
+  }
+
+  componentDidMount() {
+    this.setState({ mapLoaded: true });
+  }
+
+  onRegionChangeComplete = (region) => {
+    this.setState({ region });
   }
 
   _getLocationAsync = () => {
@@ -43,9 +45,9 @@ class Metro extends Component {
           this.setState({
             errorMessage: 'Permission to access location was denied',
           });
-        }
+      }
 
-      });
+    });
 
     Location.getCurrentPositionAsync({}).then(location => {
       this.setState({
@@ -59,14 +61,6 @@ class Metro extends Component {
     });
   };
 
-  componentDidMount() {
-    this.setState({ mapLoaded: true });
-  }
-
-  onRegionChangeComplete = (region) => {
-    this.setState({ region });
-  }
-
   render() {
     if (!this.state.mapLoaded) {
       return (
@@ -79,7 +73,7 @@ class Metro extends Component {
     return (
       <View style={{ flex: 1 }}>
         <MapView
-          region={this.state.region}
+          initialRegion={this.state.region}
           style={{ flex: 1 }}
           onRegionChangeComplete={this.onRegionChangeComplete}
         >

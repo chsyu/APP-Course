@@ -208,7 +208,7 @@ export const DrawerRouter = DrawerNavigator(
     },
   }, 
   {
-    initialRouteName: 'MetroStack',
+    initialRouteName: 'UbikeStack',
     contentOptions: {
       activeTintColor: '#e91e63',
     },
