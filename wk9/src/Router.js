@@ -6,6 +6,7 @@ import { Icon, Tile } from 'react-native-elements';
 import Albums from './components/Albums';
 import Details from './components/Details';
 import Metro from './components/Metro';
+import Ubike from './components/Ubike';
 import Me from './components/Me';
 import Setting from './components/Setting';
 
@@ -100,6 +101,25 @@ export const MetroStack = StackNavigator({
   },
 });
 
+export const UbikeStack = StackNavigator({
+  Setting: {
+    screen: Ubike,
+    navigationOptions: {
+      header: ({ navigate }) => ({
+        title: 'Ubike',
+        left: (
+          <Icon
+            name='menu'
+            iconStyle={{ marginLeft: 10 }}
+            onPress={() => navigate('DrawerOpen')}
+          />
+        ),
+      })
+    },
+  },
+});
+
+
 export const TabRouter = TabNavigator(
   {
     AlbumStack: {
@@ -157,6 +177,16 @@ export const DrawerRouter = DrawerNavigator(
       },
     },
 
+    UbikeStack: {
+      screen: UbikeStack,
+      navigationOptions: {
+        drawer: {
+          label: 'Ubike單車',
+          icon: ({ tintColor }) => <Icon name="directions-bike" size={25} color={tintColor} />
+        },
+      },
+    },
+
     MeStack: {
       screen: MeStack,
       navigationOptions: {
@@ -178,7 +208,7 @@ export const DrawerRouter = DrawerNavigator(
     },
   }, 
   {
-    initialRouteName: 'MetroStack',
+    initialRouteName: 'UbikeStack',
     contentOptions: {
       activeTintColor: '#e91e63',
     },
