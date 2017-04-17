@@ -42,7 +42,7 @@ class Ubike extends Component {
 
     _getUbikeAsync = async () => {
         let response = await axios.get(UBIKE_URL);
-        await this.setState({ ubike: response.data });
+        this.setState({ ubike: response.data });
     }
 
     _getLocationAsync = () => {

@@ -30,26 +30,22 @@ class Metro extends Component {
     this.setState({ region });
   }
 
-  _getLocationAsync = () => {
-    console.log('hello');
-    Permissions.askAsync(Permissions.LOCATION).then(status => {
-      if (status !== 'granted') {
-        this.setState({
-          errorMessage: 'Permission to access location was denied',
-        });
-      }
-
-    });
-
-    Location.getCurrentPositionAsync({}).then(location => {
+  _getLocationAsync = async () => {
+    let status = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
       this.setState({
-        region: {
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-          longitudeDelta: 0.01,
-          latitudeDelta: 0.02
-        }
+        errorMessage: 'Permission to access location was denied',
       });
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    this.setState({
+      region: {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        longitudeDelta: 0.01,
+        latitudeDelta: 0.02
+      }
     });
   };
 
@@ -83,9 +79,9 @@ class Metro extends Component {
           name='my-location'
           color='white'
           containerStyle={{
-            backgroundColor: '#517fa4', 
-            position: 'absolute', 
-            right: 20, 
+            backgroundColor: '#517fa4',
+            position: 'absolute',
+            right: 20,
             bottom: 40
           }}
           onPress={this._getLocationAsync}
