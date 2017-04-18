@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Platform, View, ActivityIndicator } from 'react-native';
-import { MapView } from 'expo';
+import { MapView, Permissions, Location, Constants } from 'expo';
 import { Button, Icon } from 'react-native-elements';
 
 class Metro extends Component {

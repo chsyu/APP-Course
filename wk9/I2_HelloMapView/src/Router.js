@@ -5,7 +5,7 @@ import { Icon, Tile } from 'react-native-elements';
 
 import Albums from './components/Albums';
 import Details from './components/Details';
-import Map from './components/Map';
+import Metro from './components/Metro';
 import Me from './components/Me';
 import Setting from './components/Setting';
 
@@ -82,12 +82,12 @@ export const SettingStack = StackNavigator({
   },
 });
 
-export const MapStack = StackNavigator({
+export const MetroStack = StackNavigator({
   Setting: {
-    screen: Map,
+    screen: Metro,
     navigationOptions: {
       header: ({ navigate }) => ({
-        title: 'Map',
+        title: 'Metro',
         left: (
           <Icon
             name='menu'
@@ -148,11 +148,11 @@ export const DrawerRouter = DrawerNavigator(
       },
     },
 
-    MapStack: {
-      screen: MapStack,
+    MetroStack: {
+      screen: MetroStack,
       navigationOptions: {
         drawer: {
-          label: 'Map',
+          label: 'Metro',
           icon: ({ tintColor }) => <Icon name="add-location" size={25} color={tintColor} />
         },
       },
@@ -179,7 +179,7 @@ export const DrawerRouter = DrawerNavigator(
     },
   }, 
   {
-    initialRouteName: 'MapStack',
+    initialRouteName: 'MetroStack',
     contentOptions: {
       activeTintColor: '#e91e63',
     },
