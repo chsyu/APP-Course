@@ -6,7 +6,6 @@ import { Icon, Tile } from 'react-native-elements';
 import Albums from './components/Albums';
 import Details from './components/Details';
 import Metro from './components/Metro';
-import Ubike from './components/Ubike';
 import Me from './components/Me';
 import Setting from './components/Setting';
 
@@ -88,25 +87,7 @@ export const MetroStack = StackNavigator({
     screen: Metro,
     navigationOptions: {
       header: ({ navigate }) => ({
-        title: 'Metro',
-        left: (
-          <Icon
-            name='menu'
-            iconStyle={{ marginLeft: 10 }}
-            onPress={() => navigate('DrawerOpen')}
-          />
-        ),
-      })
-    },
-  },
-});
-
-export const UbikeStack = StackNavigator({
-  Setting: {
-    screen: Ubike,
-    navigationOptions: {
-      header: ({ navigate }) => ({
-        title: 'Ubike',
+        title: 'Map',
         left: (
           <Icon
             name='menu'
@@ -161,7 +142,7 @@ export const DrawerRouter = DrawerNavigator(
       screen: AlbumStack,
       navigationOptions: {
         drawer: {
-          label: '專輯',
+          label: 'Albums',
           icon: ({ tintColor }) => <Icon name="list" size={25} color={tintColor} />
         },
       },
@@ -171,18 +152,8 @@ export const DrawerRouter = DrawerNavigator(
       screen: MetroStack,
       navigationOptions: {
         drawer: {
-          label: '捷運',
-          icon: ({ tintColor }) => <Icon name="tram" size={25} color={tintColor} />
-        },
-      },
-    },
-
-    UbikeStack: {
-      screen: UbikeStack,
-      navigationOptions: {
-        drawer: {
-          label: 'Ubike單車',
-          icon: ({ tintColor }) => <Icon name="directions-bike" size={25} color={tintColor} />
+          label: 'Metro',
+          icon: ({ tintColor }) => <Icon name="add-location" size={25} color={tintColor} />
         },
       },
     },
@@ -191,7 +162,7 @@ export const DrawerRouter = DrawerNavigator(
       screen: MeStack,
       navigationOptions: {
         drawer: {
-          label: '關於我們',
+          label: 'Me',
           icon: ({ tintColor }) => <Icon name="account-circle" size={25} color={tintColor} />
         },
       },
@@ -201,7 +172,7 @@ export const DrawerRouter = DrawerNavigator(
       screen: SettingStack,
       navigationOptions: {
         drawer: {
-          label: '設定',
+          label: 'Setting',
           icon: ({ tintColor }) => <Icon name="build" size={25} color={tintColor} />
         },
       },

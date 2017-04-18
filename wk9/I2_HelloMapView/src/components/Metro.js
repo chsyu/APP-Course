@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { MapView } from 'expo';
 
 class Metro extends Component {
 
    state = {
+      mapLoaded: false,
       region: {
          longitude: 121.544637,
          latitude: 25.024624,
@@ -15,14 +16,12 @@ class Metro extends Component {
    }
 
    render() {
+
       return (
          <View style={{ flex: 1 }}>
             <MapView
-               initialRegion={this.state.region}
+               region={this.state.region}
                style={{ flex: 1 }}
-               // mapType='hybrid'
-               showsTraffic
-               provider='google'
             />
          </View>
       );
