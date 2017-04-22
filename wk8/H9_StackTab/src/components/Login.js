@@ -14,7 +14,6 @@ class Login extends Component {
          <Card
             title='LOGIN PAGE'
             image={require('../assets/ntue.jpg')}
-            imageWrapperStyle={{ height: 120 }}
          >
             <Text style={{ marginBottom: 10 }}>
                Please press the button ....
