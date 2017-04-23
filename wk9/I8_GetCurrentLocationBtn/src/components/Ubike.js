@@ -48,28 +48,25 @@ class Ubike extends Component {
 
     _getUbikeAsync = async () => {
         let response = await axios.get(UBIKE_URL);
-        await this.setState({ ubike: response.data });
+        this.setState({ ubike: response.data });
     }
 
-    _getLocationAsync = () => {
-        Permissions.askAsync(Permissions.LOCATION).then(status => {
-            if (status !== 'granted') {
-                this.setState({
-                    errorMessage: 'Permission to access location was denied',
-                });
-            }
-
-        });
-
-        Location.getCurrentPositionAsync({}).then(location => {
+    _getLocationAsync = async () => {
+        let status = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
             this.setState({
-                region: {
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
-                    longitudeDelta: 0.01,
-                    latitudeDelta: 0.02
-                }
+                errorMessage: 'Permission to access location was denied',
             });
+        };
+
+        let location = await Location.getCurrentPositionAsync({});
+        this.setState({
+            region: {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+                longitudeDelta: 0.01,
+                latitudeDelta: 0.02
+            }
         });
     };
 
