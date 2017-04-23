@@ -1,8 +1,8 @@
 import React from 'react';
-import { Linking, Button, ScrollView } from 'react-native';
-import { DrawerNavigator, TabNavigator, StackNavigator, DrawerView } from 'react-navigation';
-import { Icon, Tile } from 'react-native-elements';
+import { TabNavigator, StackNavigator } from 'react-navigation';
+import { Icon } from 'react-native-elements';
 
+import Login from './components/Login';
 import Albums from './components/Albums';
 import Details from './components/Details';
 import Me from './components/Me';
@@ -12,15 +12,8 @@ export const AlbumStack = StackNavigator({
   Albums: {
     screen: Albums,
     navigationOptions: {
-      header: ({ navigate }) => ({
+      header: () => ({
         title: 'ALBUMS',
-        left: (
-          <Icon
-            name='menu'
-            iconStyle={{ marginLeft: 10 }}
-            onPress={() => navigate('DrawerOpen')}
-          />
-        ),
       })
     },
   },
@@ -29,12 +22,6 @@ export const AlbumStack = StackNavigator({
     navigationOptions: {
       header: ({ state }) => ({
         title: `${state.params.title.toUpperCase()}`,
-        right: (
-          <Button
-            title='Buy'
-            onPress={() => Linking.openURL(state.params.url)}
-          />
-        ),
       })
     },
   },
@@ -44,37 +31,23 @@ export const MeStack = StackNavigator({
   Me: {
     screen: Me,
     navigationOptions: {
-      header: ({ navigate }) => ({
+      header: () => ({
         title: 'ME',
-        left: (
-          <Icon
-            name='menu'
-            iconStyle={{ marginLeft: 10 }}
-            onPress={() => navigate('DrawerOpen')}
-          />
-        ),
       })
     },
   },
 },
-{
-  // headerMode: 'none',
-}
+  {
+    // headerMode: 'none',
+  }
 );
 
 export const SettingStack = StackNavigator({
   Setting: {
     screen: Setting,
     navigationOptions: {
-      header: ({ navigate }) => ({
+      header: () => ({
         title: 'SETTING',
-        left: (
-          <Icon
-            name='menu'
-            iconStyle={{ marginLeft: 10 }}
-            onPress={() => navigate('DrawerOpen')}
-          />
-        ),
       })
     },
   },
@@ -91,8 +64,8 @@ export const TabRouter = TabNavigator(
         },
       },
     },
-    Me: {
-      screen: Me,
+    MeStack: {
+      screen: MeStack,
       navigationOptions: {
         tabBar: {
           label: 'Me',
@@ -100,11 +73,11 @@ export const TabRouter = TabNavigator(
         },
       },
     },
-    Setting: {
-      screen: Setting,
+    SettingStack: {
+      screen: SettingStack,
       navigationOptions: {
         tabBar: {
-          label: 'Contact Us',
+          label: 'Setting',
           icon: ({ tintColor }) => <Icon name="build" size={35} color={tintColor} />
         },
       },
@@ -115,55 +88,15 @@ export const TabRouter = TabNavigator(
   }
 );
 
-export const DrawerRouter = DrawerNavigator(
-  {
-    AlbumStack: {
-      screen: AlbumStack,
-      navigationOptions: {
-        drawer: {
-          label: 'Albums',
-          icon: ({ tintColor }) => <Icon name="list" size={25} color={tintColor} />
-        },
-      },
-    },
-
-    MeStack: {
-      screen: MeStack,
-      navigationOptions: {
-        drawer: {
-          label: 'Me',
-          icon: ({ tintColor }) => <Icon name="account-circle" size={25} color={tintColor} />
-        },
-      },
-    },
-    SettingStack: {
-      screen: SettingStack,
-      navigationOptions: {
-        drawer: {
-          label: 'Setting',
-          icon: ({ tintColor }) => <Icon name="build" size={25} color={tintColor} />
-        },
-      },
-    },
-  }, 
-  {
-    initialRouteName: 'AlbumStack',
-    contentOptions: {
-      activeTintColor: '#e91e63',
-    },
-    // drawerWidth: 200,
-    // drawerPosition: 'right',
-    contentComponent: 
-      props => (
-        <ScrollView>
-          <Tile
-            imageSrc={require('./assets/ntue.jpg')}
-            featured
-          />
-          <DrawerView.Items {...props} />
-        </ScrollView>
-      )
-  }
+export const LoginStack = StackNavigator({
+  Login: {
+    screen: Login,
+  },
+  TabRouter: {
+    screen: TabRouter,
+  },
+},
+{
+  headerMode: 'none',
+}
 );
-
-

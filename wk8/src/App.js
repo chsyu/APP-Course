@@ -1,9 +1,9 @@
 import React from 'react';
-import { DrawerRouter } from './Router';
+import { LoginStack } from './Router';
 
 
 const App = () => (
-      <DrawerRouter />
+      <LoginStack />
    );
 
 export default App;
