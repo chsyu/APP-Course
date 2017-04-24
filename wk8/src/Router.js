@@ -85,6 +85,12 @@ export const TabRouter = TabNavigator(
   },
   {
     animationEnabled: 'true',
+    tabBarOptions: {
+      activeTintColor: 'white',
+      inactiveTintColor: 'white',
+      inactiveBackgroundColor: '#73B9C3',
+      activeBackgroundColor: '#575F72'
+    }
   }
 );
 
@@ -96,7 +102,7 @@ export const LoginStack = StackNavigator({
     screen: TabRouter,
   },
 },
-{
-  headerMode: 'none',
-}
+  {
+    headerMode: 'none',
+  }
 );
