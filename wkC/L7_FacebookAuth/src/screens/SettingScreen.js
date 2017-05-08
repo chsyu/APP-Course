@@ -71,7 +71,7 @@ class SettingScreen extends Component {
           onChangeText={city => this.setState({ city })}
         />
         <Picker
-          selectedValue={this.props.gender}
+          selectedValue={this.state.gender}
           onValueChange={gender => this.setState({ gender })}
         >
           <Picker.Item label="Mail" value="mail" />
