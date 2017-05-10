@@ -14,7 +14,6 @@ class UserScreen extends Component {
   };
 
   componentDidMount() {
-    console.log('UserScreen componentDidMounting ...');
     this.setUserInfo();
   }
 

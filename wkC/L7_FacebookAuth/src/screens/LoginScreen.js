@@ -120,6 +120,7 @@ class LoginScreen extends Component {
       />
     );
   }
+  
   async componentDidMount() {
     await AsyncStorage.removeItem('fb_token');
   }

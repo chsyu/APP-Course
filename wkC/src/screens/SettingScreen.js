@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Picker } from 'react-native';
+import { View, Picker, ActivityIndicator } from 'react-native';
 import * as firebase from 'firebase';
 
 import { FormLabel, FormInput, Button, CheckBox } from 'react-native-elements';
@@ -12,10 +12,10 @@ class SettingScreen extends Component {
     username: null,
     city: null,
     gender: 'mail',
+    saving: false
   };
 
   async componentWillMount() {
-    console.log('SettingScreen componentDidMounting ...');
     const { currentUser } = firebase.auth();
     let dbUserid = firebase.database().ref(`/users/${currentUser.uid}`);
     try {
@@ -31,10 +31,26 @@ class SettingScreen extends Component {
   }
 
   onSaveInfo = async () => {
+    this.setState({ saving: true });
     const { currentUser } = firebase.auth();
     const { email, phone, username, city, gender } = this.state;
     let dbUserid = firebase.database().ref(`/users/${currentUser.uid}`);
-    dbUserid.set({ email, phone, username, city, gender });
+    await dbUserid.set({ email, phone, username, city, gender });
+    this.setState({ saving: false });
+  }
+
+  renderButton() {
+    if (this.state.saving) {
+      return <ActivityIndicator size='large' />;
+    }
+
+    return (
+      <Button
+        style={{ marginTop: 10 }}
+        title='Save Setting'
+        onPress={this.onSaveInfo}
+      />
+    );
   }
 
   render() {
@@ -78,11 +94,7 @@ class SettingScreen extends Component {
           <Picker.Item label="Mail" value="mail" />
           <Picker.Item label="Femail" value="femail" />
         </Picker>
-        <Button
-          style={{ marginTop: 10 }}
-          title='Save Setting'
-          onPress={this.onSaveInfo}
-        />
+        {this.renderButton()}
       </View>
     );
   }
