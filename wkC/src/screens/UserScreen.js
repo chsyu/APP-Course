@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native';
 import * as firebase from 'firebase';
 import { Tile, List, ListItem, Button } from 'react-native-elements';
-// import me from '../json/me.json';
 
 // Make a component
 class UserScreen extends Component {
@@ -15,6 +14,7 @@ class UserScreen extends Component {
   };
 
   componentDidMount() {
+    console.log('UserScreen componentDidMounting ...');
     this.setUserInfo();
   }
 

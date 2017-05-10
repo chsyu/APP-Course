@@ -15,6 +15,7 @@ class SettingScreen extends Component {
   };
 
   async componentWillMount() {
+    console.log('SettingScreen componentDidMounting ...');
     const { currentUser } = firebase.auth();
     let dbUserid = firebase.database().ref(`/users/${currentUser.uid}`);
     try {

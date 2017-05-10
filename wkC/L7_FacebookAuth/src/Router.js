@@ -10,7 +10,7 @@ export const UserStack = StackNavigator({
     UserScreen: {
         screen: UserScreen,
         navigationOptions: {
-            header: ({ navigate, state }) => ({
+            header: ({ navigate }) => ({
                 title: 'USER-INFO',
                 right: (
                     <Icon
@@ -19,13 +19,23 @@ export const UserStack = StackNavigator({
                         onPress={() => navigate('SettingScreen')}
                     />
                 ),
+                left: null,
             })
         }
     },
     SettingScreen: {
         screen: SettingScreen,
         navigationOptions: {
-            title: 'SETTING'
+            header: ({ navigate }) => ({
+                title: 'SETTING',
+                left: (
+                    <Icon
+                        name='navigate-before'
+                        iconStyle={{ marginLeft: 10 }}
+                        onPress={() => navigate('UserScreen')}
+                    />
+                ),
+            })
         }
     }
 });
