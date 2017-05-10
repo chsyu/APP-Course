@@ -1,6 +1,6 @@
 import React from 'react';
-import LoginForm from './screens/LoginForm';
+import LoginScreen from './screens/LoginScreen';
 
-const App = () => <LoginForm />;
+const App = () => <LoginScreen />;
 
 export default App;
