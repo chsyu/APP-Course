@@ -1,6 +1,5 @@
 import React from 'react';
-import { Text, View, Modal, ActivityIndicator } from 'react-native';
-import { Card, Button } from 'react-native-elements';
+import { View, Modal, ActivityIndicator } from 'react-native';
 
 const Spinner = ({ visible }) => {
 
