@@ -12,18 +12,18 @@ RN 是一個基於Javascript開發的前端框架，可以用來撰寫原生的�
 ##教學進度
 - wk1: 課程簡介/系統安裝/起手式/JS進階
 - wk2: JS進階
-- wk4: JS進階/靜態資源/單頁APP/格式設計/排版設計
-- wk5: 多頁面APP/頁面導覽/RN資料架構
+- wk3: JS進階
+- wk4: Styling and Flex layout
+- wk5: States and Props
 - wk6: APP UI設計
-- wk7: 導覽設計Pattern + 手機內部資源利用
-- wk8: APP UI設計
-- wk9: 期中專題展示 
-- wk10: HTTP連線取得資料 ＋ Redux   
-- wk11: Firebase資料庫連線APP1 ＋ Router
+- wk8: Button and Navigator
+- wk9: MAP UI 
+- wk10: 期中專題展示   
+- wk11: Firebase and DataStorage
 - wk12: APP UX設計
-- wk13: APP 專題解說
-- wk14: Redux＋Router
+- wk13: Authentications
+- wk14: Interactive Animations
 - wk15: APP企劃設計
-- wk16: 期末專題企畫報告  
-- wk17: APP 專題解說
+- wk16: Redux  
+- wk17: Redux
 - wk18: 期末專題展示
