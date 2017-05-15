@@ -57,7 +57,7 @@ class SpinnerBtn extends Component {
             <ActivityIndicator 
                size='small' 
                color='white' 
-               style={{ position: 'absolute', top: 20, left: 0, right: 0, justifyContent: 'center', alignItems: 'center' }}
+               style={{ position: 'absolute', top: 20, left: 0, right: 0}}
             />
          );
       }

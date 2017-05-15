@@ -7,15 +7,13 @@ import {
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
-// const ballWidth = 60;
 
 class Ball extends Component {
   constructor(props) {
     super(props);
     const position = new Animated.ValueXY(0, 0);
     const ballWidth = new Animated.Value(60);
-    const ballRadius = new Animated.Value(30);
-    this.state = { touched: false, position, ballWidth, ballRadius };
+    this.state = { touched: false, position, ballWidth };
   }
 
   startAnimation() {
@@ -25,13 +23,10 @@ class Ball extends Component {
         Animated.spring(this.state.ballWidth, {
           toValue: 120
         }),
-        Animated.spring(this.state.ballRadius, {
-          toValue: 60
-        }),
         Animated.spring(this.state.position, {
-          toValue: { x: width-120, y: height-120 }
+          toValue: { x: width - 60, y: height - 60 }
         })
-      ]).start(()=>this.startAnimation());
+      ]).start(() => this.startAnimation());
 
     } else {
       this.setState({ touched: false });
@@ -39,18 +34,24 @@ class Ball extends Component {
         Animated.spring(this.state.ballWidth, {
           toValue: 60
         }),
-        Animated.spring(this.state.ballRadius, {
-          toValue: 30
-        }),
         Animated.spring(this.state.position, {
           toValue: { x: 0, y: 0 }
         })
-      ]).start(()=>this.startAnimation());
+      ]).start(() => this.startAnimation());
     }
   }
 
   render() {
-    const { ballWidth, ballRadius } = this.state;
+    const { ballWidth } = this.state;
+    const diameter = ballWidth.interpolate({
+      inputRange: [60, 90, 120],
+      outputRange: [60, 120, 60]
+    });
+    const radius = ballWidth.interpolate({
+      inputRange: [60, 90, 120],
+      outputRange: [30, 60, 30]
+    });
+
     return (
       <TouchableWithoutFeedback
         onPress={() => this.startAnimation()}
@@ -59,9 +60,9 @@ class Ball extends Component {
           style={[
             this.state.position.getLayout(),
             {
-              height: ballWidth,
-              width: ballWidth,
-              borderRadius: ballRadius,
+              height: diameter,
+              width: diameter,
+              borderRadius: radius,
               backgroundColor: 'red'
             }
           ]}
