@@ -23,7 +23,7 @@ class Panel extends Component {
     componentWillMount() {
         this.panResponder = PanResponder.create({
             //onStartShouldSetPanResponder: () => true,
-            onMoveShouldSetPanResponderCapture: () => true,
+            onMoveShouldSetPanResponderCapture: (this.onShouldDrag),
             onPanResponderMove: (event, gesture) => {
                 this.state.position.setValue({ x: gesture.dx });
             },
@@ -31,6 +31,12 @@ class Panel extends Component {
             onPanResponderTerminate: this.onReleaseItem,
         });
     }
+
+    onShouldDrag = (event, gesture) => {
+        const { dx } = gesture;
+        return Math.abs(dx) > 2;
+    }
+
 
     onToggle = () => {
         UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -61,19 +67,19 @@ class Panel extends Component {
                 style={position.getLayout()}
                 {...this.panResponder.panHandlers}
             >
-            <TouchableWithoutFeedback
-                onPress={() => this.onToggle()}
-            >
-                <View
-                    style={styles.main}
+                <TouchableWithoutFeedback
+                    onPress={() => this.onToggle()}
                 >
-                    <Text style={styles.title} >
-                        {title}
-                    </Text>
-                    <Text style={[styles.content, { height }]} >
-                        {content}
-                    </Text>
-                </View>
+                    <View
+                        style={styles.main}
+                    >
+                        <Text style={styles.title} >
+                            {title}
+                        </Text>
+                        <Text style={[styles.content, { height }]} >
+                            {content}
+                        </Text>
+                    </View>
                 </TouchableWithoutFeedback>
             </Animated.View>
         );
