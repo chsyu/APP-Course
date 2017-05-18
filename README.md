@@ -24,6 +24,6 @@ RN 是一個基於Javascript開發的前端框架，可以用來撰寫原生的�
 - wk13: Authentications
 - wk14: Interactive Animations
 - wk15: APP企劃設計
-- wk16: Redux  
+- wk16: Redux & Push Notification  
 - wk17: Redux
 - wk18: 期末專題展示
