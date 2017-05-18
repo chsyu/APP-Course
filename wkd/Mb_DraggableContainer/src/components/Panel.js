@@ -22,7 +22,8 @@ class Panel extends Component {
 
     componentWillMount() {
         this.panResponder = PanResponder.create({
-            onStartShouldSetPanResponder: () => true,
+            //onStartShouldSetPanResponder: () => true,
+            onMoveShouldSetPanResponderCapture: () => true,
             onPanResponderMove: (event, gesture) => {
                 this.state.position.setValue({ x: gesture.dx });
             },
@@ -60,6 +61,9 @@ class Panel extends Component {
                 style={position.getLayout()}
                 {...this.panResponder.panHandlers}
             >
+            <TouchableWithoutFeedback
+                onPress={() => this.onToggle()}
+            >
                 <View
                     style={styles.main}
                 >
@@ -70,6 +74,7 @@ class Panel extends Component {
                         {content}
                     </Text>
                 </View>
+                </TouchableWithoutFeedback>
             </Animated.View>
         );
     }
