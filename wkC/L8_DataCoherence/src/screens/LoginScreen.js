@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { View, ActivityIndicator, AsyncStorage } from 'react-native';
 import * as firebase from 'firebase';
-import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements';
+import { FormLabel, FormValidationMessage, Button } from 'react-native-elements';
 import { Facebook } from 'expo';
 
+// import { Confirm, Spinner, Input } from '../components';
 import Confirm from '../components/Confirm';
 import Spinner from '../components/Spinner';
+import Input from '../components/Input';
+
 
 // Make a component
 class LoginScreen extends Component {
@@ -85,14 +88,14 @@ class LoginScreen extends Component {
   onCreateUser = async () => {
     const { email, password } = this.state;
     try {
-    this.setState({
-      email: '',
-      password: '',
-      error: '',
-      loading: false,
-      showModal: false,
-      showSpinner: true
-    });
+      this.setState({
+        email: '',
+        password: '',
+        error: '',
+        loading: false,
+        showModal: false,
+        showSpinner: true
+      });
 
       await firebase.auth().createUserWithEmailAndPassword(email, password);
       const { currentUser } = firebase.auth();
@@ -129,37 +132,41 @@ class LoginScreen extends Component {
     return (
       <Button
         title='Sign in'
+        style={{marginTop: 10}}
         backgroundColor='#4AAF4C'
         onPress={this.onSignIn}
       />
     );
   }
+
   async componentDidMount() {
     await AsyncStorage.removeItem('fb_token');
   }
+
+
 
   render() {
     return (
       <View>
         <View style={styles.formStyle}>
           <FormLabel>Email</FormLabel>
-          <FormInput
-            placeholder='user@email.com'
-            autoCorrect={false}
-            autoCapitalize='none'
-            keyboardType='email-address'
-            value={this.state.email}
-            onChangeText={email => this.setState({ email })}
-          />
+            <Input
+              autoCorrect={false}
+              autoCapitalize='none'
+              keyboardType='email-address'
+              placeholder='user@email.com'
+              value={this.state.email}
+              onChangeText={email => this.setState({ email })}
+            />
           <FormLabel>Password</FormLabel>
-          <FormInput
-            secureTextEntry
-            autoCorrect={false}
-            autoCapitalize='none'
-            placeholder='password'
-            value={this.state.password}
-            onChangeText={password => this.setState({ password })}
-          />
+            <Input
+              secureTextEntry
+              autoCorrect={false}
+              autoCapitalize='none'
+              placeholder='password'
+              value={this.state.password}
+              onChangeText={password => this.setState({ password })}
+            />
           {this.renderButton()}
           <FormValidationMessage>{this.state.error}</FormValidationMessage>
         </View>

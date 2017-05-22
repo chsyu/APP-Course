@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements';
+import { FormLabel, FormValidationMessage, Button } from 'react-native-elements';
+import Input from '../components/Input';
 
 // Make a component
 class LoginScreen extends Component {
@@ -14,7 +15,7 @@ class LoginScreen extends Component {
       <View>
         <View style={styles.formStyle}>
           <FormLabel>Email</FormLabel>
-          <FormInput
+          <Input
             placeholder='user@email.com'
             autoCorrect={false}
             autoCapitalize='none'
@@ -23,7 +24,7 @@ class LoginScreen extends Component {
             onChangeText={email => this.setState({ email })}
           />
           <FormLabel>Password</FormLabel>
-          <FormInput
+          <Input
             secureTextEntry
             autoCorrect={false}
             autoCapitalize='none'

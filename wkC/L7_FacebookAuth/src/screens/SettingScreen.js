@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { View, Picker, ActivityIndicator } from 'react-native';
 import * as firebase from 'firebase';
 
-import { FormLabel, FormInput, Button, CheckBox } from 'react-native-elements';
+import { FormLabel, Button, CheckBox } from 'react-native-elements';
+import Input from '../components/Input';
 
 // Make a component
 class SettingScreen extends Component {
@@ -58,14 +59,14 @@ class SettingScreen extends Component {
     return (
       <View style={styles.formStyle}>
         <FormLabel>Username</FormLabel>
-        <FormInput
+        <Input
           autoCorrect={false}
           placeholder='John Doe'
           value={this.state.username}
           onChangeText={username => this.setState({ username })}
         />
         <FormLabel>Email</FormLabel>
-        <FormInput
+        <Input
           placeholder='user@email.com'
           autoCorrect={false}
           autoCapitalize='none'
@@ -74,14 +75,14 @@ class SettingScreen extends Component {
           onChangeText={email => this.setState({ email })}
         />
         <FormLabel>Phone</FormLabel>
-        <FormInput
+        <Input
           autoCorrect={false}
           placeholder='555-555-5555'
           value={this.state.phone}
           onChangeText={phone => this.setState({ phone })}
         />
         <FormLabel>City</FormLabel>
-        <FormInput
+        <Input
           autoCorrect={false}
           placeholder='Taipei city'
           value={this.state.city}
