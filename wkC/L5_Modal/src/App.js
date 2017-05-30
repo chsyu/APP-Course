@@ -6,12 +6,12 @@ class App extends Component {
 
   componentWillMount() {
     firebase.initializeApp({
-      apiKey: "AIzaSyA139Gz_OWXVDN2L71AZx48CK1c015glVw",
-      authDomain: "fireauthapp-6682a.firebaseapp.com",
-      databaseURL: "https://fireauthapp-6682a.firebaseio.com",
-      projectId: "fireauthapp-6682a",
-      storageBucket: "fireauthapp-6682a.appspot.com",
-      messagingSenderId: "619517647764"
+      apiKey: "AIzaSyDOU3YmWlXPdeUXzkXgW1vgnkr5f5LljH0",
+      authDomain: "project--8618119135927659799.firebaseapp.com",
+      databaseURL: "https://project--8618119135927659799.firebaseio.com",
+      projectId: "project--8618119135927659799",
+      storageBucket: "project--8618119135927659799.appspot.com",
+      messagingSenderId: "484256935889"
     });
   }
 
