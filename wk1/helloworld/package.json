@@ -1,22 +1,12 @@
 {
-	"name": "helloworld",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"start": "node node_modules/react-native/local-cli/cli.js start",
-		"test": "jest"
-	},
-	"dependencies": {
-		"react": "15.4.1",
-		"react-native": "0.39.0"
-	},
-	"devDependencies": {
-		"babel-jest": "17.0.2",
-		"babel-preset-react-native": "1.9.0",
-		"jest": "17.0.3",
-		"react-test-renderer": "15.4.1"
-	},
-	"jest": {
-		"preset": "react-native"
-	}
+  "main": "node_modules/expo/AppEntry.js",
+  "private": true,
+  "dependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "expo": "^25.0.0",
+    "react": "16.2.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz"
+  }
 }
