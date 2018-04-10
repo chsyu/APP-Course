@@ -1,11 +1,12 @@
 // Import libraries for making a component
 import React, { Component } from 'react';
-import { ScrollView, View } from 'react-native';
-import AlbumDetail from './AlbumDetail';
+import { ScrollView } from 'react-native';
+// import AlbumDetail from './AlbumDetail';
 import albums from '../json/albums.json';
+import AlbumList from './AlbumList';
 
 // Make a component
-class AlbumList extends Component {
+class AlbumListRow extends Component {
   state = { albums: [] };
 
   componentWillMount() {
@@ -15,18 +16,15 @@ class AlbumList extends Component {
   }
 
   renderAlbums() {
-    return this.state.albums.map(album => 
-      <AlbumDetail key={album.image} album={album} />
+    return this.state.albums.map((album) => 
+      <AlbumList key={album.title} />
     );
   }
 
   render() {
     // debugger;
     return (
-      <ScrollView 
-            directionalLockEnabled={false}
-            horizontal={true}
-      >        
+      <ScrollView>
         {this.renderAlbums()}
       </ScrollView>
     );
@@ -34,4 +32,4 @@ class AlbumList extends Component {
 }
 
 // Make the component available to other parts of the app
-export default AlbumList;
+export default AlbumListRow;
