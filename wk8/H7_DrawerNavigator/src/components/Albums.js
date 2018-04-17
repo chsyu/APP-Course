@@ -8,6 +8,23 @@ import albums from '../json/albums.json';
 class Albums extends Component {
   state = { albums: [] };
 
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Albums',
+      tabBarLabel: 'Albums',
+      tabBarIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />,
+      drawerLabel: 'Albums',
+      drawerIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />,
+      headerLeft: (
+        <Icon
+          name='menu'
+          iconStyle={{ marginLeft: 10 }}
+          onPress={() => navigation.navigate('DrawerOpen')}
+        />
+      ),
+    }
+  };
+
   componentWillMount() {
     this.setState({ albums });
   }

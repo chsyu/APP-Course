@@ -8,6 +8,11 @@ import albums from '../json/albums.json';
 class PageOne extends Component {
   state = { albums: [] };
 
+  static navigationOptions = {
+    title: 'Albums',
+  };
+
+
   componentWillMount() {
     this.setState({ albums });
     console.log(this.state);

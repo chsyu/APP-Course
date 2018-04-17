@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import { ScrollView } from 'react-native';
-import { List, ListItem } from 'react-native-elements';
+import { List, ListItem, Icon } from 'react-native-elements';
 
 import albums from '../json/albums.json';
 
 // Make a component
 class Albums extends Component {
   state = { albums: [] };
+
+  static navigationOptions = {
+    title: 'Albums',
+    tabBarLabel: 'Albums',
+    tabBarIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />
+  };
 
   componentWillMount() {
     this.setState({ albums });

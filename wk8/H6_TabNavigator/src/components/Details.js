@@ -1,16 +1,26 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { ScrollView, Linking } from 'react-native';
-import { Button, Card, Text, PricingCard, Tile } from 'react-native-elements';
+import { Button, Card, Text, PricingCard, Tile, Icon } from 'react-native-elements';
 
 // Make a component
-const Details = (props) => {
+class Details extends Component {
+
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+
+    return {
+      title: params.title.toUpperCase(),
+    }
+  };  
+
+  render() {
   const { title, 
           artist,
           price,
           url,
           image,
           descriptions
-  } = props.navigation.state.params;
+  } = this.props.navigation.state.params;
 
   const { boldFont } = styles;
 
@@ -52,6 +62,8 @@ const Details = (props) => {
     </ScrollView>
   );
 };
+
+}
 
 const styles = {
   boldFont: {

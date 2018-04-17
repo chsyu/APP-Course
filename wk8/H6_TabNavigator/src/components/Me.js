@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
 import { ScrollView } from 'react-native';
-import { Tile, List, ListItem } from 'react-native-elements';
+import { Tile, List, ListItem, Icon } from 'react-native-elements';
 
 import me from '../json/me.json';
 
 // Make a component
 class Me extends Component {
   state = { me: [] };
+
+  static navigationOptions = {
+    title: 'Me',
+    tabBarLabel: 'Me',
+    tabBarIcon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />
+  };
 
   componentWillMount() {
     this.setState({ me });
