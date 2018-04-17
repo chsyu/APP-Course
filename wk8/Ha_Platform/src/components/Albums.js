@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, Platform } from 'react-native';
+import { ScrollView } from 'react-native';
 import { List, ListItem, Icon } from 'react-native-elements';
 
 import albums from '../json/albums.json';
