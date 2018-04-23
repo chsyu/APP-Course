@@ -14,7 +14,7 @@ class Albums extends Component {
       tabBarLabel: 'Albums',
       tabBarIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />,
       drawerLabel: 'Albums',
-      drawerIcon: ({ tintColor }) => <Icon name="list" size={35} color={tintColor} />,
+      drawerIcon: ({ tintColor }) => <Icon name="list" size={25} color={tintColor} />,
       headerLeft: (
         <Icon
           name='menu'

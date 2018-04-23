@@ -64,6 +64,7 @@ export const DrawerRouter = DrawerNavigator(
     initialRouteName: 'Albums',
     contentOptions: {
       activeTintColor: '#e91e63',
+      labelStyle: { fontSize: 20 }
     },
     // drawerWidth: 200,
     // drawerPosition: 'right',

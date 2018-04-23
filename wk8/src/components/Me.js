@@ -14,7 +14,14 @@ class Me extends Component {
       tabBarLabel: 'Me',
       tabBarIcon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />,
       drawerLabel: 'Me',
-      drawerIcon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />,
+      drawerIcon: ({ tintColor }) => <Icon name="account-circle" size={25} color={tintColor} />,
+      headerLeft: (
+        <Icon
+          name='menu'
+          iconStyle={{ marginLeft: 10 }}
+          onPress={() => navigation.navigate('DrawerOpen')}
+        />
+      ),
     };
   }
   componentWillMount() {

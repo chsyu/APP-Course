@@ -2,8 +2,6 @@ import React from 'react';
 import { DrawerNavigator, TabNavigator, StackNavigator, DrawerItems } from 'react-navigation';
 import { ScrollView } from 'react-native';
 import { Tile } from 'react-native-elements';
-
-import Login from './components/Login';
 import Albums from './components/Albums';
 import Details from './components/Details';
 import Me from './components/Me';
@@ -66,6 +64,7 @@ export const DrawerRouter = DrawerNavigator(
     initialRouteName: 'Albums',
     contentOptions: {
       activeTintColor: '#e91e63',
+      labelStyle: { fontSize: 20 }
     },
     // drawerWidth: 200,
     // drawerPosition: 'right',
@@ -82,17 +81,6 @@ export const DrawerRouter = DrawerNavigator(
   }
 );
 
-export const LoginStack = StackNavigator({
-  Login: {
-    screen: Login,
-  },
-  TabRouter: {
-    screen: TabRouter,
-  },
-},
-  {
-    headerMode: 'none',
-  }
-);
+
 
 

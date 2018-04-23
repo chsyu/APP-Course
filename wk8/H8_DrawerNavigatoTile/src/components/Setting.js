@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { ScrollView } from 'react-native';
 import { List, ListItem, Icon } from 'react-native-elements';
 
@@ -11,7 +12,14 @@ class Contact extends Component {
       tabBarLabel: 'Setting',
       tabBarIcon: ({ tintColor }) => <Icon name="build" size={35} color={tintColor} />,
       drawerLabel: 'Setting',
-      drawerIcon: ({ tintColor }) => <Icon name="build" size={35} color={tintColor} />,
+      drawerIcon: ({ tintColor }) => 
+        (
+          <MaterialIcons
+            name="move-to-inbox"
+            size={24}
+            style={{ color: tintColor }}
+          />
+        ),
       headerLeft: (
         <Icon
           name='menu'
