@@ -11,7 +11,7 @@ class Contact extends Component {
       tabBarLabel: 'Setting',
       tabBarIcon: ({ tintColor }) => <Icon name="build" size={35} color={tintColor} />,
       drawerLabel: 'Setting',
-      drawerIcon: ({ tintColor }) => <Icon name="build" size={35} color={tintColor} />,
+      drawerIcon: ({ tintColor }) => <Icon name="build" size={25} color={tintColor} />,
       headerLeft: (
         <Icon
           name='menu'

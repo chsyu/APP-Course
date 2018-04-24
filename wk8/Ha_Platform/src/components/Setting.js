@@ -4,16 +4,11 @@ import { List, ListItem, Icon } from 'react-native-elements';
 
 // Make a component
 class Contact extends Component {
-
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'Setting',
-      tabBarLabel: 'Setting',
-      tabBarIcon: ({ tintColor }) => <Icon name="build" size={35} color={tintColor} />,
-      drawerLabel: 'Setting',
-      drawerIcon: ({ tintColor }) => <Icon name="build" size={35} color={tintColor} />,
-    };
-}
+  static navigationOptions = {
+    title: 'Setting',
+    tabBarLabel: 'Setting',
+    tabBarIcon: ({ tintColor }) => <Icon name="build" size={35} color={tintColor} />
+  };
 
   render() {
     return (

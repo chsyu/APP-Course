@@ -1,8 +1,8 @@
 import React from 'react';
-import { TabRouter } from './src/Router';
+import { DrawerRouter } from './src/Router';
 
 const App = () => (
-  <TabRouter />
+  <DrawerRouter />
 );
 
 export default App;

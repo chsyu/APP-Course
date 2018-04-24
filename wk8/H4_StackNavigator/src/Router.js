@@ -8,8 +8,8 @@ export const StackRouter = StackNavigator({
   },
   Details: {
     screen: PageTwo,
-    },
   },
+},
 );
 
 

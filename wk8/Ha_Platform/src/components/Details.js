@@ -10,12 +10,6 @@ class Details extends Component {
 
     return {
       title: params.title.toUpperCase(),
-      headerRight: (
-        <Button
-          title='Buy'
-          onPress={() => Linking.openURL(params.url)}
-        />
-      ),
     }
   };  
 

@@ -1,27 +1,27 @@
 import React from 'react';
-import { TabNavigator,StackNavigator } from 'react-navigation';
+import { TabNavigator, StackNavigator } from 'react-navigation';
 import Albums from './components/Albums';
 import Details from './components/Details';
 import Me from './components/Me';
 import Setting from './components/Setting';
 
-export const AlbumStack = StackNavigator({
+const AlbumStack = StackNavigator({
   Albums: {
     screen: Albums,
   },
   Details: {
     screen: Details,
-    },
   },
+},
 );
 
-export const MeStack = StackNavigator({
+const MeStack = StackNavigator({
   Me: {
     screen: Me,
   }
 });
 
-export const SettingStack = StackNavigator({
+const SettingStack = StackNavigator({
   Setting: {
     screen: Setting,
   }
@@ -41,7 +41,7 @@ export const TabRouter = TabNavigator(
     },
   },
   {
-    animationEnabled : true,
+    animationEnabled: true,
   }
 );
 
