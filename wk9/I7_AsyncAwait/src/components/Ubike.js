@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, View, ActivityIndicator } from 'react-native';
 import { MapView, Constants, Location, Permissions } from 'expo';
+import { Icon } from 'react-native-elements';
 import axios from 'axios';
 
 const UBIKE_URL = 'http://data.ntpc.gov.tw/od/data/api/54DDDC93-589C-4858-9C95-18B2046CC1FC?$format=json';
@@ -20,7 +21,29 @@ class Ubike extends Component {
 
     }
 
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: 'Ubike',
+            tabBarLabel: 'Ubike',
+            tabBarIcon: ({ tintColor }) => <Icon name="directions-bike" size={35} color={tintColor} />,
+            drawerLabel: 'Ubike',
+            drawerIcon: ({ tintColor }) => <Icon name="directions-bike" size={25} color={tintColor} />,
+            headerLeft: (
+                <Icon
+                    name='menu'
+                    iconStyle={{ marginLeft: 10 }}
+                    onPress={() => navigation.navigate('DrawerOpen')}
+                />
+            ),
+        }
+    };
+
     componentWillMount() {
+        // axios.get(UBIKE_URL)
+        //     .then((response) => {
+        //         this.setState({ ubike: response.data });
+        //     });
+
         this._getUbikeAsync();
 
         if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -45,25 +68,22 @@ class Ubike extends Component {
         this.setState({ ubike: response.data });
     }
 
-    _getLocationAsync = () => {
-        Permissions.askAsync(Permissions.LOCATION).then(status => {
-            if (status !== 'granted') {
-                this.setState({
-                    errorMessage: 'Permission to access location was denied',
-                });
-            }
-
-        });
-
-        Location.getCurrentPositionAsync({}).then(location => {
+    _getLocationAsync = async () => {
+        let status = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
             this.setState({
-                region: {
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
-                    longitudeDelta: 0.01,
-                    latitudeDelta: 0.02
-                }
+                errorMessage: 'Permission to access location was denied',
             });
+        };
+
+        let location = await Location.getCurrentPositionAsync({});
+        this.setState({
+            region: {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+                longitudeDelta: 0.01,
+                latitudeDelta: 0.02
+            }
         });
     };
 

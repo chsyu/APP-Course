@@ -1,31 +1,58 @@
-import React from 'react';
+import React, { Component } from 'react';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { ScrollView } from 'react-native';
-import { List, ListItem } from 'react-native-elements';
+import { List, ListItem, Icon } from 'react-native-elements';
 
 // Make a component
-const Contact = () => {
+class Contact extends Component {
 
-  return (
-      <ScrollView>
-        <List>
-          <ListItem
-            title="Notifications"
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: 'Setting',
+      tabBarLabel: 'Setting',
+      tabBarIcon: ({ tintColor }) => <Icon name="build" size={35} color={tintColor} />,
+      drawerLabel: 'Setting',
+      drawerIcon: ({ tintColor }) => 
+        (
+          <MaterialIcons
+            name="move-to-inbox"
+            size={24}
+            style={{ color: tintColor }}
           />
-          <ListItem
-            title="Profile"
-          />
-          <ListItem
-            title="Password"
-          />
-        </List>
-        <List>
-          <ListItem
-            title="Sign Out"
-            rightIcon={{ name: 'cancel' }}
-          />
-        </List>
-      </ScrollView>
-  );
-};
+        ),
+      headerLeft: (
+        <Icon
+          name='menu'
+          iconStyle={{ marginLeft: 10 }}
+          onPress={() => navigation.navigate('DrawerOpen')}
+        />
+      ),
+    };
+}
+
+  render() {
+    return (
+        <ScrollView>
+          <List>
+            <ListItem
+              title="Notifications"
+            />
+            <ListItem
+              title="Profile"
+            />
+            <ListItem
+              title="Password"
+            />
+          </List>
+          <List>
+            <ListItem
+              title="Sign Out"
+              rightIcon={{ name: 'cancel' }}
+            />
+          </List>
+        </ScrollView>
+    );
+  };
+}
 
 export default Contact;

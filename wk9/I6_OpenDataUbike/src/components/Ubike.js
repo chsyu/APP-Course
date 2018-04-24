@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, View, ActivityIndicator } from 'react-native';
 import { MapView, Constants, Location, Permissions } from 'expo';
+import { Icon } from 'react-native-elements';
 import axios from 'axios';
 
 const UBIKE_URL = 'http://data.ntpc.gov.tw/od/data/api/54DDDC93-589C-4858-9C95-18B2046CC1FC?$format=json';
@@ -19,6 +20,23 @@ class Ubike extends Component {
         errorMessage: null
 
     }
+
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: 'Ubike',
+            tabBarLabel: 'Ubike',
+            tabBarIcon: ({ tintColor }) => <Icon name="directions-bike" size={35} color={tintColor} />,
+            drawerLabel: 'Ubike',
+            drawerIcon: ({ tintColor }) => <Icon name="directions-bike" size={25} color={tintColor} />,
+            headerLeft: (
+                <Icon
+                    name='menu'
+                    iconStyle={{ marginLeft: 10 }}
+                    onPress={() => navigation.navigate('DrawerOpen')}
+                />
+            ),
+        }
+    };
 
     componentWillMount() {
         axios.get(UBIKE_URL)

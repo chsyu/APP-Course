@@ -21,6 +21,23 @@ class Ubike extends Component {
 
     }
 
+    static navigationOptions = ({ navigation }) => {
+        return {
+            title: 'Ubike',
+            tabBarLabel: 'Ubike',
+            tabBarIcon: ({ tintColor }) => <Icon name="directions-bike" size={35} color={tintColor} />,
+            drawerLabel: 'Ubike',
+            drawerIcon: ({ tintColor }) => <Icon name="directions-bike" size={25} color={tintColor} />,
+            headerLeft: (
+                <Icon
+                    name='menu'
+                    iconStyle={{ marginLeft: 10 }}
+                    onPress={() => navigation.navigate('DrawerOpen')}
+                />
+            ),
+        }
+    };
+
     componentWillMount() {
         // axios.get(UBIKE_URL)
         //     .then((response) => {
