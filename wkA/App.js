@@ -1,56 +1,61 @@
-/* @flow */
-
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Button } from 'react-native-elements';
+import { View, Text } from 'react-native';
+import { FormLabel } from 'react-native-elements';
+import Input from './components/Input';
 
-export default class Counter extends Component {
+// Make a component
+class BMIScreen extends Component {
   state = {
-    currentCount: 0
+    weight: '10',
+    height: '10'
   };
   render() {
-    const { container, btnArea, btnStyle, count } = styles;
+    const { formStyle, count, inputStyle } = styles;
     return (
-      <View style={container}>
-        <View style={btnArea}>
-          <Button
-            title='+'
-            textStyle={{fontSize: 60}}
-            buttonStyle={btnStyle}
-            onPress={() => this.setState({currentCount: this.state.currentCount+1})}
+      <View>
+        <View style={formStyle}>
+          <FormLabel>Height</FormLabel>
+          <Input
+            placeholder='height(cm)'
+            keyboardType='numeric'
+            value={this.state.height}
+            inputStyle={inputStyle}
+            onChangeText={height => this.setState({ height })}
           />
-          <Button
-            title='-'
-            textStyle={{fontSize: 60}}
-            buttonStyle={btnStyle}
-            onPress={() => this.setState({currentCount: this.state.currentCount-1})}
+          <FormLabel>Weight</FormLabel>
+          <Input
+            placeholder='weight(kg)'
+            value={this.state.weight}
+            keyboardType='numeric'
+            inputStyle={inputStyle}
+            onChangeText={weight => this.setState({ weight })}
           />
-        </View>
-        <Text style={count}>{this.state.currentCount}</Text>
+       </View>
+        <Text style={count}>
+          BMI = {Math.round(parseInt(this.state.weight)/parseInt(this.state.height)/parseInt(this.state.height)*10000)}
+        </Text>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-  },
-  btnArea: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  btnStyle: {
-    backgroundColor: "rgba(92, 99,216, 1)",
-    width: 100,
+
+const styles = {
+  formStyle: {
+    marginTop: 150
   },
   count: {
     marginTop: 60,
     textAlign: 'center',
-    fontSize: 60,
-    fontWeight: 'bold'
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: 'gray',
+  },
+  inputStyle: {
+    fontSize: 40,
+    textAlign: 'center',
   }
-});
+};
+
+
+export default BMIScreen;

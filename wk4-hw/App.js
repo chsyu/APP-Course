@@ -25,11 +25,11 @@ import { StyleSheet, Text, View } from 'react-native';
 // import App from './src/flex/Gridding.test.js';
 // import App from './src/flex/Gridding.js';
 // import App from './src/flex/LoadingCard.test.js';
-// import App from './src/flex/LoadingCard.js';
+import App from './src/flex/LoadingCard.js';
 
 // Composing Exercises
 // import App from './src/composing/CalendarMonth.test.js';
-import App from './src/composing/CalendarMonth.js';
+// import App from './src/composing/CalendarMonth.js';
 // import App from './src/composing/ContactCard.test.js';
 // import App from './src/composing/ContactCard.js';
 // import App from './src/composing/ProfileScreen.test.js';

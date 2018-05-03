@@ -9,9 +9,10 @@ const Input = ({ label,
    secureTextEntry,
    autoCorrect,
    autoCapitalize,
+   inputStyle,
    keyboardType}) => {
 
-   const { inputStyle, containerStyle } = styles;
+   const { textStyle, containerStyle } = styles;
 
    if (Platform.OS === 'ios') {
       return (
@@ -23,6 +24,7 @@ const Input = ({ label,
             placeholder={placeholder}
             autoCorrect={false}
             value={value}
+            inputStyle={inputStyle}
             onChangeText={onChangeText}
          />
       );
@@ -37,7 +39,7 @@ const Input = ({ label,
             secureTextEntry={secureTextEntry}
             placeholder={placeholder}
             autoCorrect={false}
-            style={inputStyle}
+            style={[textStyle, inputStyle]}
             value={value}
             onChangeText={onChangeText}
          />
@@ -46,7 +48,7 @@ const Input = ({ label,
 };
 
 const styles = {
-   inputStyle: {
+   textStyle: {
       color: '#000',
       paddingRight: 5,
       paddingLeft: 5,
