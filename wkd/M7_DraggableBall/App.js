@@ -5,7 +5,7 @@ import Ball from './components/Ball';
 
 const App = () => (
   <View>
-    <Ball />
+    <Ball positionXY={{ x: 0, y: 0 }} />
   </View>
 );
 
