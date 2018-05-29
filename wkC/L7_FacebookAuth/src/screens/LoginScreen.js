@@ -61,7 +61,7 @@ class LoginScreen extends Component {
 
     // Sign in with credential from the Facebook user.
     try {
-      await firebase.auth().signInWithCredential(credential);
+      await firebase.auth().signInAndRetrieveDataWithCredential(credential);
       const { currentUser } = await firebase.auth();
       console.log(`currentUser = ${currentUser.uid}`);
       this.props.navigation.navigate('UserStack');

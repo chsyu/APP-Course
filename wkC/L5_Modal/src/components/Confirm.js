@@ -15,13 +15,11 @@ const Confirm = ({ title, visible, onAccept, onDecline }) => {
             <Card title={title}>
                <View style={{ flexDirection: 'row' }}>
                   <Button
-                     style={{ flex: 1 }}
                      title='Yes'
                      backgroundColor='#7BD500'
                      onPress={onAccept}
                   />
                   <Button
-                     style={{ flex: 1 }}
                      title='No'
                      backgroundColor='#D10036'
                      onPress={onDecline}

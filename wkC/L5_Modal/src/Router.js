@@ -1,11 +1,11 @@
 import React from 'react';
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 
 import LoginScreen from './screens/LoginScreen';
 import UserScreen from './screens/UserScreen';
 
-export const UserStack = StackNavigator({
+export const UserStack = createStackNavigator({
    UserScreen: {
       screen: UserScreen,
       navigationOptions: {
@@ -14,13 +14,9 @@ export const UserStack = StackNavigator({
    }
 });
 
-export const LoginStack = StackNavigator({
-   LoginScreen: {
-      screen: LoginScreen,
-   },
-   UserStack: {
-      screen: UserStack,
-   },
+export const LoginStack = createStackNavigator({
+   LoginScreen: LoginScreen,
+   UserStack: UserStack
 },
    {
       headerMode: 'none',

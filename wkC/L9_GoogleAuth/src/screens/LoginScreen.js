@@ -46,8 +46,8 @@ class LoginScreen extends Component {
   doGoogleLogin = async () => {
     console.log('trying login Google ...');
     let result = await Expo.Google.logInAsync({
-      androidClientId: '619517647764-hnbmkmb2ips6mbcgknk7r2lfsl2v6q7s.apps.googleusercontent.com',
-      iosClientId: '619517647764-86q250c8kir80s6h5arkdjt88cphe4fq.apps.googleusercontent.com',
+      androidClientId: '484256935889-kbkb03n9qi4t342049v8051mkssrmt69.apps.googleusercontent.com',
+      iosClientId: '484256935889-vaeil3k7a304ed2nit9dc4tcdmn8vfei.apps.googleusercontent.com',
       scopes: ['profile', 'email'],
     });
     let google_idToken = 0, google_accessToken = 0;
@@ -72,7 +72,6 @@ class LoginScreen extends Component {
     try {
       await firebase.auth().signInWithCredential(credential);
       const { currentUser } = await firebase.auth();
-      console.log(`Google currentUser = ${currentUser.uid}`);
       this.props.navigation.navigate('UserStack');
     } catch (e2) {
       console.log('Firebase Google login fail ...');

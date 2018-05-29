@@ -14,11 +14,7 @@ class UserScreen extends Component {
     gender: null
   };
 
-  componentDidMount() {
-    this.setUserInfo();
-  }
-
-  setUserInfo = async () => {
+  async componentDidMount() {
     const { currentUser } = firebase.auth();
     let dbUserid = firebase.database().ref(`/users/${currentUser.uid}`);
     try {
@@ -31,7 +27,6 @@ class UserScreen extends Component {
 
       this.setState({ username, email, city, phone, gender });
     } catch (err) { }
-
   }
 
   onSignOut = () => {

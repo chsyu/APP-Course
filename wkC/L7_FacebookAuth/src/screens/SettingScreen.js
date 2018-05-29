@@ -3,6 +3,7 @@ import { View, Picker, ActivityIndicator } from 'react-native';
 import * as firebase from 'firebase';
 
 import { FormLabel, Button, CheckBox } from 'react-native-elements';
+
 import Input from '../components/Input';
 
 // Make a component

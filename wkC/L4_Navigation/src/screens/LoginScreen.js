@@ -18,6 +18,7 @@ class LoginScreen extends Component {
     this.setState({ error: ' ', loading: true });
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
+      this.setState({email: '', password: '', loading: false});
       this.props.navigation.navigate('UserStack');
     } catch (err) {
       this.onCreateUser();
@@ -28,6 +29,7 @@ class LoginScreen extends Component {
     const { email, password } = this.state;
     try {
       await firebase.auth().createUserWithEmailAndPassword(email, password);
+      this.setState({email: '', password: '', loading: false});
       this.props.navigation.navigate('UserStack');
     } catch (err) {
       this.setState({
