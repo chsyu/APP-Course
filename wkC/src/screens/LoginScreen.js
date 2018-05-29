@@ -4,11 +4,8 @@ import * as firebase from 'firebase';
 import { FormLabel, FormValidationMessage, Button } from 'react-native-elements';
 import { Facebook } from 'expo';
 
-// import { Confirm, Spinner, Input } from '../components';
-import Confirm from '../components/Confirm';
-import Spinner from '../components/Spinner';
 import Input from '../components/Input';
-
+import Confirm from '../components/Confirm';
 
 // Make a component
 class LoginScreen extends Component {
@@ -18,7 +15,6 @@ class LoginScreen extends Component {
     error: ' ',
     loading: false,
     showModal: false,
-    showSpinner: false,
     token: null,
     status: 'Not Login...'
   };
@@ -65,7 +61,7 @@ class LoginScreen extends Component {
 
     // Sign in with credential from the Facebook user.
     try {
-      await firebase.auth().signInWithCredential(credential);
+      await firebase.auth().signInAndRetrieveDataWithCredential(credential);
       const { currentUser } = await firebase.auth();
       console.log(`currentUser = ${currentUser.uid}`);
       this.props.navigation.navigate('UserStack');
@@ -79,6 +75,7 @@ class LoginScreen extends Component {
     this.setState({ error: ' ', loading: true });
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
+      this.setState({email: '', password: '', loading: false});
       this.props.navigation.navigate('UserStack');
     } catch (err) {
       this.setState({ showModal: true });
@@ -88,20 +85,13 @@ class LoginScreen extends Component {
   onCreateUser = async () => {
     const { email, password } = this.state;
     try {
+      await firebase.auth().createUserWithEmailAndPassword(email, password);
       this.setState({
+        showModal: false,
         email: '',
         password: '',
-        error: '',
-        loading: false,
-        showModal: false,
-        showSpinner: true
+        loading: false
       });
-
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
-      const { currentUser } = firebase.auth();
-      let dbUserid = firebase.database().ref(`/users/${currentUser.uid}`);
-      await dbUserid.set({ email: "", phone: "", username: "", city: "", gender: "" });
-      this.setState({ showSpinner: false });
       this.props.navigation.navigate('UserStack');
     } catch (err) {
       this.setState({
@@ -132,41 +122,38 @@ class LoginScreen extends Component {
     return (
       <Button
         title='Sign in'
-        style={{marginTop: 10}}
         backgroundColor='#4AAF4C'
         onPress={this.onSignIn}
       />
     );
   }
-
+  
   async componentDidMount() {
     await AsyncStorage.removeItem('fb_token');
   }
-
-
 
   render() {
     return (
       <View>
         <View style={styles.formStyle}>
           <FormLabel>Email</FormLabel>
-            <Input
-              autoCorrect={false}
-              autoCapitalize='none'
-              keyboardType='email-address'
-              placeholder='user@email.com'
-              value={this.state.email}
-              onChangeText={email => this.setState({ email })}
-            />
+          <Input
+            placeholder='user@email.com'
+            autoCorrect={false}
+            autoCapitalize='none'
+            keyboardType='email-address'
+            value={this.state.email}
+            onChangeText={email => this.setState({ email })}
+          />
           <FormLabel>Password</FormLabel>
-            <Input
-              secureTextEntry
-              autoCorrect={false}
-              autoCapitalize='none'
-              placeholder='password'
-              value={this.state.password}
-              onChangeText={password => this.setState({ password })}
-            />
+          <Input
+            secureTextEntry
+            autoCorrect={false}
+            autoCapitalize='none'
+            placeholder='password'
+            value={this.state.password}
+            onChangeText={password => this.setState({ password })}
+          />
           {this.renderButton()}
           <FormValidationMessage>{this.state.error}</FormValidationMessage>
         </View>
@@ -182,9 +169,6 @@ class LoginScreen extends Component {
           visible={this.state.showModal}
           onAccept={this.onCreateUser}
           onDecline={this.onCLoseModal}
-        />
-        <Spinner
-          visible={this.state.showSpinner}
         />
       </View>
     );
