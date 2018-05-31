@@ -34,7 +34,7 @@ export const UserStack = createStackNavigator({
                         <Icon
                             name='navigate-before'
                             iconStyle={{ marginLeft: 10 }}
-                            onPress={() => navigation.navigate('UserScreen')}
+                            onPress={() => navigation.push('UserScreen')}
                         />
 
                     ),

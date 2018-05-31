@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native';
 import * as firebase from 'firebase';
 import { Tile, List, ListItem, Button } from 'react-native-elements';
+// import me from '../json/me.json';
 
 // Make a component
 class UserScreen extends Component {
@@ -13,24 +14,19 @@ class UserScreen extends Component {
     gender: null
   };
 
-  componentDidMount() {
-    this.setUserInfo();
-  }
-
-  setUserInfo = async () => {
+  async componentDidMount() {
     const { currentUser } = firebase.auth();
     let dbUserid = firebase.database().ref(`/users/${currentUser.uid}`);
     try {
       let snapshot = await dbUserid.once('value');
-      let username = snapshot.val().username || " ";
-      let email = snapshot.val().email || " ";
-      let city = snapshot.val().city || " ";
-      let phone = snapshot.val().phone || " ";
-      let gender = snapshot.val().gender || " ";
+      let username = snapshot.val().username;
+      let email = snapshot.val().email;
+      let city = snapshot.val().city;
+      let phone = snapshot.val().phone;
+      let gender = snapshot.val().gender;
 
       this.setState({ username, email, city, phone, gender });
     } catch (err) { }
-
   }
 
   onSignOut = () => {

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { View, Picker, ActivityIndicator } from 'react-native';
 import * as firebase from 'firebase';
 
-import { Button, CheckBox, FormLabel } from 'react-native-elements';
-// import { Input } from '../components';
+import { FormLabel, Button, CheckBox } from 'react-native-elements';
+
 import Input from '../components/Input';
 
 // Make a component
@@ -60,35 +60,35 @@ class SettingScreen extends Component {
     return (
       <View style={styles.formStyle}>
         <FormLabel>Username</FormLabel>
-          <Input
-            autoCorrect={false}
-            placeholder='John Doe'
-            value={this.state.username}
-            onChangeText={username => this.setState({ username })}
-          />
+        <Input
+          autoCorrect={false}
+          placeholder='John Doe'
+          value={this.state.username}
+          onChangeText={username => this.setState({ username })}
+        />
         <FormLabel>Email</FormLabel>
-          <Input
-            placeholder='user@email.com'
-            autoCorrect={false}
-            autoCapitalize='none'
-            keyboardType='email-address'
-            value={this.state.email}
-            onChangeText={email => this.setState({ email })}
-          />
+        <Input
+          placeholder='user@email.com'
+          autoCorrect={false}
+          autoCapitalize='none'
+          keyboardType='email-address'
+          value={this.state.email}
+          onChangeText={email => this.setState({ email })}
+        />
         <FormLabel>Phone</FormLabel>
-          <Input
-            autoCorrect={false}
-            placeholder='555-555-5555'
-            value={this.state.phone}
-            onChangeText={phone => this.setState({ phone })}
-          />
+        <Input
+          autoCorrect={false}
+          placeholder='555-555-5555'
+          value={this.state.phone}
+          onChangeText={phone => this.setState({ phone })}
+        />
         <FormLabel>City</FormLabel>
-          <Input
-            autoCorrect={false}
-            placeholder='Taipei city'
-            value={this.state.city}
-            onChangeText={city => this.setState({ city })}
-          />
+        <Input
+          autoCorrect={false}
+          placeholder='Taipei city'
+          value={this.state.city}
+          onChangeText={city => this.setState({ city })}
+        />
         <Picker
           selectedValue={this.state.gender}
           onValueChange={gender => this.setState({ gender })}
