@@ -10,9 +10,6 @@ class Me extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      // title: 'Me',
-      // tabBarLabel: 'Me',
-      // tabBarIcon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />,
       drawerLabel: 'Me',
       drawerIcon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />,
       headerLeft: (

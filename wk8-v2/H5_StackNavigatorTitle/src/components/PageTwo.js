@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ScrollView, Linking } from 'react-native';
-import { Button, Card, Text, PricingCard, Tile } from 'react-native-elements';
+import { Button, Card, Text, PricingCard, Tile, Icon } from 'react-native-elements';
 
 // Make a component
 class PageTwo extends Component {
@@ -9,6 +9,13 @@ class PageTwo extends Component {
 
     return {
       title: params.title.toUpperCase(),
+      headerRight: (
+        <Icon
+            name='add-shopping-cart'
+            iconStyle={{ marginRight: 10 }}
+            onPress={() => Linking.openURL(params.url)}
+        />
+      )
     }
   };  
   render() {

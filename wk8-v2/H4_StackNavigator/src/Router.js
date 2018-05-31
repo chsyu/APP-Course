@@ -9,7 +9,6 @@ export const StackRouter = createStackNavigator({
   Details: {
     screen: PageTwo,
   },
-},
-);
+});
 
 

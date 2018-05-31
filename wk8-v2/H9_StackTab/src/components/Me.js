@@ -8,6 +8,19 @@ import me from '../json/me.json';
 class Me extends Component {
   state = { me: [] };
 
+  static navigationOptions = ({ navigation }) => {
+    return {
+      drawerLabel: 'Me',
+      drawerIcon: ({ tintColor }) => <Icon name="account-circle" size={35} color={tintColor} />,
+      headerLeft: (
+        <Icon
+          name='menu'
+          iconStyle={{ marginLeft: 10 }}
+          onPress={() => navigation.openDrawer()}
+        />
+      ),
+    };
+  }
   componentWillMount() {
     this.setState({ me });
   }

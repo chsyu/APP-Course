@@ -5,6 +5,22 @@ import { List, ListItem, Icon } from 'react-native-elements';
 // Make a component
 class Contact extends Component {
 
+  static navigationOptions = ({ navigation }) => {
+    return {
+      // title: 'Setting',
+      // tabBarLabel: 'Setting',
+      // tabBarIcon: ({ tintColor }) => <Icon name="build" size={35} color={tintColor} />,
+      drawerLabel: 'Setting',
+      drawerIcon: ({ tintColor }) => <Icon name="build" size={25} color={tintColor} />,
+      headerLeft: (
+        <Icon
+          name='menu'
+          iconStyle={{ marginLeft: 10 }}
+          onPress={() => navigation.openDrawer()}
+        />
+      ),
+    };
+}
 
   render() {
     return (
