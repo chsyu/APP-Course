@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { TouchableWithoutFeedback, StyleSheet, Platform, View, ActivityIndicator, Animated } from 'react-native';
+import {
+  TouchableWithoutFeedback,
+  Easing,
+  StyleSheet,
+  Platform,
+  View,
+  ActivityIndicator,
+  Animated
+} from 'react-native';
 import { MapView, Permissions, Location, Constants } from 'expo';
 import { Button, Icon } from 'react-native-elements';
 import metro from '../json/metro.json';
@@ -81,8 +89,8 @@ class Metro extends Component {
             borderRadius: markerRadius,
             opacity: markerOpacity,
             backgroundColor: "rgba(130,4,150, 0.9)",
-          }
-          }
+            // borderWidth: 2,
+          }}
         />
       );
     }
@@ -94,8 +102,8 @@ class Metro extends Component {
           borderRadius: 15,
           opacity: 0.7,
           backgroundColor: "rgba(130,4,150, 0.9)",
-        }
-        }
+          // borderWidth: 2,
+        }}
       />
 
     );
@@ -106,28 +114,40 @@ class Metro extends Component {
       this.setState({ touched: true, siteId });
 
       Animated.parallel([
-        Animated.spring(this.state.markerWidth, {
-          toValue: 50
+        Animated.timing(this.state.markerWidth, {
+          toValue: 70,
+          duration: 2000,
+          easing: Easing.easeInCirc
         }),
-        Animated.spring(this.state.markerRadius, {
-          toValue: 25
+        Animated.timing(this.state.markerRadius, {
+          toValue: 25,
+          duration: 2000,
+          easing: Easing.easeInCirc
         }),
-        Animated.spring(this.state.markerOpacity, {
-          toValue: 0.35
+        Animated.timing(this.state.markerOpacity, {
+          toValue: 0.35,
+          duration: 2000,
+          easing: Easing.easeInCirc
         })
       ]).start(() => this.startAnimation());
 
     } else {
       this.setState({ touched: false });
       Animated.parallel([
-        Animated.spring(this.state.markerWidth, {
-          toValue: 30
+        Animated.timing(this.state.markerWidth, {
+          toValue: 30,
+          duration: 2000,
+          easing: Easing.easeOutCirc
         }),
-        Animated.spring(this.state.markerRadius, {
-          toValue: 15
+        Animated.timing(this.state.markerRadius, {
+          toValue: 15,
+          duration: 2000,
+          easing: Easing.easeOutCirc
         }),
-        Animated.spring(this.state.markerOpacity, {
-          toValue: 0.7
+        Animated.timing(this.state.markerOpacity, {
+          toValue: 0.7,
+          duration: 2000,
+          easing: Easing.easeOutCirc
         })
       ]).start();
     }
