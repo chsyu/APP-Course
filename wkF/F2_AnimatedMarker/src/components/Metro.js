@@ -16,11 +16,8 @@ class Metro extends Component {
 
   constructor(props) {
     super(props);
-    const ballRadius = new Animated.Value(35);
-    const ballWidth = new Animated.Value(70);
-    const markerWidth = new Animated.Value(30);
-    const markerRadius = new Animated.Value(15);
     const markerOpacity = new Animated.Value(0.7);
+    const markerRatio = new Animated.Value(1);
 
     this.state = {
       mapLoaded: false,
@@ -41,9 +38,8 @@ class Metro extends Component {
       errorMessage: null,
       touched: false,
       siteId: null,
-      markerWidth,
-      markerRadius,
-      markerOpacity
+      markerOpacity,
+      markerRatio
     }
   }
 
@@ -78,19 +74,34 @@ class Metro extends Component {
     }
   }
 
-  renderTouchedSite(siteId) {
-    const { markerWidth, markerRadius, markerOpacity } = this.state;
+  scalingTouchedSite(siteId) {
+    const { 
+      markerRatio, 
+      markerOpacity 
+    } = this.state;
+    const scaleStyle = {
+      transform: [
+        {
+          scale: markerRatio,
+        },
+      ],
+    };
+
+    const opacityStyle = {
+      opacity: markerOpacity,
+    };
+
     if (siteId == this.state.siteId) {
       return (
         <Animated.View
-          style={{
-            width: markerWidth,
-            height: markerWidth,
-            borderRadius: markerRadius,
-            opacity: markerOpacity,
+          style={[{
+            width: 30,
+            height: 30,
+            borderRadius: 15,
+            opacity: 0.7,
             backgroundColor: "rgba(130,4,150, 0.9)",
-            // borderWidth: 2,
-          }}
+            borderWidth: 2,
+          }, scaleStyle, opacityStyle]}
         />
       );
     }
@@ -102,7 +113,7 @@ class Metro extends Component {
           borderRadius: 15,
           opacity: 0.7,
           backgroundColor: "rgba(130,4,150, 0.9)",
-          // borderWidth: 2,
+          borderWidth: 2,
         }}
       />
 
@@ -114,13 +125,8 @@ class Metro extends Component {
       this.setState({ touched: true, siteId });
 
       Animated.parallel([
-        Animated.timing(this.state.markerWidth, {
-          toValue: 70,
-          duration: 2000,
-          easing: Easing.easeInCirc
-        }),
-        Animated.timing(this.state.markerRadius, {
-          toValue: 25,
+        Animated.timing(this.state.markerRatio, {
+          toValue: 3.5,
           duration: 2000,
           easing: Easing.easeInCirc
         }),
@@ -134,13 +140,8 @@ class Metro extends Component {
     } else {
       this.setState({ touched: false });
       Animated.parallel([
-        Animated.timing(this.state.markerWidth, {
-          toValue: 30,
-          duration: 2000,
-          easing: Easing.easeOutCirc
-        }),
-        Animated.timing(this.state.markerRadius, {
-          toValue: 15,
+        Animated.timing(this.state.markerRatio, {
+          toValue: 1,
           duration: 2000,
           easing: Easing.easeOutCirc
         }),
@@ -218,7 +219,7 @@ class Metro extends Component {
                 onPress={() => this.startAnimation(site.id)}
               >
 
-                {this.renderTouchedSite(site.id)}
+                {this.scalingTouchedSite(site.id)}
 
               </TouchableWithoutFeedback>
 
@@ -230,25 +231,5 @@ class Metro extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  markerWrap: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  // marker: {
-  //   width: markerWidth,
-  //   height: markerWidth,
-  //   borderRadius: markerWidth/2,
-  //   opacity: markerOpacity,
-  //   backgroundColor: "rgba(130,4,150, 0.9)",
-  // },
-  ring: {
-    backgroundColor: "rgba(130,4,150, 0.3)",
-    position: "absolute",
-    borderWidth: 1,
-    borderColor: "rgba(130,4,150, 0.5)",
-  },
-});
 
 export default Metro;
