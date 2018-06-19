@@ -26,5 +26,5 @@
 - wk14: Interactive Animations
 - wk15: APP企劃設計
 - wk16: Redux & Push Notification  
-- wk17: Redux
+- wk17: Mobx
 - wk18: 期末專題展示
