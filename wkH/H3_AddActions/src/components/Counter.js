@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
-import { observer, inject } from 'mobx-react/native';
+import { observer } from 'mobx-react/native';
 
 @observer
 class Counter extends Component {

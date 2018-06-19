@@ -3,7 +3,7 @@ import libraryList from '../json/libraryList.json';
 
 class BookStore {
     @observable state = {
-        libraryList: libraryList,
+        libraryList,
         book: {}
     };
     @action.bound
