@@ -6,7 +6,7 @@ import { FormLabel, Button, CheckBox } from 'react-native-elements';
 
 import Input from '../components/Input';
 
-// Make a component
+// Injection Store
 import { observer, inject } from 'mobx-react/native';
 
 @inject('store') @observer
@@ -15,27 +15,12 @@ class SettingScreen extends Component {
     saving: false
   };
 
-  async componentWillMount() {
-    const { currentUser } = firebase.auth();
-    let dbUserid = firebase.database().ref(`/users/${currentUser.uid}`);
-    try {
-      let snapshot = await dbUserid.once('value');
-      let username = snapshot.val().username;
-      let email = snapshot.val().email;
-      let city = snapshot.val().city;
-      let phone = snapshot.val().phone;
-      let gender = snapshot.val().gender;
-
-      this.props.store.state = ({ username, email, city, phone, gender });
-    } catch (err) { }
-  }
-
   onSaveInfo = async () => {
     this.setState({ saving: true });
     const { currentUser } = firebase.auth();
-    const { email, phone, username, city, gender } = this.props.store.state;
+    // const { email, phone, username, city, gender } = this.props.store.state;
     let dbUserid = firebase.database().ref(`/users/${currentUser.uid}`);
-    await dbUserid.set({ email, phone, username, city, gender });
+    await dbUserid.set({ ...this.props.store.state });
     this.setState({ saving: false });
   }
 

@@ -18,9 +18,9 @@ class SettingScreen extends Component {
   onSaveInfo = async () => {
     this.setState({ saving: true });
     const { currentUser } = firebase.auth();
-    const { email, phone, username, city, gender } = this.props.store.state;
+    // const { email, phone, username, city, gender } = this.props.store.state;
     let dbUserid = firebase.database().ref(`/users/${currentUser.uid}`);
-    await dbUserid.set({ email, phone, username, city, gender });
+    await dbUserid.set({ ...this.props.store.state });
     this.setState({ saving: false });
   }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Provider } from 'mobx-react';
 import Counter from './src/components/Counter';
 import counterStore from './src/stores/counterStore';
+import { Provider } from 'mobx-react';
 
 class App extends Component {
   render() {

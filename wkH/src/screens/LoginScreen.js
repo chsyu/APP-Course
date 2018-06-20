@@ -6,7 +6,11 @@ import { FormLabel, FormValidationMessage, Button } from 'react-native-elements'
 import Input from '../components/Input';
 import Confirm from '../components/Confirm';
 
+// Injection Store
+import { observer, inject } from 'mobx-react/native';
+
 // Make a component
+@inject('store') @observer
 class LoginScreen extends Component {
   state = {
     email: null,
@@ -22,6 +26,13 @@ class LoginScreen extends Component {
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
       this.setState({email: '', password: '', loading: false});
+      const currentUser = await firebase.auth().currentUser;
+      let dbUserid = firebase.database().ref(`/users/${currentUser.uid}`);
+      try {
+        let snapshot = await dbUserid.once('value');
+        console.log(snapshot);
+        this.props.store.state = ({ ...snapshot.val() });
+      } catch (err) {console.log(err); }  
       this.props.navigation.navigate('UserStack');
     } catch (err) {
       this.setState({ showModal: true });

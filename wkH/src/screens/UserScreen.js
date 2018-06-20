@@ -10,21 +10,6 @@ import { observer, inject } from 'mobx-react/native';
 @inject('store') @observer
 class UserScreen extends Component {
 
-  async componentDidMount() {
-    const { currentUser } = firebase.auth();
-    let dbUserid = firebase.database().ref(`/users/${currentUser.uid}`);
-    try {
-      let snapshot = await dbUserid.once('value');
-      let username = snapshot.val().username;
-      let email = snapshot.val().email;
-      let city = snapshot.val().city;
-      let phone = snapshot.val().phone;
-      let gender = snapshot.val().gender;
-
-      this.props.store.state = ({ username, email, city, phone, gender });
-    } catch (err) { }
-  }
-
   onSignOut = () => {
     firebase.auth().signOut();
     this.props.navigation.navigate('LoginScreen');

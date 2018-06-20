@@ -1,3 +1,4 @@
+import * as firebase from 'firebase';
 import { observable, action } from 'mobx';
 
 class PersonalStore {
@@ -8,7 +9,6 @@ class PersonalStore {
         phone: null,
         gender: null
     };
-
 }
 
 export default new PersonalStore();
