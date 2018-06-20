@@ -5,10 +5,14 @@ import { observer, inject } from 'mobx-react/native';
 
 @inject('store') @observer
 class Counter extends Component {
-  componentDidMount() {
-    setInterval(() => {
+  componentWillMount() {
+    this.interval = setInterval(() => {
       this.props.store.incCounter();
-    }, 1000);
+    }, 300);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   render() {
