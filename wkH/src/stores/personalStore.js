@@ -9,6 +9,18 @@ class PersonalStore {
         phone: null,
         gender: null
     };
+
+    @action.bound
+    clearPersonalStore() {
+        this.state = {
+            email: null,
+            username: null,
+            city: null,
+            phone: null,
+            gender: null
+        };
+    }
+
 }
 
 export default new PersonalStore();

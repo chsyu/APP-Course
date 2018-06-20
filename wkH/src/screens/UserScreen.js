@@ -4,7 +4,7 @@ import * as firebase from 'firebase';
 import { Tile, List, ListItem, Button } from 'react-native-elements';
 // import me from '../json/me.json';
 
-// Make a component
+// Injection Store
 import { observer, inject } from 'mobx-react/native';
 
 @inject('store') @observer
@@ -12,6 +12,7 @@ class UserScreen extends Component {
 
   onSignOut = () => {
     firebase.auth().signOut();
+    this.props.store.clearPersonalStore();
     this.props.navigation.navigate('LoginScreen');
   }
 
