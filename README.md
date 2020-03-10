@@ -11,7 +11,7 @@
 原生APP開發的學習門檻並不低，除了要學會Java(Android)與Swift(iOS)，還要精熟類別庫。 此外，學會Android或iOS的設計規範，以及更進一步的UI/UX設計，才能讓你做出一個好用的APP。 這門課程以React Native開發跨平台的APP，藉由專題導向的學習，由淺入深讓你熟悉APP的開發語言，經由UI/UX的設計，讓你更進一步學會設計擁有良好用戶體驗的APP。
 
 ## 教學進度
-- wk1: 課程簡介/系統安裝/起手式
+- wk1: Hello RN
 - wk2: RN UI Components
 - wk3: Material Design (UI)
 - wk4: States/Props
