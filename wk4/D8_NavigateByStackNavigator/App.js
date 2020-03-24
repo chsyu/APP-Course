@@ -1,5 +1,4 @@
 import React from 'react';
-// import { View, FlatList } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -20,3 +19,4 @@ function App() {
 }
 
 export default App;
+

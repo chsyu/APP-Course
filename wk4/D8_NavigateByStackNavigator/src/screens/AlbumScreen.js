@@ -7,6 +7,7 @@ import albumData from "../json/albums.json";
 const AlbumScreen = ({ navigation }) => {
   return (
     <View style={{flex: 1}}>
+      <Header title={albumData.albumTitle} />
       <FlatList
       data={albumData.albumList}
       renderItem={({ item }) => 
