@@ -5,15 +5,40 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import AlbumScreen from './src/screens/AlbumScreen';
 import DetailScreen from './src/screens/DetailScreen';
+import albumData from "./src/json/albums.json";
 
 const Stack = createStackNavigator();
 
-function App() {
+const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={AlbumScreen} />
-        <Stack.Screen name="Detail" component={DetailScreen} />      
+        <Stack.Screen 
+          name="Home" 
+          component={AlbumScreen} 
+          options={{
+            title: albumData.albumTitle,
+            headerTitleStyle: {
+              fontWeight: '400',
+              fontSize: 20
+            }, 
+          }}
+        />
+        <Stack.Screen 
+          name="Detail" 
+          component={DetailScreen}
+          options={({ route }) => ({ 
+            title: route.params.title,
+            headerStyle: {
+              backgroundColor: '#4F9DEB',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: '400',
+              fontSize: 20
+            },  
+           })}
+        />      
       </Stack.Navigator>
     </NavigationContainer>
   );

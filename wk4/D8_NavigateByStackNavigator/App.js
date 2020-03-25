@@ -7,7 +7,7 @@ import DetailScreen from './src/screens/DetailScreen';
 
 const Stack = createStackNavigator();
 
-function App() {
+const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>

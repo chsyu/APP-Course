@@ -6,7 +6,7 @@ import AlbumScreen from './src/screens/AlbumScreen'
 
 const Stack = createStackNavigator();
 
-function App() {
+const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
