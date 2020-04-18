@@ -137,7 +137,7 @@ const CustomDrawerAnimatedContent = ({ progress, ...rest }) => {
 
 const CustomDrawerContent = ({ ...rest }) => {
   return (
-    <DrawerContentScrollView {...rest}>
+    <DrawerContentScrollView style={{marginTop: -48}} {...rest}>
       <Tile
         imageSrc={require('./assets/drawerTile.jpg')}
         featured
