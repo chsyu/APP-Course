@@ -1,0 +1,19 @@
+{
+    "gender": "NA",
+    "name": {
+      "first": "NTUE",
+      "last": "DTD"
+    },
+    "location": {
+      "street": "He-Ping East Road, Section 2, No. 138",
+      "city": "Taipei",
+      "state": "NA",
+      "postcode": 106
+    },
+    "email": "dtd@tea.ntue.edu.tw",
+    "login": {
+      "username": "NTUEDTD"
+    },
+    "dob": "2006-08-01 01:00:00"
+  }
+  
