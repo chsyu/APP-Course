@@ -6,14 +6,14 @@ import albumData from "../json/albums.json";
 class AlbumScreen extends Component {
   constructor(props) {
       super(props)
-      this.state = { albumData };
+      this.state = { albums: albumData };
   }
 
   render() {
     return (
       <View style={{flex: 1}}>
         <FlatList
-        data={this.state.albumData.albumList}
+        data={this.state.albums.albumList}
         renderItem={({ item }) => 
         <AlbumDetail 
           album={item}       

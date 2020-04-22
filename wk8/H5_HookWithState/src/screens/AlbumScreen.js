@@ -4,11 +4,11 @@ import AlbumDetail from "../components/AlbumDetail";
 import albumData from "../json/albums.json";
 
 const AlbumScreen = ({ navigation }) => {
-  const [albumState, setAlbumData] = useState(albumData.albumList);
+  const [albums, setAlbums] = useState(albumData.albumList);
   return (
     <View style={{flex: 1}}>
       <FlatList
-      data={albumState}
+      data={albums}
       renderItem={({ item }) => 
       <AlbumDetail 
         album={item}       
