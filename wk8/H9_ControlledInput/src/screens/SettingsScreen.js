@@ -6,7 +6,7 @@ import { StoreContext } from "../stores/AlbumStore";
 // Make a component
 const SettingsScreen = ({ navigation }) => {
   const { meState } = useContext(StoreContext);
-  let [me, setMe] = meState;
+  const [me, setMe] = meState;
   return (
     <ScrollView style={{ paddingTop: 44 }}>
       <Text style={{ fontSize: 30, textAlign: "center" }}>
@@ -34,6 +34,20 @@ const SettingsScreen = ({ navigation }) => {
         onChangeText={(username) =>
           setMe({ ...me, login: { ...me.login, username } })
         }
+      />
+      <Input
+        labelStyle={{ marginTop: 20 }}
+        label="Firstname"
+        placeholder="John"
+        value={me.name.first}
+        onChangeText={(first) => setMe({ ...me, name: { ...me.name, first } })}
+      />
+      <Input
+        labelStyle={{ marginTop: 20 }}
+        label="Lastname"
+        placeholder="Doe"
+        value={me.name.last}
+        onChangeText={(last) => setMe({ ...me, name: { ...me.name, last } })}
       />
       <Input
         labelStyle={{ marginTop: 20 }}
