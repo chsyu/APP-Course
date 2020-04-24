@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Button } from "react-native-elements";
 
 const App = () => {
-  let [count, setCount] = useState(0);
+  const [count, setCount] = useState(0);
   return (
     <View style={styles.container}>
       <View style={styles.btnArea}>
@@ -11,13 +11,13 @@ const App = () => {
           title="+"
           titleStyle={{ fontSize: 60 }}
           buttonStyle={styles.btnStyle}
-          onPress={() => setCount((count += 1))}
+          onPress={() => setCount(count + 1)}
         />
         <Button
           title="-"
           titleStyle={{ fontSize: 60 }}
           buttonStyle={styles.btnStyle}
-          onPress={() => setCount((count -= 1))}
+          onPress={() => setCount(count - 1)}
         />
       </View>
       <Text style={styles.count}>{count}</Text>
