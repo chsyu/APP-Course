@@ -10,25 +10,24 @@ export default function App(props) {
         const savedStateString = await AsyncStorage.getItem(COUNTER_KEY);
         const state = JSON.parse(savedStateString);
         setCount(state);
-      } catch(e) {
-      }
+      } catch (e) {}
     };
     restoreState();
   }, []);
 
-  const plusOneFn = async () => {
+  const plusOneFn = () => {
     setCount(count + 1);
     try {
-      await AsyncStorage.setItem(COUNTER_KEY, JSON.stringify(count));
+      AsyncStorage.setItem(COUNTER_KEY, JSON.stringify(count));
     } catch (error) {
       // Error saving data
     }
   };
 
-  const resetFn = async () => {
+  const resetFn = () => {
     setCount(0);
     try {
-      await AsyncStorage.setItem(COUNTER_KEY, JSON.stringify(count));
+      AsyncStorage.setItem(COUNTER_KEY, JSON.stringify(count));
     } catch (error) {
       // Error saving data
     }
@@ -53,6 +52,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonGroup: {
-    flexDirection: 'row',
-  }
+    flexDirection: "row",
+  },
 });

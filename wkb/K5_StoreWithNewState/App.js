@@ -4,9 +4,9 @@ const COUNTER_KEY = "COUNTER_KEY";
 
 export default function App(props) {
   const [count, setCount] = React.useState(0);
-  const saveToAsyncStorage = async () => {
+  const saveToAsyncStorage = () => {
     try {
-      await AsyncStorage.setItem(COUNTER_KEY, JSON.stringify(count));
+      AsyncStorage.setItem(COUNTER_KEY, JSON.stringify(count));
     } catch (error) {
       // Error saving data
     }
