@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 
 const App = () => {
   const [region, setRegion] = useState({
@@ -12,18 +12,28 @@ const App = () => {
   const [marker, setMarker] = useState({
     coord: {
       longitude: 121.544637,
-      latitude: 25.024624,    
+      latitude: 25.024624,
     },
-    name: 'NTUE',
-    address: 'He-Ping East Road'
+    name: "國立臺北教育大學",
+    address: "台北市和平東路二段134號",
   });
+
   const onRegionChangeComplete = (rgn) => {
-    setRegion(rgn);
-    setMarker({...marker, coord: {
-      longitude: rgn.longitude,
-      latitude: rgn.latitude
-    }});
-  }
+    if (
+      Math.abs(rgn.latitude - region.latitude) > 0.0002 ||
+      Math.abs(rgn.longitude - region.longitude) > 0.0002
+    ) {
+      setRegion(rgn);
+      setMarker({
+        ...marker,
+        coord: {
+          longitude: rgn.longitude,
+          latitude: rgn.latitude,
+        },
+      });
+    }
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <MapView
@@ -33,7 +43,7 @@ const App = () => {
         provider="google"
         onRegionChangeComplete={onRegionChangeComplete}
       >
-        <MapView.Marker
+        <Marker
           coordinate={marker.coord}
           title={marker.name}
           description={marker.address}

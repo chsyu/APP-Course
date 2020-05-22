@@ -4,37 +4,30 @@ import Constants from "expo-constants";
 import * as Location from "expo-location";
 
 export default function App() {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [msg, setMsg] = useState("Waiting..");
+  const getLocation = async () => {
+    let { status } = await Location.requestPermissionsAsync();
+    if (status !== "granted") {
+      setMsg("Permission to access location was denied");
+    } else {
+      let location = await Location.getCurrentPositionAsync({});
+      setMsg(JSON.stringify(location));
+    }
+  };
 
   useEffect(() => {
     if (Platform.OS === "android" && !Constants.isDevice) {
-      setErrorMsg(
+      setMsg(
         "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
       );
-    } else {
-      (async () => {
-        let { status } = await Location.requestPermissionsAsync();
-        if (status !== "granted") {
-          setErrorMsg("Permission to access location was denied");
-        }
-
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation(location);
-      })();
+      return;
     }
+    getLocation();
   });
-
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.paragraph}>{text}</Text>
+      <Text style={styles.paragraph}>{msg}</Text>
     </View>
   );
 }
