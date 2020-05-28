@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import { StyleSheet, View, Dimensions, Text, ScrollView } from "react-native";
+import React from "react";
+import { View } from "react-native";
 import { VictoryPie } from "victory-native";
 
-export default () => {
-  const sampleData = [
-    { x: "Cats", y: 35 },
-    { x: "Dogs", y: 40 },
-    { x: "Birds", y: 55 },
-  ];
+const sampleData = [
+  { x: "Cats", y: 35 },
+  { x: "Dogs", y: 40 },
+  { x: "Birds", y: 55 },
+];
 
+export default () => {
   return (
     <View style={{ alignItems: "center" }}>
       <VictoryPie
@@ -19,20 +19,3 @@ export default () => {
     </View>
   );
 };
-
-const viewStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  monospace: {
-    fontFamily: Platform.OS === "ios" ? "Menlo" : "monospace",
-  },
-  contentContainer: {
-    alignItems: "center",
-  },
-  header: {
-    fontWeight: "600",
-    padding: 15,
-    fontSize: 18,
-  },
-});
