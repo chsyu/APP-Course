@@ -1,25 +1,17 @@
-import React, { useRef } from "react";
-import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import React from "react";
+import { View, StyleSheet } from "react-native";
 import Constants from "expo-constants";
 import LottieView from "lottie-react-native";
 
 const App = () => {
-  const animation = useRef(null);
-
-  const onPress = () => {
-    animation.current.play();
-  };
-
   return (
     <View style={styles.container}>
       <LottieView
         ref={animation}
         source={require("./json/download-icon.json")}
-        loop={false}
+        loop
+        autoPlay
       />
-      <TouchableOpacity onPress={onPress}>
-        <Text style={styles.button}>{"PLAY"}</Text>
-      </TouchableOpacity>
     </View>
   );
 };
