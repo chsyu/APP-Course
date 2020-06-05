@@ -7,14 +7,21 @@ const sampleData = [
   { x: "Dogs", y: 40 },
   { x: "Birds", y: 55 },
 ];
+const dataColor = ["tomato", "orange", "gold"];
 
 export default () => {
   return (
     <View style={{ alignItems: "center" }}>
+      <VictoryPie 
+        width={300} 
+        data={sampleData} 
+        colorScale={dataColor} 
+      />
       <VictoryPie
         width={300}
-        colorScale={["tomato", "orange", "gold"]}
         data={sampleData}
+        colorScale={dataColor}
+        innerRadius={50}
       />
     </View>
   );

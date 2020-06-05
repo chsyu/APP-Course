@@ -2,35 +2,39 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { VictoryPie } from "victory-native";
 
+const defaultData = [
+  { x: "Cats", y: 0 },
+  { x: "Dogs", y: 0 },
+  { x: "Birds", y: 100 },
+];
+
 const sampleData = [
   { x: "Cats", y: 35 },
   { x: "Dogs", y: 40 },
   { x: "Birds", y: 55 },
 ];
-const graphicColor = ["#388087", "#6fb3b8", "#badfe7"]; // Colors
-const wantedGraphicData = [{ y: 10 }, { y: 50 }, { y: 40 }]; // Data that we want to display
-const defaultGraphicData = [{ y: 0 }, { y: 0 }, { y: 100 }]; // Data used to make the animate prop work
+const dataColor = ["#388087", "#6fb3b8", "#badfe7"];
 
 export default () => {
-  const [graphicData, setGraphicData] = useState(defaultGraphicData);
+  const [graphicData, setGraphicData] = useState(defaultData);
   useEffect(() => {
-    setGraphicData(wantedGraphicData); // Setting the data that we want to display
+    setGraphicData(sampleData);
   }, []);
 
   return (
     <View style={{ alignItems: "center" }}>
-      <VictoryPie
-        width={300}
-        colorScale={["tomato", "orange", "gold"]}
-        data={sampleData}
+      <VictoryPie 
+        width={300} 
+        colorScale={dataColor} 
+        data={sampleData} 
       />
       <VictoryPie
         animate={{ easing: "exp" }}
         data={graphicData}
-        width={250}
-        height={250}
-        colorScale={graphicColor}
+        width={300}
+        colorScale={dataColor}
         innerRadius={50}
+        labelRadius={60}
       />
     </View>
   );
