@@ -31,19 +31,18 @@ const LoginScreen = () => {
   };
 
   const renderButton = () => {
-   if (loading) {
-      return <ActivityIndicator size="large" style={{ marginTop: 30 }} />;
-   }
-
-   return (
-     <Button
-       title="Sign in"
-       buttonStyle={{ backgroundColor: "#4AAF4C" }}
-       containerStyle={{ padding: 5 }}
-       onPress={onSignIn}
-     />
-   );
+    return loading ? (
+      <ActivityIndicator size="large" style={{ marginTop: 30 }} />
+    ) : (
+      <Button
+        title="Sign in"
+        buttonStyle={{ backgroundColor: "#4AAF4C" }}
+        containerStyle={{ padding: 5 }}
+        onPress={onSignIn}
+      />
+    );
   };
+
   return (
     <View>
       <View style={styles.formStyle}>

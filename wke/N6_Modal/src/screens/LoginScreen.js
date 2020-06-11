@@ -58,11 +58,9 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const renderButton = () => {
-    if (loading) {
-      return <ActivityIndicator size="large" style={{ marginTop: 30 }} />;
-    }
-
-    return (
+    return loading ? (
+      <ActivityIndicator size="large" style={{ marginTop: 30 }} />
+    ) : (
       <Button
         title="Sign in"
         buttonStyle={{ backgroundColor: "#4AAF4C" }}
@@ -71,6 +69,7 @@ const LoginScreen = ({ navigation }) => {
       />
     );
   };
+  
   return (
     <View>
       <View style={styles.formStyle}>
