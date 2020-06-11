@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import * as firebase from "firebase";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import { Button, Text } from "react-native-elements";
 import Input from "../components/Input";
 import Confirm from "../components/Confirm";
+import { StoreContext } from "../stores";
 
 // Make a component
 const LoginScreen = ({ navigation }) => {
+  const { isLoginState } = useContext(StoreContext);
+  const [isLogin, setIsLogin] = isLoginState;
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [error, setError] = useState("");
@@ -18,7 +21,10 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
-      navigation.navigate("User");
+      setEmail("");
+      setPassword("");
+      setError("");
+      setIsLogin(true);   
     } catch (err) {
       setShowModal(true);
       setLoading(false);
@@ -33,7 +39,7 @@ const LoginScreen = ({ navigation }) => {
       setEmail("");
       setPassword("");
       setLoading(false);
-      navigation.navigate("User");
+      setIsLogin(true);
     } catch (err) {
       setShowModal(false);
       setError(err.message);
@@ -44,27 +50,26 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const onCLoseModal = () => {
-      setShowModal(false);
-      setError("");
-      setEmail("");
-      setPassword("");
-      setLoading(false);
+    setShowModal(false);
+    setError("");
+    setEmail("");
+    setPassword("");
+    setLoading(false);
   };
 
-
   const renderButton = () => {
-   if (loading) {
+    if (loading) {
       return <ActivityIndicator size="large" style={{ marginTop: 30 }} />;
-   }
+    }
 
-   return (
-     <Button
-       title="Sign in"
-       buttonStyle={{ backgroundColor: "#4AAF4C" }}
-       containerStyle={{ padding: 5 }}
-       onPress={onSignIn}
-     />
-   );
+    return (
+      <Button
+        title="Sign in"
+        buttonStyle={{ backgroundColor: "#4AAF4C" }}
+        containerStyle={{ padding: 5 }}
+        onPress={onSignIn}
+      />
+    );
   };
   return (
     <View>

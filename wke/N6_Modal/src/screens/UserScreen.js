@@ -1,13 +1,16 @@
-import React, { Component } from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import * as firebase from "firebase";
 import { Button } from "react-native-elements";
+import { StoreContext } from "../stores";
 
 // Make a component
 const UserScreen = ({ navigation }) => {
+  const { isLoginState } = useContext(StoreContext);
+  const [isLogin, setIsLogin] = isLoginState;
   const onSignOut = () => {
     firebase.auth().signOut();
-    navigation.navigate("Login");
+    setIsLogin(false);
   };
 
   return (
