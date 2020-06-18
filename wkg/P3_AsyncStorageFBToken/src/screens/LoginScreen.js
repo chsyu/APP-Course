@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as firebase from "firebase";
 import * as Facebook from "expo-facebook";
 
@@ -8,9 +8,9 @@ import {
   ActivityIndicator,
   AsyncStorage,
 } from "react-native";
-import { useAuthState } from "react-firebase-hooks/auth";
-
 import { Button, Text } from "react-native-elements";
+import axios from "axios";
+
 import Input from "../components/Input";
 
 // Make a component
@@ -19,7 +19,6 @@ const LoginScreen = () => {
   const [password, setPassword] = useState(null);
   const [msg, setMsg] = useState("  ");
   const [loading, setLoading] = useState(false);
-  const [user] = useAuthState(firebase.auth());
 
   const onSignIn = async () => {
     setMsg(" ");
@@ -36,50 +35,43 @@ const LoginScreen = () => {
       setLoading(false);
       setEmail("");
       setPassword("");
-      setMsg(`${user.email} is login...`);
     }
   };
 
-  const getFBToken = async () => {
+  const askFBTokenAndLogin = async () => {
     const token = await AsyncStorage.getItem("fb_token");
-
     if (token) {
-      const response = await fetch(
-        `https://graph.facebook.com/me?access_token=${token}`
-      );
-      setMsg(`${(await response.json()).name} is login...`);
+      doFBLogin(token);
     } else {
-      doFBLogIn();
+      try {
+        await Facebook.initializeAsync("596563987631240");
+        const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+          permissions: ["public_profile"],
+        });
+        if (type === "success") {
+          await AsyncStorage.setItem("fb_token", token);
+          doFBLogin(token);
+        } else {
+          // type === 'cancel'
+          return;
+        }
+      } catch ({ message }) {
+        setMsg(`Facebook Login Error: ${message}`);
+      }
     }
   };
 
-  const doFBLogIn = async () => {
-    try {
-      await Facebook.initializeAsync("596563987631240");
-      const { type, token } = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ["public_profile"],
+  const doFBLogin = async (token) => {
+    const response = await axios.get(
+      `https://graph.facebook.com/me?access_token=${token}`
+    );
+    const credential = firebase.auth.FacebookAuthProvider.credential(token);
+    await firebase.auth().signInWithCredential(credential);
+    const { currentUser } = await firebase.auth();
+    if (!currentUser.displayName) {
+      await currentUser.updateProfile({
+        displayName: response.data.name,
       });
-      if (type === "success") {
-        await AsyncStorage.setItem("fb_token", token);
-        // Get the user's name using Facebook's Graph API
-        const response = await fetch(
-          `https://graph.facebook.com/me?access_token=${token}`
-        );
-        setMsg(`${(await response.json()).name} is login...`);
-        const credential = firebase.auth.FacebookAuthProvider.credential(token);
-
-        // Sign in with credential from the Facebook user.
-        try {
-          await firebase.auth().signInAndCredential(credential);
-          const { currentUser } = await firebase.auth();
-          setMsg(`${msg} and userID = ${currentUser.uid}`);
-        } catch (err) {}
-      } else {
-        // type === 'cancel'
-        return;
-      }
-    } catch ({ message }) {
-      setMsg(`Facebook Login Error: ${message}`);
     }
   };
 
@@ -97,6 +89,17 @@ const LoginScreen = () => {
       />
     );
   };
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setMsg(`${user.displayName || user.email} is login ...`);
+      } else {
+        setMsg(" ");
+      }
+    });
+  }, []);
+
   return (
     <View>
       <View style={styles.formStyle}>
@@ -128,7 +131,7 @@ const LoginScreen = () => {
           title="Facebook Login"
           buttonStyle={{ backgroundColor: "#39579A" }}
           containerStyle={{ padding: 5 }}
-          onPress={getFBToken}
+          onPress={askFBTokenAndLogin}
         />
         <Button
           title="Google Login"
@@ -153,7 +156,7 @@ const LoginScreen = () => {
 
 const styles = StyleSheet.create({
   formStyle: {
-    marginTop: 100,
+    marginTop: 50,
   },
 });
 

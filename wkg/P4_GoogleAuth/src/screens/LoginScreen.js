@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as firebase from "firebase";
 import * as Facebook from "expo-facebook";
 import * as Google from "expo-google-app-auth";
@@ -9,13 +9,15 @@ import {
   ActivityIndicator,
   AsyncStorage,
 } from "react-native";
-import { useAuthState } from "react-firebase-hooks/auth";
-
 import { Button, Text } from "react-native-elements";
+import axios from "axios";
+
 import Input from "../components/Input";
 
-const ANDROID_CLIENT_ID = "832044128799-7igvvesric35jcavh8afph1ni709d9bl.apps.googleusercontent.com";
-const IOS_CLIENT_ID = "832044128799-ksgfd6t049fugucoip47k9obm3cqfb5r.apps.googleusercontent.com";
+const ANDROID_CLIENT_ID =
+  "832044128799-7igvvesric35jcavh8afph1ni709d9bl.apps.googleusercontent.com";
+const IOS_CLIENT_ID =
+  "832044128799-ksgfd6t049fugucoip47k9obm3cqfb5r.apps.googleusercontent.com";
 
 // Make a component
 const LoginScreen = () => {
@@ -23,7 +25,6 @@ const LoginScreen = () => {
   const [password, setPassword] = useState(null);
   const [msg, setMsg] = useState("  ");
   const [loading, setLoading] = useState(false);
-  const [user] = useAuthState(firebase.auth());
 
   const onSignIn = async () => {
     setMsg(" ");
@@ -40,72 +41,107 @@ const LoginScreen = () => {
       setLoading(false);
       setEmail("");
       setPassword("");
-      setMsg(`${user.email} is login...`);
     }
   };
 
-  const getFBToken = async () => {
+  const askFBTokenAndLogin = async () => {
     const token = await AsyncStorage.getItem("fb_token");
-
     if (token) {
-      const response = await fetch(
-        `https://graph.facebook.com/me?access_token=${token}`
-      );
-      setMsg(`${(await response.json()).name} is login...`);
+      doFBLogin(token);
     } else {
-      doFBLogIn();
-    }
-  };
-
-  const doFBLogIn = async () => {
-    try {
-      await Facebook.initializeAsync("596563987631240");
-      const { type, token } = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ["public_profile"],
-      });
-      if (type === "success") {
-        await AsyncStorage.setItem("fb_token", token);
-        // Get the user's name using Facebook's Graph API
-        const response = await fetch(
-          `https://graph.facebook.com/me?access_token=${token}`
-        );
-        setMsg(`${(await response.json()).name} is login...`);
-        const credential = firebase.auth.FacebookAuthProvider.credential(token);
-
-        // Sign in with credential from the Facebook user.
-        try {
-          await firebase.auth().signInAndCredential(credential);
-          const { currentUser } = await firebase.auth();
-          setMsg(`${msg} and userID = ${currentUser.uid}`);
-        } catch (err) {}
-      } else {
-        // type === 'cancel'
-        return;
+      try {
+        await Facebook.initializeAsync("596563987631240");
+        const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+          permissions: ["public_profile"],
+        });
+        if (type === "success") {
+          await AsyncStorage.setItem("fb_token", token);
+          doFBLogin(token);
+        } else {
+          // type === 'cancel'
+          return;
+        }
+      } catch ({ message }) {
+        setMsg(`Facebook Login Error: ${message}`);
       }
-    } catch ({ message }) {
-      setMsg(`Facebook Login Error: ${message}`);
     }
   };
 
-  const doGoogleLogIn = async () => {
-     try {
-       const { type, accessToken, user } = await Google.logInAsync({
-         androidClientId: ANDROID_CLIENT_ID,
-         iosClientId: IOS_CLIENT_ID,
-         scopes: ["profile", "email"],
-       });
+  const doFBLogin = async (token) => {
+    const response = await axios.get(
+      `https://graph.facebook.com/me?access_token=${token}`
+    );
+    const credential = firebase.auth.FacebookAuthProvider.credential(token);
+    try {
+      await firebase.auth().signInWithCredential(credential);
+      const { currentUser } = await firebase.auth();
+      if (!currentUser.displayName) {
+        await currentUser.updateProfile({
+          displayName: `Facebook's ${response.data.name}`,
+        });
+      }
+    } catch (e) {
+      AsyncStorage.removeItem("fb_token");
+      return;
+    }
+  };
 
-       if (type === "success") {
-         setMsg(`${user.name} is login ...`);
-         await AsyncStorage.setItem("google_token", token);
-         return accessToken;
-       } else {
-         return { cancelled: true };
-       }
-     } catch (e) {
-       return { error: true };
-     } 
-  }
+  const askGoogleTokenAndLogin = async () => {
+    const idToken = await AsyncStorage.getItem("google_idToken");
+    const accessToken = await AsyncStorage.getItem("google_accessToken");
+
+    if (idToken) {
+      try {
+        doGoogleLogin(idToken, accessToken);
+      } catch (e) {
+        AsyncStorage.removeItem("google_accessToken");
+        AsyncStorage.removeItem("google_idToken");
+      }
+    } else {
+      try {
+        const { type, accessToken, idToken, user } = await Google.logInAsync({
+          androidClientId: ANDROID_CLIENT_ID,
+          iosClientId: IOS_CLIENT_ID,
+          scopes: ["profile", "email"],
+        });
+        if (type === "success") {
+          await AsyncStorage.setItem("google_idToken", idToken);
+          await AsyncStorage.setItem("google_accessToken", accessToken);
+          doGoogleLogin(idToken, accessToken, user);
+        } else {
+          return { cancelled: true };
+        }
+      } catch (e) {
+        return { error: true };
+      }
+    }
+  };
+
+  const doGoogleLogin = async (idToken, accessToken, user) => {
+    try {
+      const response = await axios.get(
+        `https://www.googleapis.com/userinfo/v2/me?oauth_token=${accessToken}`
+      );
+    } catch (e) {}
+
+    // Firebase Google Token Login
+    const credential = firebase.auth.GoogleAuthProvider.credential(idToken);
+
+    try {
+      await firebase.auth().signInWithCredential(credential);
+      const { currentUser } = await firebase.auth();
+      if (!currentUser.displayName) {
+        await currentUser.updateProfile({
+          // displayName: `Google's ${response.data.name}`,
+          displayName: `Google's ${user.name}`,
+        });
+      }
+    } catch (e2) {
+      AsyncStorage.removeItem("google_accessToken");
+      AsyncStorage.removeItem("google_idToken");
+      return;
+    }
+  };
 
   const renderLoginButton = () => {
     if (loading) {
@@ -121,6 +157,17 @@ const LoginScreen = () => {
       />
     );
   };
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setMsg(`${user.displayName || user.email} is login ...`);
+      } else {
+        setMsg(" ");
+      }
+    });
+  }, []);
+
   return (
     <View>
       <View style={styles.formStyle}>
@@ -152,13 +199,13 @@ const LoginScreen = () => {
           title="Facebook Login"
           buttonStyle={{ backgroundColor: "#39579A" }}
           containerStyle={{ padding: 5 }}
-          onPress={getFBToken}
+          onPress={askFBTokenAndLogin}
         />
         <Button
           title="Google Login"
           buttonStyle={{ backgroundColor: "#CD5542" }}
           containerStyle={{ padding: 5 }}
-          onPress={doGoogleLogIn}
+          onPress={askGoogleTokenAndLogin}
         />
       </View>
       <View style={styles.formStyle}>
@@ -178,7 +225,7 @@ const LoginScreen = () => {
 
 const styles = StyleSheet.create({
   formStyle: {
-    marginTop: 100,
+    marginTop: 50,
   },
 });
 

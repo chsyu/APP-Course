@@ -3,9 +3,9 @@ import * as firebase from "firebase";
 import * as Facebook from "expo-facebook";
 
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { useAuthState } from "react-firebase-hooks/auth";
-
 import { Button, Text } from "react-native-elements";
+import axios from "axios";
+
 import Input from "../components/Input";
 
 // Make a component
@@ -14,7 +14,6 @@ const LoginScreen = () => {
   const [password, setPassword] = useState(null);
   const [msg, setMsg] = useState("  ");
   const [loading, setLoading] = useState(false);
-  const [user] = useAuthState(firebase.auth());
 
   const onSignIn = async () => {
     setMsg(" ");
@@ -31,22 +30,30 @@ const LoginScreen = () => {
       setLoading(false);
       setEmail("");
       setPassword("");
-      setMsg(`${user.email} is login...`);
     }
   };
 
   const doFBLogIn = async () => {
     try {
+      //Get Token
       await Facebook.initializeAsync("596563987631240");
       const { type, token } = await Facebook.logInWithReadPermissionsAsync({
         permissions: ["public_profile"],
       });
       if (type === "success") {
         // Get the user's name using Facebook's Graph API
-        const response = await fetch(
+        const response = await axios.get(
           `https://graph.facebook.com/me?access_token=${token}`
         );
-        setMsg(`${(await response.json()).name} is login...`);
+        //Login Firebase
+        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        await firebase.auth().signInWithCredential(credential);
+        const { currentUser } = await firebase.auth();
+        if (!currentUser.displayName) {
+          await currentUser.updateProfile({
+            displayName: response.data.name,
+          });
+        }
       } else {
         // type === 'cancel'
         return;
@@ -70,6 +77,17 @@ const LoginScreen = () => {
       />
     );
   };
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setMsg(`${user.displayName || user.email} is login ...`);
+      } else {
+        setMsg(" ");
+      }
+    });
+  }, []);
+
   return (
     <View>
       <View style={styles.formStyle}>
@@ -126,7 +144,7 @@ const LoginScreen = () => {
 
 const styles = StyleSheet.create({
   formStyle: {
-    marginTop: 100,
+    marginTop: 50,
   },
 });
 

@@ -1,54 +1,39 @@
 import React, { useState, useEffect } from "react";
 import * as firebase from "firebase";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 import { Button, Text } from "react-native-elements";
 import Input from "../components/Input";
-
 
 // Make a component
 const LoginScreen = () => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const [error, setError] = useState("");
+  const [msg, setMsg] = useState("  ");
   const [loading, setLoading] = useState(false);
-  const [user, loading1, error1] = useAuthState(firebase.auth());
 
   const onSignIn = async () => {
-    setError(" ");
+    setMsg(" ");
     setLoading(true);
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (err1) {
       try {
         await firebase.auth().createUserWithEmailAndPassword(email, password);
-        setEmail("");
-        setPassword("");
-        setError("");
       } catch (err2) {
-        setError(err2.message);
+        setMsg(err2.message);
       }
     } finally {
       setLoading(false);
-    }
-  };
-
-  const renderAuth = () => {
-    
-    if (user) {
-      return <Text style={{padding: 10}}>{user.email} is login</Text>;
-    } else {
-      return <Text></Text>
+      setEmail("");
+      setPassword("");
     }
   };
 
   const renderButton = () => {
-    if (error1) {
-      return <ActivityIndicator size="large" style={{ marginTop: 30 }} />;
-    }
-
-    return (
+    return loading? 
+    <ActivityIndicator size="large" style={{ marginTop: 15 }} />
+    :(
       <Button
         title="Sign in"
         buttonStyle={{ backgroundColor: "#4AAF4C" }}
@@ -57,6 +42,19 @@ const LoginScreen = () => {
       />
     );
   };
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setMsg(`${user.email} is login`);
+        setEmail(user.email);
+      } else {
+        setMsg(" ");
+        setEmail("");
+      }
+    });
+  }, []);
+
   return (
     <View>
       <View style={styles.formStyle}>
@@ -81,13 +79,12 @@ const LoginScreen = () => {
           onChangeText={(password) => setPassword(password)}
         />
         {renderButton()}
-        {renderAuth()}
-        <Text style={{ padding: 10, fontSize: 16, color: "red" }}>{error}</Text>
+        <Text style={{padding: 10}}>{msg}</Text>
       </View>
       <View style={styles.formStyle}>
         <Button
           title="Sign Out"
-          buttonStyle={{ backgroundColor: "#39579A" }}
+          buttonStyle={{ backgroundColor: "gray" }}
           containerStyle={{ padding: 5 }}
           onPress={()=>firebase.auth().signOut()}
         />
@@ -98,7 +95,7 @@ const LoginScreen = () => {
 
 const styles = StyleSheet.create({
   formStyle: {
-    marginTop: 150,
+    marginTop: 60,
   },
 });
 
