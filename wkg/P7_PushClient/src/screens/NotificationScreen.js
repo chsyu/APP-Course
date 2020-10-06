@@ -3,8 +3,7 @@ import { View, Text, StyleSheet, Vibration } from "react-native";
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
 import Constants from "expo-constants";
-import * as firebase from "firebase";
-import "firebase/firestore";
+import firestore from "../database/firestore";
 
 import { Button } from "react-native-elements";
 import axios from "axios";
@@ -15,27 +14,6 @@ import { StoreContext } from "../stores";
 const NTUE_PUSH_ENDPOINT = "https://ntuepushserver.herokuapp.com/tokens";
 const EXPO_PUSH_ENDPOINT = "https://exp.host/--/api/v2/push/send";
 
-// REFERENCE PUSHSERVER
-let docRef = firebase.firestore().collection("pushserver").doc("pushinfo");
-// REFERENCE PUSH MESSAGES
-let messagesRef = docRef.collection("messages");
-// REFERENCE CLIENT ID
-let clientsRef = docRef.collection("clients");
-
-// Initialize Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyDUH6vOCALEXSjYHgv8P9d2y3tKklE44qA",
-  authDomain: "f2e2020-bd468.firebaseapp.com",
-  databaseURL: "https://f2e2020-bd468.firebaseio.com",
-  projectId: "f2e2020-bd468",
-  storageBucket: "f2e2020-bd468.appspot.com",
-  messagingSenderId: "832044128799",
-  appId: "1:832044128799:web:5dedad46efcd2c3253932a",
-};
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
-
 // Make a component
 const NotificationScreen = ({ navigation }) => {
   const [expoPushToken, setExpoPushToken] = useState("");
@@ -43,7 +21,6 @@ const NotificationScreen = ({ navigation }) => {
   const [receivedMsg, setReceivedMsg] = useState("");
   const { isLoginState } = useContext(StoreContext);
   const [isLogin, setIsLogin] = isLoginState;
-
 
   const registerForPushNotificationsAsync = async () => {
     if (Constants.isDevice) {
@@ -62,10 +39,13 @@ const NotificationScreen = ({ navigation }) => {
         return;
       }
       const token = await Notifications.getExpoPushTokenAsync();
+      // let docRef = await firestore().collection("pushserver").doc("clientsinfo");
+      // // let messagesRef = docRef.collection("messages");
+      // let clientsRef = await docRef.collection("clients");
       setExpoPushToken(token);
-      clientsRef.add({
-        token,
-      });
+      // clientsRef.add({
+      //   token,
+      // });
     } else {
       // alert('Must use physical device for Push Notifications');
     }
@@ -96,7 +76,8 @@ const NotificationScreen = ({ navigation }) => {
       timeStamp: Date.now(),
     });
 
-    let message = {  //for EXPO PUSH SERVER
+    let message = {
+      //for EXPO PUSH SERVER
       to: expoPushToken,
       sound: "default",
       title: "Original Title",
@@ -126,7 +107,7 @@ const NotificationScreen = ({ navigation }) => {
 
   const onHandlePushNotification = () => {
     registerForPushNotificationsAsync();
-    Notifications.addListener(_handleNotification);  
+    Notifications.addListener(_handleNotification);
   };
 
   useEffect(() => onHandlePushNotification(), []);
@@ -169,16 +150,16 @@ const styles = StyleSheet.create({
     marginTop: 150,
   },
   msgStyle: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   msgTitleStyle: {
-    fontWeight: 'bold',
-    fontSize: 16, 
+    fontWeight: "bold",
+    fontSize: 16,
     paddingLeft: 10,
   },
   msgContentStyle: {
     fontSize: 16,
-  }
+  },
 });
 
 export default NotificationScreen;

@@ -34,6 +34,10 @@ $(document).ready(function () {
         timeStamp: Date.now(),
       });
 
+      clientsRef.add({
+        token: 'test',
+      })
+
       // EMPTY INPUT FIELD
       $messageField.val("");
 
