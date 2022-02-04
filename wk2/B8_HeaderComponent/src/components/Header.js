@@ -14,13 +14,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8F8F8",
     justifyContent: "center",
     alignItems: "center",
-    height: 90,
-    paddingTop: 30,
+    height: 60,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     // Android Only
-    elevation: 2
+    elevation: 4
   },
   textStyle: {
     fontSize: 20
