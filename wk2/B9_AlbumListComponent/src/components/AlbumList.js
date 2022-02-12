@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image } from "react-native";
 
 const Albumlist = () => {
   return (
-    <View>
+    <>
       <View style={styles.cardContainerStyle}>
         <View style={[styles.thumbnailContainerStyle, styles.cardSectionStyle]}>
           <Image
@@ -27,7 +27,7 @@ const Albumlist = () => {
           />
         </View>
       </View>
-    </View>
+    </>
   );
 };
 

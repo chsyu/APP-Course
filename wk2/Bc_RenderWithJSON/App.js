@@ -1,15 +1,22 @@
 import React from "react";
-import { View } from "react-native";
+import { StyleSheet, StatusBar, SafeAreaView } from "react-native";
 import Header from "./src/components/Header";
 import AlbumList from "./src/components/AlbumList";
 
 const App = () => {
   return (
-    <View>
+    <SafeAreaView style={styles.container}>
+      <StatusBar />
       <Header />
       <AlbumList />
-    </View>
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default App;

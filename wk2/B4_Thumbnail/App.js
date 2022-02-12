@@ -1,9 +1,10 @@
 import React from "./node_modules/react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, StatusBar, SafeAreaView } from "react-native";
 
 const App = () => {
   return (
-    <View>
+    <SafeAreaView style={{flex: 1}}>
+      <StatusBar />
       <View style={styles.headerStyle}>
         <Text style={styles.textStyle}>Albums</Text>
       </View>
@@ -11,7 +12,7 @@ const App = () => {
         <Image
           style={styles.thumbnailStyle}
           source={{
-            uri: "https://i.imgur.com/K3KJ3w4h.jpg"
+            uri: "https://i.imgur.com/K3KJ3w4h.jpg",
           }}
         />
         <View style={styles.headerContentStyle}>
@@ -19,7 +20,7 @@ const App = () => {
           <Text>Taylor Swift</Text>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -28,29 +29,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#F8F8F8",
     justifyContent: "center",
     alignItems: "center",
-    height: 90,
-    paddingTop: 30,
+    height: 60,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     // Android Only
-    elevation: 2
+    elevation: 2,
   },
   textStyle: {
-    fontSize: 20
+    fontSize: 20,
   },
   thumbnailContainerStyle: {
     flexDirection: "row",
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
   },
   thumbnailStyle: {
     height: 50,
-    width: 50
+    width: 50,
   },
   headerContentStyle: {
     flexDirection: "column",
     justifyContent: "space-around",
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   cardContainerStyle: {
     borderWidth: 1,
@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
     elevation: 1,
     marginLeft: 5,
     marginRight: 5,
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
 });
 
 export default App;

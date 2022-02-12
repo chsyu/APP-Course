@@ -1,30 +1,32 @@
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React from "./node_modules/react";
+import { StyleSheet, Text, View, StatusBar, SafeAreaView } from "react-native";
 
 const App = () => {
   return (
-    <View style={styles.viewStyle}>
-      <Text style={styles.textStyle}>Albums</Text>
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar />
+      <View style={styles.headerStyle}>
+        <Text style={styles.textStyle}>Albums</Text>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  viewStyle: {
+  headerStyle: {
     backgroundColor: "#F8F8F8",
     justifyContent: "center",
     alignItems: "center",
-    height: 90,
-    paddingTop: 30,
+    height: 60,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     // Android Only
-    elevation: 2
+    elevation: 2,
   },
   textStyle: {
-    fontSize: 20
-  }
+    fontSize: 20,
+  },
 });
 
 export default App;
