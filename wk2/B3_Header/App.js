@@ -1,12 +1,16 @@
 import React from "./node_modules/react";
-import { StyleSheet, Text, View, StatusBar, SafeAreaView } from "react-native";
+import {  StyleSheet, Text,
+          View, StatusBar, SafeAreaView 
+      } from "react-native";
 
 const App = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar />
       <View style={styles.headerStyle}>
-        <Text style={styles.textStyle}>Albums</Text>
+        <Text style={styles.textStyle}>
+          Albums
+        </Text>
       </View>
     </SafeAreaView>
   );
