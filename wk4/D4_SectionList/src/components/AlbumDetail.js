@@ -5,12 +5,11 @@ const AlbumDetail = props => {
    let { album } = props;
    return (
       <View style={styles.cardContainerStyle}>
-        <View style={[styles.thumbnailContainerStyle, styles.cardSectionStyle]}>
+        <View style={[styles.thumbnailContainerStyle, 
+                      styles.cardSectionStyle]}>
           <Image
             style={styles.thumbnailStyle}
-            source={{
-              uri: album.thumbnail_image
-            }}
+            source={{uri: album.thumbnail_image}}
           />
           <View style={styles.headerContentStyle}>
             <Text>{album.title}</Text>
@@ -20,9 +19,7 @@ const AlbumDetail = props => {
         <View style={styles.cardSectionStyle}>
           <Image
             style={styles.imageStyle}
-            source={{
-              uri: album.image
-            }}
+            source={{uri: album.image}}
           />
         </View>
       </View>
