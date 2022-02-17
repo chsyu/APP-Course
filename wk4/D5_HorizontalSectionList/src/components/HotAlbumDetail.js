@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, Image} from "react-native";
 const HotAlbumDetail = props => {
    let { album } = props;
    return (
+     <View style={{flexDirection: 'column'}}>
       <View style={styles.cardContainerStyle}>
         <View style={styles.cardSectionStyle}>
           <Image
@@ -11,7 +12,13 @@ const HotAlbumDetail = props => {
             source={{uri: album.image}}
           />
         </View>
-      </View>
+      </View>  
+      <View style={styles.headerContainerStyle}>
+        <Text style={styles.headerTitleStyle}>{album.title}</Text>
+        <Text style={styles.headerContentStyle}>{album.artist}</Text>
+      </View>   
+    </View>
+
   )};
 
 const styles = StyleSheet.create({
@@ -28,6 +35,22 @@ const styles = StyleSheet.create({
     marginRight: 5,
     marginTop: 10
   },
+  headerContainerStyle: {
+    flexDirection: "column",
+    justifyContent: "space-around",
+    paddingLeft: 12,
+    width: 130,
+  },
+  headerTitleStyle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  headerContentStyle: {
+    fontSize: 11,
+    fontWeight: '300',
+    color: "#222",
+    width: '100%'
+  },
   cardSectionStyle: {
     padding: 5,
     backgroundColor: "#fff",
@@ -35,8 +58,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
   imageStyle: {
-    height: 140,
-    width: 140,
+    height: 130,
+    width: 130,
   }
 });
 
