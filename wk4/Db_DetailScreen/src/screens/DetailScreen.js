@@ -28,10 +28,16 @@ const DetailScreen = ({ route }) => {
         />  
       </View>
       <View style={styles.cardContainerStyle}>
-          <Text>{`Artist: ${artist}`}</Text>
-          <Text>{`Title: ${title}`}</Text>
+          <Text>
+            <Text style={{fontWeight:'bold'}}>Artist: </Text>
+            {artist}
+          </Text>
+          <Text>            
+            <Text style={{fontWeight:'bold'}}>Title: </Text>
+            {title}
+          </Text>
           <Text style={{marginTop: 15, fontWeight: 'bold'}}>Descriptions:</Text>
-          <Text>{description}</Text>
+          <Text style={{lineHeight: 18}}>{'\t'}{description}</Text>
       </View>
     </ScrollView>
   );
