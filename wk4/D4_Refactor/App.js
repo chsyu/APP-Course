@@ -1,7 +1,7 @@
 import React from "react";
-import { SafeAreaView, StatusBar, FlatList } from "react-native";
+import { SafeAreaView, StatusBar } from "react-native";
 import Header from "./src/components/Header";
-import AlbumDetail from "./src/components/AlbumDetail";
+import AlbumList from "./src/components/AlbumList";
 import albumData from "./src/json/albums.json";
 
 const App = () => {
@@ -9,11 +9,7 @@ const App = () => {
     <SafeAreaView>
       <StatusBar />
       <Header title={albumData.albumTitle} />
-      <FlatList
-      data={albumData.albumList}
-      renderItem={({ item }) => <AlbumDetail album={item} />}
-      keyExtractor={item => item.title}
-      />
+      <AlbumList list={albumData.albumList} />
     </SafeAreaView>
   );
 };
