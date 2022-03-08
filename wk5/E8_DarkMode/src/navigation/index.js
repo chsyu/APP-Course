@@ -3,7 +3,7 @@ import { NavigationContainer, useTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { StatusBar } from 'native-base';
 import { extendTheme, useColorMode } from 'native-base';
 
 import AlbumScreen from '../screens/AlbumScreen';
@@ -17,18 +17,23 @@ import albumData from "../json/albums.json";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Define the config
-const config = {
-  useSystemColorMode: false,
-  initialColorMode: "dark",
-};
+// // Define the config
+// const config = {
+//   useSystemColorMode: false,
+//   initialColorMode: "light",
+// };
 
-// extend the theme
-export const theme = extendTheme({ config });
+// // extend the theme
+// export const theme = extendTheme({ config });
 
 const Navigation = () => {
+  const { colorMode } = useColorMode();
   return (
     <NavigationContainer theme={MyTheme} >
+      <StatusBar 
+        barStyle={colorMode=="light"?"dark-content":"light-content"} 
+        backgroundColor={colorMode=="light"?"white":"black"}
+      />  
       <MyTabs />
     </NavigationContainer>
   );
@@ -42,7 +47,7 @@ const MyTabs = () => {
     <Tab.Navigator
       initialRouteName="HomeStack"
       screenOptions={{
-        tabBarInactiveTintColor: colorMode=='light'? colors.light500: 'white',
+        tabBarInactiveTintColor: colorMode=='light'? colors.light500: 'gray',
         tabBarActiveTintColor: colorMode=='light'? colors.primary700: 'white',
         tabBarStyle: { backgroundColor: colorMode=='light'? 'white' : 'black' },
         // headerShown: false

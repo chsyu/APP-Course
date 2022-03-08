@@ -12,8 +12,10 @@ const DetailScreen = ({ route }) => {
     description
   } = route.params;
   return (
-    <Center flex={1} _dark={{ bg: "blueGray.900" }}
-    _light={{ bg: "white" }}>
+    <Center 
+      flex={1} _dark={{ bg: "blueGray.900" }}
+      _light={{ bg: "white" }}
+    >
       <ScrollView >
         <AspectRatio w="100%" ratio={16 / 9}>
           <Image
@@ -21,8 +23,8 @@ const DetailScreen = ({ route }) => {
             alt='albumImage'
           />
         </AspectRatio>
-        <Box  _dark={{ bg: "blueGray.900" }}
-        _light={{ bg: "white" }} padding="2" margin="2">
+        <Box shadow={1} _dark={{ bg: "blueGray.900", borderColor: 'blueGray.500', borderWidth: 0.6 }}
+        _light={{ bg: "blueGray.50" }} padding="2" margin="2">
           <Center>
             <Heading pt={1} fontSize="2xl" color='#6099E4'>Discount Now!</Heading>
             <Heading fontSize="4xl">Price: ${price}</Heading>
@@ -34,8 +36,8 @@ const DetailScreen = ({ route }) => {
             Buy Now !
           </Button>   
         </Box>
-        <Box  _dark={{ bg: "blueGray.900" }}
-        _light={{ bg: "white" }} padding="2" margin="2">
+        <Box shadow={1} _dark={{ bg: "blueGray.900", borderColor: 'blueGray.500', borderWidth: 0.6 }}
+        _light={{ bg: "blueGray.50" }} padding="2" margin="2">
             <Text>
               <Text bold>Artist: </Text>
               {artist}
