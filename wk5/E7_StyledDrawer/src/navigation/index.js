@@ -6,10 +6,11 @@ import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItemList,
+  DrawerItem,
 } from '@react-navigation/drawer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { Divider, Image } from 'native-base';
+import { Divider, Image, Input, HStack, Text } from 'native-base';
 
 import AlbumScreen from '../screens/AlbumScreen';
 import DetailScreen from '../screens/DetailScreen';
@@ -32,6 +33,8 @@ const Navigation = () => {
 }
 
 const CustomDrawerContent = (props) => {
+  const { colors } = useTheme();
+
   return (
     <DrawerContentScrollView {...props}>
       <Image
@@ -41,6 +44,22 @@ const CustomDrawerContent = (props) => {
       />
       <DrawerItemList {...props} />
       <Divider my="2"/>
+      <DrawerItem 
+        label="Help"
+        activeBackgroundColor={colors.primary100}
+        activeTintColor={colors.primary700}
+        inactiveTintColor={colors.light500}
+        labelStyle={ {fontSize: 18, fontWeight: '400'} }
+        icon={({ color }) => (
+          <MaterialCommunityIcons name="account-question" color={color} size={26} />
+        )}
+        onPress={()=>alert('Need Help ...')}
+      />
+      <HStack pl="4" alignItems="center">
+        <MaterialCommunityIcons name="magnify" color={colors.light500} size={26} />
+        <Input mx="3" fontSize={18} placeholder="Input Search Text" flex={1} />
+      </HStack>
+
     </DrawerContentScrollView>
   );
 }
