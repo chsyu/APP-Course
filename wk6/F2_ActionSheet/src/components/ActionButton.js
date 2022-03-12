@@ -1,5 +1,7 @@
 import React from 'react';
 import { Box, Pressable, Actionsheet, useDisclose } from 'native-base';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default () => {
@@ -24,9 +26,9 @@ export default () => {
           <Actionsheet.Item>Option 3</Actionsheet.Item>
           <Actionsheet.Item color="red.500">Delete</Actionsheet.Item>
         </Actionsheet.Content>
-        <Actionsheet.Footer>
-          <Actionsheet.Item onPress={onClose}>Cancel</Actionsheet.Item>
-        </Actionsheet.Footer>
+        <Actionsheet.Footer safeAreaBottom={true}>
+          <Actionsheet.Item pl="6" onPress={onClose}>Cancel</Actionsheet.Item>
+        </Actionsheet.Footer>          
       </Actionsheet>
     </>
   );
