@@ -20,7 +20,7 @@ const GeneralAccountScreen = () => {
    }
 
    const nameRegex = /^[a-zA-Z]+\w*$/;
-   const emailRegex =/^\w{3,}@[a-zA-Z_]+?\.[a-zA-Z]{2,5}/
+   const emailRegex =/\w{3,}@[a-zA-Z_]+\.[a-zA-Z]{2,5}/
 
    return (
       <VStack space={2} mt={5} width="80%" alignSelf="center">
@@ -35,9 +35,8 @@ const GeneralAccountScreen = () => {
                variant="underlined" _focus={focusInputStyle} value={name} 
                onChangeText={text => {
                   setName(text);
-                  if (text.match(nameRegex)) {
-                     setNameIsError(false);
-                   } else setNameIsError(true);
+                  if (text.match(nameRegex)) setNameIsError(false)
+                  else setNameIsError(true);
                }}
             />
             <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
@@ -52,9 +51,8 @@ const GeneralAccountScreen = () => {
                variant="underlined" _focus={focusInputStyle} value={email}
                onChangeText={text => {
                   setEmail(text);
-                  if (text.match(emailRegex)) {
-                     setEmailIsError(false);
-                   } else setEmailIsError(true);
+                  if (text.match(emailRegex)) setEmailIsError(false)
+                  else setEmailIsError(true);
                }}
             />
             <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
