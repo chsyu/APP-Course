@@ -7,12 +7,8 @@ export default function TabVAccountSettingScreeniewExample() {
    const [selectedIndex, setSelectedIndex] = useState(0);
    const { colorMode } = useColorMode();
 
-   const handleIndexChange = (index) => {
-      setSelectedIndex(index);
-   };
-
-   const SegmentedContent = ({ index }) => {
-      if (index == 1) {
+   const SegmentedContent = () => {
+      if (selectedIndex == 1) {
          return (
             <Center flex={1}
                _dark={{ bg: "blueGray.900" }}
@@ -29,7 +25,6 @@ export default function TabVAccountSettingScreeniewExample() {
             </Center>
          )
       }
-
    }
 
    return (
@@ -39,19 +34,19 @@ export default function TabVAccountSettingScreeniewExample() {
          <SegmentedControlTab
             values={["General", "Advanced"]}
             tabStyle={{ 
-               marginTop: 10, borderColor: colorMode == "light" ? "gray" : 'black', 
+               marginTop: 10, borderColor: colorMode == "light" ? "gray" : "black", 
                borderWidth: colorMode=="light"? 1: 4,
-               backgroundColor: colorMode == "light" ? "white" : 'black' 
+               backgroundColor: colorMode == "light" ? "white" : "black" 
             }}
             firstTabStyle={{ marginLeft: 20 }}
             lastTabStyle={{ marginRight: 20 }}
-            tabTextStyle={{ fontSize: 16, padding: 5, color: colorMode == "light" ? "gray" : '#88898B', }}
-            activeTabStyle={{ backgroundColor: colorMode == "light" ? "gray" : '#282A2E' }}
+            tabTextStyle={{ fontSize: 16, padding: 5, color: colorMode == "light" ? "gray" : "#88898B", }}
+            activeTabStyle={{ backgroundColor: colorMode == "light" ? "gray" : "#282A2E" }}
             activeTabTextStyle={{ color: "white" }}
             selectedIndex={selectedIndex}
-            onTabPress={(index) => handleIndexChange(index)}
+            onTabPress={(index) => setSelectedIndex(index)}
          />
-         <SegmentedContent index={selectedIndex} />
+         <SegmentedContent />
       </Box>
    );
 }

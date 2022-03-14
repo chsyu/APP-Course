@@ -30,10 +30,14 @@ const Navigation = () => {
   const { colorMode } = useColorMode();
   return (
     <NavigationContainer theme={MyTheme} >
-      <StatusBar 
-        barStyle={colorMode=="light"?"dark-content":"light-content"} 
-        backgroundColor={colorMode=="light"?"white":"black"}
-      />  
+      <StatusBar
+        barStyle={
+          colorMode == "light" ? "dark-content" : "light-content"
+        }
+        backgroundColor={
+          colorMode == "light" ? "white" : "black"
+        }
+      />
       <MyTabs />
     </NavigationContainer>
   );
@@ -47,9 +51,9 @@ const MyTabs = () => {
     <Tab.Navigator
       initialRouteName="HomeStack"
       screenOptions={{
-        tabBarInactiveTintColor: colorMode=='light'? colors.light500: 'gray',
-        tabBarActiveTintColor: colorMode=='light'? colors.primary700: 'white',
-        tabBarStyle: { backgroundColor: colorMode=='light'? 'white' : 'black' },
+        tabBarInactiveTintColor: colorMode == 'light' ? colors.light500 : 'gray',
+        tabBarActiveTintColor: colorMode == 'light' ? colors.primary700 : 'white',
+        tabBarStyle: { backgroundColor: colorMode == 'light' ? 'white' : 'black' },
         // headerShown: false
       }}
     >

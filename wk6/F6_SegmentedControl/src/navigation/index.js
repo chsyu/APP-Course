@@ -57,9 +57,11 @@ const CustomDrawerContent = (props) => {
   const { colors } = useTheme();
   const { colorMode } = useColorMode();
   return (
-    <DrawerContentScrollView {...props} >
+    <DrawerContentScrollView {...props}
+      contentContainerStyle={{ paddingTop: 0 }}
+    >
       <Image
-        h={150}
+        h={250}
         source={require("../images/drawerTile.jpg")}
         alt='albumImage'
       />
