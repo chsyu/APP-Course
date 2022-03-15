@@ -1,0 +1,22 @@
+import 'react-native-gesture-handler';
+import React from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NativeBaseProvider } from 'native-base';
+import { Provider } from "react-redux";
+import store from "./src/store"
+
+import Navigation from './src/navigation';
+
+const App = () => {
+  return (
+    <SafeAreaProvider>
+      <Provider store={store}>
+        <NativeBaseProvider>
+          <Navigation />
+        </NativeBaseProvider>
+      </Provider>
+    </SafeAreaProvider>
+  );
+}
+
+export default App;
