@@ -1,7 +1,7 @@
 import React from 'react';
 import { Platform } from 'react-native';
 import { KeyboardAvoidingView } from 'native-base';
-import { NavigationContainer, useTheme } from '@react-navigation/native';
+import { NavigationContainer, useTheme, Header } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -12,7 +12,7 @@ import {
 } from '@react-navigation/drawer';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StatusBar, Divider, Image, Input, HStack, Box } from 'native-base';
-import { extendTheme, useColorMode } from 'native-base';
+import { useColorMode } from 'native-base';
 
 import AlbumScreen from '../screens/AlbumScreen';
 import DetailScreen from '../screens/DetailScreen';
@@ -29,19 +29,11 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-// // Define the config
-// const config = {
-//   useSystemColorMode: false,
-//   initialColorMode: "light",
-// };
-
-// // extend the theme
-// export const theme = extendTheme({ config });
-
 const Navigation = () => {
   const { colorMode } = useColorMode();
   return (
     <KeyboardAvoidingView
+      keyboardVerticalOffset={Platform.select({ios: 0, android: -500})}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       flex={1}
     >
@@ -259,11 +251,7 @@ const HomeStack = ({ navigation }) => {
   const { colorMode } = useColorMode();
 
   return (
-    <Stack.Navigator
-    // screenOptions={{
-    //   headerShown: false
-    // }}
-    >
+    <Stack.Navigator >
       <Stack.Screen
         name="Home"
         component={AlbumScreen}
