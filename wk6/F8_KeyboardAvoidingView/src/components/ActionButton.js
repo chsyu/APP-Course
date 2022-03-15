@@ -11,7 +11,7 @@ export default () => {
       <Pressable
         onPress={onOpen}
         position="absolute" left={"50%"} right={"50%"} bottom={"5%"} ml={-35}
-        width={70} height={70} borderRadius={300}
+        width={50} height={50} borderRadius={300}
         bg="#0e7490" shadow={2} justifyContent="center" alignItems="center" zIndex={99} 
       >
         <Box>

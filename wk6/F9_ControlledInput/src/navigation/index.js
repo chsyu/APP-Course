@@ -1,5 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
+import { KeyboardAvoidingView } from 'native-base';
 import { NavigationContainer, useTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -40,16 +41,21 @@ const Drawer = createDrawerNavigator();
 const Navigation = () => {
   const { colorMode } = useColorMode();
   return (
-    <NavigationContainer theme={MyTheme} >
-      <StatusBar
-        barStyle={colorMode == "light" ? "dark-content" : "light-content"}
-        backgroundColor={colorMode == "light" ? "white" : "black"}
-      />
-      {Platform.OS == 'ios' ?
-        <MyTabs /> :
-        <MyTabs />
-      }
-    </NavigationContainer>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      flex={1}
+    >
+      <NavigationContainer theme={MyTheme} >
+        <StatusBar
+          barStyle={colorMode == "light" ? "dark-content" : "light-content"}
+          backgroundColor={colorMode == "light" ? "white" : "black"}
+        />
+        {Platform.OS == 'ios' ?
+          <MyTabs /> :
+          <MyTabs />
+        }
+      </NavigationContainer>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -143,7 +149,7 @@ const MyTabs = () => {
         tabBarStyle: { backgroundColor: colorMode == 'light' ? 'white' : 'black' },
         // headerShown: false
       }}
-      >
+    >
       <Tab.Screen
         name="HomeStack"
         component={HomeStack}
