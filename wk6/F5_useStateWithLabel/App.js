@@ -8,7 +8,7 @@ const App = () => {
     return [value, setValue];
   };
   
-  const [count, setCount] = useStateWithLabel(0, "count");
+  const [counter, setCounter] = useStateWithLabel(0, "counter");
   const [colorMode, setColorMode] = useStateWithLabel("light", "colorMode");
   const toggleColorMode = () => {
     if (colorMode == "light") setColorMode("dark");
@@ -18,15 +18,15 @@ const App = () => {
     <NativeBaseProvider>
       <Center flex={1} bg={colorMode == "light" ? "white" : "black"}>
         <HStack space={20}>
-          <Button borderRadius={0} width={70} onPress={() => setCount(count + 1)}>
+          <Button borderRadius={0} width={70} onPress={() => setCounter(counter + 1)}>
             <Text fontSize={40} color={colorMode == "light" ? "white" : "black"}>+</Text>
           </Button>
-          <Button borderRadius={0} width={70} onPress={() => setCount(count - 1)}>
+          <Button borderRadius={0} width={70} onPress={() => setCounter(counter - 1)}>
             <Text fontSize={40} color={colorMode == "light" ? "white" : "black"}>-</Text>
           </Button>
         </HStack>
         <Text fontSize={40} mt={20} color={colorMode == "dark" ? "white" : "black"}>
-          {count}
+          {counter}
         </Text>
         <HStack mt={20} space={8} alignItems="center" >
           <Text fontSize="lg" color={colorMode == "dark" ? "white" : "black"}>

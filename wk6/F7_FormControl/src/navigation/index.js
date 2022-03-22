@@ -19,7 +19,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import DisplaySettingScreen from '../screens/DisplaySettingScreen';
 import AccountSettingScreen from '../screens/AccountSettingScreen';
 import NullScreen from '../screens/NullScreen';
-import MyTheme from '../Theme';
+import { lightTheme, darkTheme } from '../Theme';
 import ActionButton from '../components/ActionButton';
 
 import albumData from "../json/albums.json";
@@ -39,6 +39,7 @@ const Drawer = createDrawerNavigator();
 
 const Navigation = () => {
   const { colorMode } = useColorMode();
+  const MyTheme = colorMode == 'light' ? lightTheme : darkTheme;
   return (
     <NavigationContainer theme={MyTheme} >
       <StatusBar
