@@ -10,7 +10,7 @@ import AlbumScreen from '../screens/AlbumScreen';
 import DetailScreen from '../screens/DetailScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import DisplaySettingScreen from '../screens/DisplaySettingScreen';
-import MyTheme from '../Theme';
+import { lightTheme, darkTheme } from '../Theme';
 
 import albumData from "../json/albums.json";
 
@@ -28,6 +28,7 @@ const Tab = createBottomTabNavigator();
 
 const Navigation = () => {
   const { colorMode } = useColorMode();
+  const MyTheme = colorMode == 'light' ? lightTheme : darkTheme;
   return (
     <NavigationContainer theme={MyTheme} >
       <StatusBar
@@ -51,10 +52,8 @@ const MyTabs = () => {
     <Tab.Navigator
       initialRouteName="HomeStack"
       screenOptions={{
-        tabBarInactiveTintColor: colorMode == 'light' ? colors.light500 : 'gray',
-        tabBarActiveTintColor: colorMode == 'light' ? colors.primary700 : 'white',
-        tabBarStyle: { backgroundColor: colorMode == 'light' ? 'white' : 'black' },
-        // headerShown: false
+        tabBarInactiveTintColor: colors.light400,
+        tabBarActiveTintColor: colors.primary700,
       }}
     >
       <Tab.Screen
@@ -97,11 +96,7 @@ const SettingsStack = () => {
         component={SettingsScreen}
         options={{
           title: "Settings",
-          headerStyle: {
-            backgroundColor: colorMode == 'light' ? 'white' : 'black',
-          },
           headerTitleStyle: {
-            color: colorMode == 'light' ? 'black' : 'white',
             fontWeight: '400',
             fontSize: 20
           },
@@ -112,12 +107,8 @@ const SettingsStack = () => {
         component={DisplaySettingScreen}
         options={{
           title: "Display",
-          headerStyle: {
-            backgroundColor: colorMode == 'light' ? 'white' : 'black',
-          },
           headerTintColor: colorMode == 'light' ? 'black' : 'white',
           headerTitleStyle: {
-            color: colorMode == 'light' ? 'black' : 'white',
             fontWeight: '400',
             fontSize: 20
           },
@@ -141,11 +132,7 @@ const HomeStack = () => {
         component={AlbumScreen}
         options={{
           title: albumData.albumTitle,
-          headerStyle: {
-            backgroundColor: colorMode == 'light' ? 'white' : 'black',
-          },
           headerTitleStyle: {
-            color: colorMode == 'light' ? 'black' : 'white',
             fontWeight: '400',
             fontSize: 20
           },
@@ -156,15 +143,8 @@ const HomeStack = () => {
         component={DetailScreen}
         options={({ route }) => ({
           title: route.params.title,
-          headerStyle: {
-            backgroundColor: '#fff',
-          },
           headerTintColor: colorMode == 'light' ? 'black' : 'white',
-          headerStyle: {
-            backgroundColor: colorMode == 'light' ? 'white' : 'black',
-          },
           headerTitleStyle: {
-            color: colorMode == 'light' ? 'black' : 'white',
             fontWeight: '400',
             fontSize: 20
           },
