@@ -9,8 +9,7 @@ const reducer = combineReducers({
 
 const store = createStore(
   reducer,
-  initialState,
-  compose(applyMiddleware(thunk))
+  applyMiddleware(thunk)
 );
 
 export default store;

@@ -1,8 +1,18 @@
 import React from 'react';
 import { Box, Center, Switch, HStack, Text, useColorMode } from 'native-base';
+import { useDispatch } from "react-redux";
+
+import { setColorMode } from '../redux/actions/settingsActions';
 
 const DisplaySettingScreen = () => {
    const { colorMode, toggleColorMode } = useColorMode();
+   const dispatch = useDispatch();
+
+   const onToggleColorMode = () => {
+      if(colorMode == 'light') dispatch(setColorMode("dark"))
+      else dispatch(setColorMode("light"))
+      toggleColorMode();
+   }
 
    return (
       <Box
@@ -23,7 +33,7 @@ const DisplaySettingScreen = () => {
                <Switch
                   name="light Mode"
                   isChecked={colorMode === "light"}
-                  onToggle={toggleColorMode}
+                  onToggle={onToggleColorMode}
                   accessibilityLabel="display-mode"
                   accessibilityHint="light or dark mode"
                />

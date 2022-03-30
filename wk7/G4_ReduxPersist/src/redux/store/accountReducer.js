@@ -1,4 +1,4 @@
-import { SET_GENERAL_ACCOUNT_INFO } from "../utils/constants";
+import { SET_GENERAL_ACCOUNT_INFO } from "../constants";
 
 const initialState = {
   general: {

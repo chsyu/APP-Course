@@ -3,7 +3,7 @@ import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NativeBaseProvider } from 'native-base';
 import { Provider } from "react-redux";
-import store from "./src/store"
+import store from './src/redux/store';
 
 import Navigation from './src/navigation';
 
