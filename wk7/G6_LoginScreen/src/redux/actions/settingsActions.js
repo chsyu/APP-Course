@@ -1,4 +1,4 @@
-import { SET_COLOR_MODE } from "../utils/constants";
+import { SET_COLOR_MODE } from "../constants";
 
 
 export const setColorMode = (colorMode) => async (dispatch) => {

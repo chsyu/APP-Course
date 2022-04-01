@@ -1,19 +1,21 @@
 import 'react-native-gesture-handler';
 import React from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NativeBaseProvider } from 'native-base';
 import { Provider } from "react-redux";
-import { PersistGate } from 'redux-persist/integration/react';
-
-import { store, persistor } from "./src/store"
+import { store } from './src/redux/store';
 
 import Navigation from './src/navigation';
 
 const App = () => {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Navigation />
-      </PersistGate>
-    </Provider>
+    <SafeAreaProvider>
+      <Provider store={store}>
+        <NativeBaseProvider>
+          <Navigation />
+        </NativeBaseProvider>
+      </Provider>
+    </SafeAreaProvider>
   );
 }
 

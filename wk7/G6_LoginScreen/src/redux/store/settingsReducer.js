@@ -1,4 +1,4 @@
-import { SET_COLOR_MODE } from "../utils/constants";
+import { SET_COLOR_MODE } from "../constants";
 
 const initialState = {
   display: {

@@ -1,4 +1,4 @@
-import { SET_GENERAL_ACCOUNT_INFO, SUCCESS_LOGIN_REQUEST, LOGOUT } from "../utils/constants";
+import { SET_GENERAL_ACCOUNT_INFO, SUCCESS_LOGIN_REQUEST, LOGOUT } from "../constants";
 
 const initialState = {
   general: {
@@ -19,10 +19,10 @@ export const accountReducer = (state = initialState, action) => {
       return { ...state, general: { ...action.payload } };
 
     case SUCCESS_LOGIN_REQUEST:
-      return { ...state, login: { ...state.login, hasLogin: true }};
+      return { ...state, login: { ...state.login, hasLogin: true } };
 
     case LOGOUT:
-      return { ...state, login: { ...state.login, hasLogin: false }};
+      return { ...state, login: { ...state.login, hasLogin: false } };
 
     default:
       return state;

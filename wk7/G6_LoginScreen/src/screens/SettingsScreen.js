@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Center, Button } from "native-base";
 import { useDispatch } from "react-redux";
-import { logout } from "../actions/accountActions"
+import { logout } from "../redux/actions/accountActions"
 import ListItem from "../components/ListItem"
 
 const SettingsScreen = ({ navigation }) => {

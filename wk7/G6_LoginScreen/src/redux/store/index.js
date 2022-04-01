@@ -9,7 +9,6 @@ import { settingsReducer } from "./settingsReducer"
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['general', 'display', 'login']
 };
 
 const reducer = combineReducers({

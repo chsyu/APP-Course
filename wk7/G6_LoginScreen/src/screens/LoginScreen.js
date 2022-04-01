@@ -1,6 +1,6 @@
 import { Box, Text, Heading, VStack, FormControl, Input, Link, Button, HStack, Center, useColorMode } from "native-base";
 import { useDispatch } from "react-redux";
-import { login } from "../actions/accountActions"
+import { login } from "../redux/actions/accountActions"
 
 const LoginScreen = () => {
    const dispatch = useDispatch();

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Center, Switch, HStack, Text, useColorMode } from 'native-base';
 import { useDispatch } from "react-redux";
 
-import { setColorMode } from '../actions/settingsActions';
+import { setColorMode } from '../redux/actions/settingsActions';
 
 const DisplaySettingScreen = () => {
    const { colorMode, toggleColorMode } = useColorMode();

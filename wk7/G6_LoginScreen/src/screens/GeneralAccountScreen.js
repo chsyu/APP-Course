@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollView, FormControl, useColorMode, VStack, Text, Input, WarningOutlineIcon, KeyboardAvoidingView } from 'native-base'
 
-import { setGeneralAccountInfo } from "../actions/accountActions";
+import { setGeneralAccountInfo } from "../redux/actions/accountActions";
 
 
 const GeneralAccountScreen = () => {

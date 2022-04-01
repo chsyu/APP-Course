@@ -1,7 +1,6 @@
-import { SET_GENERAL_ACCOUNT_INFO, SUCCESS_LOGIN_REQUEST, LOGOUT } from "../utils/constants";
+import { SET_GENERAL_ACCOUNT_INFO, SUCCESS_LOGIN_REQUEST, LOGOUT } from "../constants";
 
-
-export const setGeneralAccountInfo = (info) => async (dispatch) => {
+export const setGeneralAccountInfo = (info) => (dispatch) => {
   dispatch({
     type: SET_GENERAL_ACCOUNT_INFO,
     payload: info,
