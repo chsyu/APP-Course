@@ -1,6 +1,6 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { NativeBaseProvider, extendTheme, KeyboardAvoidingView } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
@@ -11,13 +11,18 @@ import MyTheme from '../Theme';
 import { MyTabs } from './MyTabs';
 import { MyDrawer } from './MyDrawers';
 import LoginScreen from '../screens/LoginScreen';
-import { selectLogin } from "../redux/store/accountSlice";
+import { selectHasLogin } from "../redux/store/accountSlice";
 import { selectColorMode } from '../redux/store/settingsSlice';
+import { selectnavigationState } from '../redux/store/navigationSlice';
+import { setNavigationState } from '../redux/store/navigationSlice';
 
 const Navigation = () => {
   const { colorMode } = useColorMode();
   const initialColorMode = useSelector(selectColorMode);
-  const login = useSelector(selectLogin);
+  const hasLogin = useSelector(selectHasLogin);
+  const navigationState = useSelector(selectnavigationState)
+
+  const dispatch = useDispatch();
 
   // Define the config
   const config = {
@@ -36,10 +41,14 @@ const Navigation = () => {
         flex={1}
       >
         {
-          !login.hasLogin
+          !hasLogin
           ? (<LoginScreen />)
           : (
-            <NavigationContainer theme={MyTheme} >
+            <NavigationContainer 
+              theme={MyTheme} 
+              initialState={navigationState}
+              onStateChange={ (state) => dispatch(setNavigationState(state)) }
+            >
               <StatusBar
                 barStyle={colorMode == "light" ? "dark-content" : "light-content"}
                 backgroundColor={colorMode == "light" ? "white" : "black"}

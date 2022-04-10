@@ -6,6 +6,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import accountReducer from "./accountSlice";
 import settingsReducer from "./settingsSlice"
 import contentReducer from "./contentSlice";
+import navigationReducer from "./navigationSlice";
 
 const persistConfig = {
   key: 'root',
@@ -16,6 +17,7 @@ export const store = configureStore({
   reducer: {
     account: persistReducer(persistConfig, accountReducer),
     settings: persistReducer(persistConfig, settingsReducer),
+    navigation: persistReducer(persistConfig, navigationReducer),
     content: persistReducer(persistConfig, contentReducer)
   },
   devTools: process.env.NODE_ENV !== 'production',

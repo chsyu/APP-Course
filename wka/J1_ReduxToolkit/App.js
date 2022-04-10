@@ -20,6 +20,7 @@ const counterSlice = createSlice({
   },
 });
 
+const selectCounter = (state) => state.counter.counterValue;
 const { setCounter } = counterSlice.actions;
 
 // Part2: Combine Reducers and Create a Store
@@ -37,7 +38,7 @@ const store = configureStore({
 // send actions by useDispatch
 const Screen = () => {
   // Get states from store
-  const counterValue = useSelector((state) => state.counter.counterValue);
+  const counterValue = useSelector(selectCounter);
 
   // Define a dispatch to send actions
   const dispatch = useDispatch();

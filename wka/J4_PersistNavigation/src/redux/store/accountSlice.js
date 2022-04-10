@@ -33,7 +33,7 @@ const accountSlice = createSlice({
 
 // export state to global
 export const selectGeneral = (state) => state.account.general;
-export const selectLogin = (state) => state.account.login;
+export const selectHasLogin = (state) => state.account.login.hasLogin;
 
 // export actions to global
 export const { setGeneralAccountInfo, login, logout } = accountSlice.actions;

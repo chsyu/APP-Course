@@ -1,13 +1,14 @@
 import { NativeBaseProvider, Center, HStack, Button, Text } from "native-base";
 import { useDispatch, useSelector } from "react-redux";
 import { setCounter } from "../redux/counterSlice";
+import { selectCounter } from "../redux/counterSlice";
 
 // Then, you can use the redux state management:
 // get states by useSelector
 // send actions by useDispatch
 const HomeScreen = () => {
    // Get states from store
-   const counterValue = useSelector((state) => state.counter.counterValue);
+   const counterValue = useSelector(selectCounter);
  
    // Define a dispatch to send actions
    const dispatch = useDispatch();

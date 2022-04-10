@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 
 // Part1: Define Slice (including reducers and actions)
@@ -15,8 +15,11 @@ const counterSlice = createSlice({
   },
 });
 
+// export state to global
+export const selectCounter = (state) => state.counter.counterValue;
+
 // export actions to global
 export const { setCounter } = counterSlice.actions;
 
-// export states to global
+// export reducer to global
 export default counterSlice.reducer;
