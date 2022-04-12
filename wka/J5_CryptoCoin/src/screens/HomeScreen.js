@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { FlatList,  HStack, VStack, Text, useColorMode } from "native-base";
-import { RefreshControl } from "react-native"
+import { FlatList, HStack, VStack, Text, useColorMode } from "native-base";
+import { RefreshControl, ActivityIndicator } from "react-native"
 import CoinItem from "../components/CoinItem";
 import { getMarketData } from "../services/requests";
 
@@ -30,6 +30,10 @@ const HomeScreen = () => {
     setLoading(false);
   };
 
+  const renderFooter = () => {
+    return loading && <ActivityIndicator />
+  }
+
   useEffect(() => {
     fetchCoins(page);
   }, [page]);
@@ -44,7 +48,9 @@ const HomeScreen = () => {
         data={coins}
         renderItem={({ item }) => <CoinItem marketCoin={item} />}
         keyExtractor={(item) => item.market_cap_rank}
-        onEndReached={() => setPage(page + 1)}
+        ListFooterComponent={renderFooter}
+        onEndReached={() => !loading && setPage(page + 1)}
+        onEndReachedThreshold={0.5}
         refreshControl={
          <RefreshControl
            refreshing={loading}
