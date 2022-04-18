@@ -1,10 +1,7 @@
 import React from "react";
 import { NativeBaseProvider, Center, HStack, Button, Text } from "native-base";
-import { Provider } from "react-redux";
-import { useDispatch, useSelector } from "react-redux";
-import { configureStore } from '@reduxjs/toolkit';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
+import { useDispatch, useSelector, Provider } from "react-redux";
+import { configureStore, createSlice } from '@reduxjs/toolkit';
 
 // Part1: Define Slice (including reducers and actions)
 const initialState = { counterValue: 0 };
@@ -30,9 +27,6 @@ const store = configureStore({
   },
 });
 
-
-
-
 // Then, you can use the redux state management:
 // get states by useSelector
 // send actions by useDispatch
@@ -45,7 +39,7 @@ const Screen = () => {
 
   return (
     <NativeBaseProvider>
-      <Center flex={1} bg={"white"}>
+      <Center flex={1}>
         <HStack space={20}>
           <Button borderRadius={0} width={70} onPress={() => dispatch(setCounter(counterValue + 1))}>
             <Text fontSize={40} color="white">+</Text>
@@ -54,7 +48,7 @@ const Screen = () => {
             <Text fontSize={40} color="white">-</Text>
           </Button>
         </HStack>
-        <Text fontSize={40} mt={20} color={"black"}>
+        <Text fontSize={40} mt={20}>
           {counterValue}
         </Text>
       </Center>
@@ -70,6 +64,5 @@ const App = () => {
     </Provider>
   );
 };
-
 
 export default App;

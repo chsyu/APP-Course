@@ -7,7 +7,6 @@ const initialState = { counterValue: 0 };
 const counterSlice = createSlice({
   name: 'counter',
   initialState,
-  // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     setCounter: (state, action) => {
       state.counterValue = action.payload;

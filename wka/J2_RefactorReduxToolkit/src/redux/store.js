@@ -10,4 +10,5 @@ const store = configureStore({
  });
 
 //  export store to global
- export default store;
+export default store;
+
