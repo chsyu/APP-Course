@@ -88,7 +88,7 @@ export default function App() {
       <NativeBaseProvider>
         <Box flex={1}>
           <MapView
-            region={region}
+            initialRegion={region}
             style={{ flex: 1 }}
             showsTraffic
             // onRegionChangeComplete={onRegionChangeComplete}
@@ -102,7 +102,7 @@ export default function App() {
                 title={site.name}
                 description={site.address}
               >
-                <Center bg="white" borderRadius={60} w={10} h={10} borderWidth={2} borderColor="black">
+                <Center bg="white" borderRadius={60} p={1} borderWidth={2} borderColor="black">
                   <Icon name={"bus"} size={30} color="black" />
                 </Center>
               </Marker>

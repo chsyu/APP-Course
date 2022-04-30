@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { Platform } from "react-native";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -17,6 +17,8 @@ export default function App() {
   const [metro, setMetro] = useState(metroJson);
   const [ubike, setUbike] = useState([]);
   const [zoomRatio, setZoomRatio] = useState(1);
+
+  const mapRef = useRef(null);
 
   const [region, setRegion] = useState({
     longitude: 121.544637,
@@ -47,6 +49,13 @@ export default function App() {
       },
     });
   };
+
+  const onRegionChangeComplete = (rgn) => {
+    mapRef.current = rgn;
+    if (rgn.longitudeDelta > 0.02) {
+      setZoomRatio(0.02 / rgn.longitudeDelta);
+    }
+  }
 
   const getLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -80,11 +89,11 @@ export default function App() {
       <NativeBaseProvider>
         <Box flex={1}>
           <MapView
-            region={region}
+            initialRegion={region}
             style={{ flex: 1 }}
             showsTraffic
-            provider="google"
-            customMapStyle={mapStyle}
+            ref={mapRef}
+            onRegionChangeComplete={onRegionChangeComplete}
           >
             {metro.map((site) => (
               <Marker
@@ -93,8 +102,8 @@ export default function App() {
                 title={site.name}
                 description={site.address}
               >
-                <Center bg="white" borderRadius={60} w={10} h={10} borderWidth={2} borderColor="black">
-                  <Icon name={"bus"} size={30*zoomRatio} color="black" />
+                <Center bg="white" borderRadius={60} p={1 * zoomRatio} borderWidth={2} borderColor="black">
+                  <Icon name={"bus"} size={30 * zoomRatio} color="black" />
                 </Center>
               </Marker>
             ))}
@@ -108,9 +117,9 @@ export default function App() {
                 title={`${site.sna} ${site.sbi}/${site.tot}`}
                 description={site.ar}
               >
-                <Center bg="white" borderRadius={60} w={10} h={10} borderWidth={2} borderColor="black">
-                  <Icon name={"bicycle"} size={30*zoomRatio} color="black" />
-                </Center>                
+                <Center bg="white" borderRadius={60} p={1 * zoomRatio} borderWidth={2} borderColor="black">
+                  <Icon name={"bicycle"} size={30 * zoomRatio} color="black" />
+                </Center>
               </Marker>
             ))}
           </MapView>
