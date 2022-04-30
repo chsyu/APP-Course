@@ -1,26 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Platform, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import Constants from "expo-constants";
-import * as Location from "expo-location";
-import { Icon } from "react-native-elements";
+import { useState, useEffect } from 'react';
+import MapView, { Marker } from 'react-native-maps';
+import { Platform } from "react-native";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NativeBaseProvider, Box } from 'native-base';
+import * as Location from 'expo-location';
+import * as Device from "expo-device";
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import mapStyle from "./styles/mapStyle.json"
 
-const App = () => {
+export default function App() {
+  const [msg, setMsg] = useState("Waiting...");
+  const [onCurrentLocation, setOnCurrentLocation] = useState(false);
+
   const [region, setRegion] = useState({
     longitude: 121.544637,
     latitude: 25.024624,
     longitudeDelta: 0.01,
     latitudeDelta: 0.02,
-  });
+  })
   const [marker, setMarker] = useState({
     coord: {
       longitude: 121.544637,
       latitude: 25.024624,
     },
-    name: "國立臺北教育大學",
-    address: "台北市和平東路二段134號",
+    // name: "國立臺北教育大學",
+    // address: "台北市和平東路二段134號",
   });
-  const [onCurrentLocation, setOnCurrentLocation] = useState(false);
 
   const onRegionChangeComplete = (rgn) => {
     if (
@@ -28,6 +34,13 @@ const App = () => {
       Math.abs(rgn.longitude - region.longitude) > 0.0002
     ) {
       setRegion(rgn);
+      setMarker({
+        ...marker,
+        coord: {
+          longitude: rgn.longitude,
+          latitude: rgn.latitude,
+        },
+      });
       setOnCurrentLocation(false);
     }
   };
@@ -48,71 +61,66 @@ const App = () => {
   };
 
   const getLocation = async () => {
-    let { status } = await Location.requestPermissionsAsync();
-    if (status !== "granted") {
-      setMsg("Permission to access location was denied");
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      setMsg('Permission to access location was denied');
       return;
     }
     let location = await Location.getCurrentPositionAsync({});
     setRegionAndMarker(location);
     setOnCurrentLocation(true);
-  };
+  }
 
   useEffect(() => {
-    if (Platform.OS === "android" && !Constants.isDevice) {
-      setErrorMsg(
+    if (Platform.OS === "android" && !Device.isDevice) {
+      setMsg(
         "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
       );
-    } else {
-      getLocation();
+      return
     }
+    getLocation();
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
-      <MapView
-        region={region}
-        style={{ flex: 1 }}
-        showsTraffic
-        provider="google"
-        onRegionChangeComplete={onRegionChangeComplete}
-      >
-        <Marker
-          coordinate={marker.coord}
-          title={marker.name}
-          description={marker.address}
-        >
-          <View style={styles.ring} />
-        </Marker>
-      </MapView>
-      {!onCurrentLocation && (
-        <Icon
-          raised
-          name="ios-locate"
-          type="ionicon"
-          color="black"
-          containerStyle={{
-            backgroundColor: "#517fa4",
-            position: "absolute",
-            right: 20,
-            bottom: 40,
-          }}
-          onPress={getLocation}
-        />
-      )}
-    </View>
+    <SafeAreaProvider>
+      <NativeBaseProvider>
+        <Box flex={1}>
+          <MapView
+            region={region}
+            style={{ flex: 1 }}
+            showsTraffic
+            onRegionChangeComplete={onRegionChangeComplete}
+            provider="google"
+            customMapStyle={mapStyle}
+          >
+            <Marker
+              coordinate={marker.coord}
+              title={marker.name}
+              description={marker.address}
+            >
+              <Icon name={"map-marker"} size={60} color="#B12A5B" />
+            </Marker>
+          </MapView>
+          {!onCurrentLocation && (
+            <Box 
+              bg="white"
+              borderRadius={60}
+              position="absolute"
+              shadow="2"
+              zIndex={99}
+              right={5}
+              bottom={5}
+            >
+              <Ionicons name={"ios-locate"}
+                size={60}
+                color="black"
+                onPress={getLocation}
+              />
+            </Box>
+
+          )}
+        </Box>
+      </NativeBaseProvider>
+    </SafeAreaProvider>
   );
-};
-
-const styles = StyleSheet.create({
-  ring: {
-    width: 40,
-    height: 40,
-    borderRadius: 40,
-    backgroundColor: "rgba(130,4,150, 0.3)",
-    borderWidth: 5,
-    borderColor: "rgba(130,4,150, 0.5)",
-  },
-});
-
-export default App;
+}

@@ -1,19 +1,26 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import MapView from 'react-native-maps';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NativeBaseProvider, Box } from 'native-base';
 
 export default function App() {
+  let region = {
+    longitude: 121.544637,
+    latitude: 25.024624,
+    longitudeDelta: 0.01,
+    latitudeDelta: 0.02,
+  };
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
+    <SafeAreaProvider>
+      <NativeBaseProvider>
+        <Box flex={1}>
+          <MapView
+            region={region}
+            style={{ flex: 1 }}
+            showsTraffic
+            mapType='hybrid'
+          />
+        </Box>
+      </NativeBaseProvider>
+    </SafeAreaProvider>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};

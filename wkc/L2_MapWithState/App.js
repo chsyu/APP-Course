@@ -1,24 +1,28 @@
-import React, { useState } from "react";
-import { View } from "react-native";
-import MapView from "react-native-maps";
+import { useState } from 'react';
+import MapView from 'react-native-maps';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NativeBaseProvider, Box } from 'native-base';
 
-const App = () => {
+export default function App() {
   const [region, setRegion] = useState({
     longitude: 121.544637,
     latitude: 25.024624,
     longitudeDelta: 0.01,
     latitudeDelta: 0.02,
-  });
+  })
+
   return (
-    <View style={{ flex: 1 }}>
-      <MapView
-        region={region}
-        style={{ flex: 1 }}
-        showsTraffic
-        provider="google"
-      />
-    </View>
+    <SafeAreaProvider>
+      <NativeBaseProvider>
+        <Box flex={1}>
+          <MapView
+            region={region}
+            style={{ flex: 1 }}
+            showsTraffic
+            mapType='hybrid'
+          />
+        </Box>
+      </NativeBaseProvider>
+    </SafeAreaProvider>
   );
 };
-
-export default App;

@@ -1,15 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { Platform } from "react-native";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NativeBaseProvider, Box } from 'native-base';
-import * as Location from 'expo-location';
-import * as Device from "expo-device";
 import Icon from 'react-native-vector-icons/FontAwesome';
-import mapStyle from "./styles/mapStyle.json"
 
 export default function App() {
-  const [msg, setMsg] = useState("Waiting...");
   const [region, setRegion] = useState({
     longitude: 121.544637,
     latitude: 25.024624,
@@ -21,8 +16,8 @@ export default function App() {
       longitude: 121.544637,
       latitude: 25.024624,
     },
-    // name: "國立臺北教育大學",
-    // address: "台北市和平東路二段134號",
+    name: "國立臺北教育大學",
+    address: "台北市和平東路二段134號",
   });
 
   const onRegionChangeComplete = (rgn) => {
@@ -41,45 +36,6 @@ export default function App() {
     }
   };
 
-  const setRegionAndMarker = (location) => {
-    setRegion({
-      ...region,
-      longitude: location.coords.longitude,
-      latitude: location.coords.latitude,
-    });
-    setMarker({
-      ...marker,
-      coord: {
-        longitude: location.coords.longitude,
-        latitude: location.coords.latitude,
-      },
-    });
-  };
-
-  const getLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      setMsg('Permission to access location was denied');
-      return;
-    }
-
-    Location.watchPositionAsync({
-      accuracy: Location.Accuracy.High,
-      distanceInterval: 2000,
-      timeInterval: 1000
-    }, (loc) => setRegionAndMarker(loc));
-  }
-
-  useEffect(() => {
-    if (Platform.OS === "android" && !Device.isDevice) {
-      setMsg(
-        "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
-      );
-      return
-    }
-    getLocation();
-  }, []);
-
   return (
     <SafeAreaProvider>
       <NativeBaseProvider>
@@ -89,8 +45,6 @@ export default function App() {
             style={{ flex: 1 }}
             showsTraffic
             onRegionChangeComplete={onRegionChangeComplete}
-            provider="google"
-            customMapStyle={mapStyle}
           >
             <Marker
               coordinate={marker.coord}
@@ -104,4 +58,4 @@ export default function App() {
       </NativeBaseProvider>
     </SafeAreaProvider>
   );
-}
+};
