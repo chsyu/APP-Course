@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { Platform } from "react-native";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -17,7 +17,6 @@ export default function App() {
   const [metro, setMetro] = useState(metroJson);
   const [ubike, setUbike] = useState([]);
   const [zoomRatio, setZoomRatio] = useState(1);
-  const mapRef = useRef(null)
 
   const [region, setRegion] = useState({
     longitude: 121.544637,
@@ -76,19 +75,6 @@ export default function App() {
     getUbikeData();
   }, []);
 
-  useEffect(() => {
-    // receive a point on the map through props
-    if (location) {
-      console.log('change location, location: ', location)
-      mapRef.current.animateToRegion({
-        latitude: location.latitude,
-        longitude: location.longitude,
-        latitudeDelta: 0.2,
-        longitudeDelta: 0.2,
-      })
-    }
-  }, [location])
-
   return (
     <SafeAreaProvider>
       <NativeBaseProvider>
@@ -99,7 +85,6 @@ export default function App() {
             showsTraffic
             provider="google"
             customMapStyle={mapStyle}
-            ref={mapRef}
           >
             {metro.map((site) => (
               <Marker
