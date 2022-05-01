@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { Platform } from "react-native";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -17,8 +17,6 @@ export default function App() {
   const [metro, setMetro] = useState(metroJson);
   const [ubike, setUbike] = useState([]);
   const [zoomRatio, setZoomRatio] = useState(1);
-
-  const mapRef = useRef(null);
 
   const [region, setRegion] = useState({
     longitude: 121.544637,
@@ -51,10 +49,11 @@ export default function App() {
   };
 
   const onRegionChangeComplete = (rgn) => {
-    mapRef.current = rgn;
-    if (rgn.longitudeDelta > 0.02) {
+    console.log(0.02 / rgn.longitudeDelta)
+    if (rgn.longitudeDelta > 0.02)
       setZoomRatio(0.02 / rgn.longitudeDelta);
-    }
+    else
+      setZoomRatio(1);
   }
 
   const getLocation = async () => {
@@ -91,11 +90,10 @@ export default function App() {
           <MapView
             initialRegion={region}
             style={{ flex: 1 }}
-            showsTraffic
-            ref={mapRef}
+            showsTraffic          
             onRegionChangeComplete={onRegionChangeComplete}
           >
-            {metro.map((site) => (
+            {(zoomRatio > 0.14) && metro.map((site) => (
               <Marker
                 coordinate={{ latitude: site.latitude, longitude: site.longitude }}
                 key={`${site.id}${site.line}`}
@@ -107,7 +105,7 @@ export default function App() {
                 </Center>
               </Marker>
             ))}
-            {ubike.map((site) => (
+            {(zoomRatio > 0.14) && ubike.map((site) => (
               <Marker
                 coordinate={{
                   latitude: Number(site.lat),
