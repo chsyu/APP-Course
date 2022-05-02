@@ -102,7 +102,7 @@ export default function App() {
                 title={site.name}
                 description={site.address}
               >
-                <Center bg="white" borderRadius={60} p={1} borderWidth={2} borderColor="black">
+                <Center bg="white" borderRadius={60} p={2} borderWidth={2} borderColor="black">
                   <Icon name={"bus"} size={30} color="black" />
                 </Center>
               </Marker>

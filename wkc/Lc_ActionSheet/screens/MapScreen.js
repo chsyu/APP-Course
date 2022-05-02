@@ -96,7 +96,7 @@ export default function MapScreen() {
                   title={site.name}
                   description={site.address}
                >
-                  <Center bg="white" borderRadius={60} p={1 * zoomRatio} borderWidth={2} borderColor="black">
+                  <Center bg="white" borderRadius={60} p={3 * zoomRatio} borderWidth={2 * zoomRatio} borderColor="black">
                      <Icon name={"bus"} size={30 * zoomRatio} color="black" />
                   </Center>
                </Marker>

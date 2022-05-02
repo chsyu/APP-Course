@@ -117,7 +117,6 @@ export default function App() {
                 onPress={getLocation}
               />
             </Box>
-
           )}
         </Box>
       </NativeBaseProvider>

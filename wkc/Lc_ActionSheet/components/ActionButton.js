@@ -10,7 +10,7 @@ export default (props) => {
   return (
     <>
       <Pressable onPress={onOpen}>
-        <Center bg="white" borderRadius={60} p={1 * zoomRatio} borderWidth={2} borderColor="black">
+        <Center bg="white" borderRadius={60} p={3 * zoomRatio} borderWidth={2 * zoomRatio} borderColor="black">
           <Icon name={"bicycle"} size={30 * zoomRatio} color="black" />
         </Center>
       </Pressable>
