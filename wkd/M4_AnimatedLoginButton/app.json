@@ -1,15 +1,14 @@
 {
   "expo": {
-    "name": "wkd",
-    "slug": "wkd",
+    "name": "wk1proj",
+    "slug": "wk1proj",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#6043A0"
+      "backgroundColor": "#29303A"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,7 +22,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#6043A0"
+        "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
