@@ -1,51 +1,66 @@
 import React, { useCallback } from 'react';
-import { Center, Pressable } from 'native-base';
+import { Center, Pressable, Box } from 'native-base';
 import Animated, {
    useSharedValue,
    withTiming,
    useAnimatedProps,
-   useDerivedValue
+   useAnimatedStyle,
+   useDerivedValue,
+   Easing,
 } from 'react-native-reanimated';
 import { ReText } from 'react-native-redash';
 
 import Svg, { Circle } from 'react-native-svg';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const AnimatedBox = Animated.createAnimatedComponent(Box);
 
-export default function CircleCounter({ R, count, stroke_color }) {
-   const CIRCLE_LENGTH = Math.ceil(R * 2 * Math.PI);
-   const width = 2.5 * R;
-   const height = 2.5 * R;
-   const fontSize = R * 0.7;
+export default function CircleCounter({ size, count, stroke_color }) {
+   const CIRCLE_LENGTH = Math.ceil(size * 2 * Math.PI);
+   const R = size;
+   const width = 2.5 * size;
+   const height = 2.5 * size;
+   const fontSize = size * 0.6;
    const BACKGROUND_STROKE_COLOR = 'lightgray';
-   // const stroke_color = '#444B6F';
-   const strokeWidth = 20;
+   const strokeWidth = size * 0.4;
 
    const progress = useSharedValue(0);
+   const _width = useSharedValue(0);
 
    const animatedProps = useAnimatedProps(() => ({
       strokeDashoffset: CIRCLE_LENGTH * (1 - progress.value),
    }));
+
+   const animatedWidth = useAnimatedStyle(() =>( {
+      width: `${_width.value}%`
+   }))
 
    const progressText = useDerivedValue(() => {
       return `${Math.floor(progress.value * count)}`;
    });
 
    const onPress = useCallback(() => {
-      progress.value = withTiming(progress.value > 0 ? 0 : 1, { duration: 1000 });
+      progress.value = withTiming(progress.value > 0 ? 0 : 1, { duration: 1000, easing: Easing.out(Easing.exp), });
+      _width.value = withTiming(_width.value > 0 ? 0 : 30, {duration: 1000, easing: Easing.out(Easing.exp),});
    }, []);
 
    return (
       <Pressable w={width} h={height} onPress={onPress}>
-         <Center flex={1}>
+         <Center flex={1} shadow="2">
             <ReText
                style={{
                   fontSize: fontSize,
+                  fontWeight: '200',
                   color: stroke_color,
                   textAlign: 'center',
                   position: 'absolute',
                }}
                text={progressText}
+            />
+            <AnimatedBox 
+               bg={stroke_color} h={2} width={"30%"} 
+               position="absolute" bottom={9}
+               style={animatedWidth}
             />
             <Svg style={{ position: 'absolute' }}>
                <Circle
