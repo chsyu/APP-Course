@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { VictoryPie } from "victory-native";
 
+const defaultData = [
+  { x: "Cats", y: 0 },
+  { x: "Dogs", y: 0 },
+  { x: "Birds", y: 100 },
+];
+
 const sampleData = [
   { x: "Cats", y: 35 },
   { x: "Dogs", y: 40 },
