@@ -1,4 +1,3 @@
-import React, { useCallback } from 'react';
 import { Center, Pressable, Box } from 'native-base';
 import Animated, {
    useSharedValue,
@@ -39,10 +38,10 @@ export default function CircleCounter({ size, count, stroke_color }) {
       return `${Math.floor(progress.value * count)}`;
    });
 
-   const onPress = useCallback(() => {
+   const onPress = () => {
       progress.value = withTiming(progress.value > 0 ? 0 : 1, { duration: 1000, easing: Easing.out(Easing.exp), });
       _width.value = withTiming(_width.value > 0 ? 0 : 30, {duration: 1000, easing: Easing.out(Easing.exp),});
-   }, []);
+   };
 
    return (
       <Pressable w={width} h={height} onPress={onPress}>

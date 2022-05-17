@@ -31,7 +31,6 @@ const App = () => {
       }),
       200
     );
-    return () => cancelAnimation(rotation);
   }, []);
 
   return (

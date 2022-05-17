@@ -30,12 +30,6 @@ const Colors = {
    },
 };
 
-const SWITCH_TRACK_COLOR = {
-   true: 'rgba(256, 0, 256, 0.2)',
-   false: 'rgba(0,0,0,0.1)',
-};
-
-
 export default function App() {
    const { colorMode, toggleColorMode } = useColorMode();
 

@@ -1,4 +1,3 @@
-import React, { useCallback } from 'react';
 import { Dimensions } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NativeBaseProvider, Button, Center } from 'native-base';
@@ -34,9 +33,9 @@ export default function App() {
     return `${Math.floor(progress.value * 100)}`;
   });
 
-  const onPress = useCallback(() => {
+  const onPress = () => {
     progress.value = withTiming(progress.value > 0 ? 0 : 1, { duration: 2000 });
-  }, []);
+  };
 
   return (
     <SafeAreaProvider>

@@ -30,22 +30,21 @@ export default function App() {
     initialMode.value = false;
   }, []);
 
-  const [items, setItems] = useState(
-    new Array(5).fill(0).map((_, index) => ({ id: index }))
-  );
+  const [items, setItems] = useState([{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }]);
 
-  const onAdd = useCallback(() => {
-    setItems((currentItems) => {
-      const nextItemId = (currentItems[currentItems.length - 1]?.id ?? 0) + 1;
-      return [...currentItems, { id: nextItemId }];
-    });
-  }, []);
+  const onAdd = () => {
+    setItems([...items, { 
+      id: items[items.length - 1]?.id >= 0 
+      ? (items[items.length - 1].id + 1) 
+      : 0 
+    }])
+  }
 
-  const onDelete = useCallback((itemId) => {
+  const onDelete = (itemId) => {
     setItems((currentItems) => {
       return currentItems.filter((item) => item.id !== itemId);
     });
-  }, []);
+  };
 
   return (
     <SafeAreaProvider>

@@ -19,15 +19,11 @@ export default function App() {
   });
 
   const gestureHandler = useAnimatedGestureHandler({
-    onStart: (_, ctx) => {
-      ctx.offsetX = translateX.value;
-      ctx.offsetY = translateY.value;
-    },
-    onActive: (event, ctx) => {
+    onActive: (event) => {
       translateX.value = event.translationX + translateXOLD.value;
       translateY.value = event.translationY + translateYOLD.value;
     },
-    onEnd: (_) => {
+    onEnd: (event) => {
       // translateX.value = withSpring(0);
       // translateY.value = withSpring(0);
       translateXOLD.value = translateX.value;

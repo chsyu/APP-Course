@@ -6,11 +6,9 @@ import Animated, { Easing, useSharedValue, useAnimatedStyle, withTiming, withSpr
 
 export default function App() {
   const rotate = useSharedValue('0deg');
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
-      transform: [{ rotate: rotate.value }],
-    };
-  });
+  const animatedStyles = useAnimatedStyle(() => ({
+      transform: { rotate: rotate.value },
+    }));
 
   useEffect(() => {
     rotate.value = withTiming("360deg", {
@@ -25,7 +23,8 @@ export default function App() {
         <Center flex={1}>
           <Pressable
             onPress={() => {
-              rotate.value = withSpring(rotate.value == "0deg" ? "360deg" : "0deg")
+              rotate.value = 
+                withSpring(rotate.value == "0deg" ? "360deg" : "0deg")
             }}
           >
             <Animated.Image
