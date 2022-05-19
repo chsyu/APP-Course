@@ -7,7 +7,7 @@ import Animated, { Easing, useSharedValue, useAnimatedStyle, withTiming, withSpr
 export default function App() {
   const rotate = useSharedValue('0deg');
   const animatedStyles = useAnimatedStyle(() => ({
-      transform: { rotate: rotate.value },
+      transform: [{ rotate: rotate.value }],
     }));
 
   useEffect(() => {
