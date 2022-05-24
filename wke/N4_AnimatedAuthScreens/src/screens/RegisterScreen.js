@@ -6,10 +6,10 @@ import {
    VStack,
    FormControl,
    Input,
-   Link,
    Button,
    HStack,
    Center,
+   useColorMode,
    Pressable
 } from "native-base";
 import Animated, {
@@ -31,6 +31,7 @@ const RegisterScreen = () => {
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const [name, setName] = useState('');
+   const { colorMode } = useColorMode();
    const rotation = useSharedValue(0);
    const btnWidth = useSharedValue("100%");
    const animatedSpinnerStyles = useAnimatedStyle(() => {
@@ -132,7 +133,7 @@ const RegisterScreen = () => {
                   </Text>
                   <Pressable onPress={goToLogin}>
                      <Text
-                        color="indigo.500"
+                        color={colorMode == 'dark'? "indigo.300" : "indigo.500"}
                         fontWeight="medium"
                         fontSize="xs"
                      >Sign In</Text>

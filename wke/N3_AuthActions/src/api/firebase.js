@@ -1,11 +1,10 @@
-import { initializeApp } from 'firebase/app';
-import {
-  getAuth,
-  onAuthStateChanged,
-  FacebookAuthProvider,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
+import { getApps, getApp, initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  signOut,
 } from 'firebase/auth';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getReactNativePersistence, initializeAuth } from 'firebase/auth/react-native';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBBixpAodVLz3GxDGQooTYYjUUXeyu9bzA",
@@ -13,28 +12,40 @@ const firebaseConfig = {
   projectId: "f2e2021-44d38",
   storageBucket: "f2e2021-44d38.appspot.com",
   messagingSenderId: "657878254604",
-  appId: "1:657878254604:web:9eab06c1a773a9bcc81a29"
+  appId: "1:657878254604:web:50f895d5225f3006c81a29"
 };
 
+const app_length = getApps().length > 0;
+
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app = app_length ? getApp() : initializeApp(firebaseConfig);
 
 //REFERENCE AUTH
-const auth = getAuth(app);
+const auth = app_length ? getAuth(app) :
+  initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage)
+  });
 
-export const signInWithEmailPassword = async (email, password) => {
-  return await signInWithEmailAndPassword(email, password);
-}
-
-export const registerWithEmailPassword = async (email, password, name) => {
-  await createUserWithEmailAndPassword(email, password);
-  const user = auth.currentUser;
-  await user.updateProfile({
-    displayName: name,
-  })
+export const login = async ({email, password}) => {
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
   return user;
 }
 
-export const signOut = () => {
-  // auth.signOut();
+export const register = async ({name, email, password}) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    await updateProfile(auth.currentUser, {
+      displayName: name,
+    })
+    return user;
+  } catch (e) {
+    console.log('error ...')
+    console.log(e)
+  }
+}
+
+export const logout = () => {
+  signOut(auth);
 }

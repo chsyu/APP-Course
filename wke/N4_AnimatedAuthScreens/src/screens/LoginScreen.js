@@ -10,6 +10,7 @@ import {
    HStack,
    Center,
    Pressable,
+   useColorMode,
 } from "native-base";
 import Animated, {
    useAnimatedStyle,
@@ -28,6 +29,7 @@ const LoginScreen = () => {
    const [loginRequest, setLoginRequest] = useState(false);
    const [email, setEmail] = useState();
    const [password, setPassword] = useState();
+   const { colorMode } = useColorMode();
 
    const rotation = useSharedValue(0);
    const btnWidth = useSharedValue("100%");
@@ -124,7 +126,7 @@ const LoginScreen = () => {
                   </Text>
                   <Pressable onPress={goToRegister}>
                      <Text
-                        color="indigo.500"
+                        color={colorMode == 'dark'? "indigo.300" : "indigo.500"}
                         fontWeight="medium"
                         fontSize="xs"
                      >Sign Up</Text>

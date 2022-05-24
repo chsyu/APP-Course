@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { login, register } from "../api/firebase";
+import { login, logout, register } from "../api/firebase";
 
 // Define async functions
 const loginAsync = createAsyncThunk(
    'account/login',
-   async () => {
-      const { data } = await login();
+   async ({ email, password }) => {
+      const { data } = await login({ email, password });
       // The value we return becomes the `fulfilled` action payload
       return data;
    }
@@ -13,8 +13,8 @@ const loginAsync = createAsyncThunk(
 
 const registerAsync = createAsyncThunk(
    'account/register',
-   async () => {
-      const { data } = await register();
+   async ({ name, email, password }) => {
+      const { data } = await register({ name, email, password });
       // The value we return becomes the `fulfilled` action payload
       return data;
    }
@@ -31,7 +31,6 @@ const initialState = {
    login: {
       hasLogin: false,
       hasAccount: true,
-      testState: "testState"
    },
    status: 'idle',
 };
@@ -44,7 +43,8 @@ const accountSlice = createSlice({
       setGeneralAccountInfo: (state, action) => {
          state.general = action.payload;
       },
-      logout: (state) => {
+      signOut: (state) => {
+         logout();
          state.login.hasLogin = false;
       },
       gotoRegister: (state) => {
@@ -56,20 +56,20 @@ const accountSlice = createSlice({
    },
    extraReducers: (builder) => {
       builder
-      .addCase(loginAsync.pending, (state) => {
-         state.status = 'loading';
-      })
-      .addCase(loginAsync.fulfilled, (state, action) => {
-         state.status = 'idle';
-         state.login.hasLogin = true;
-      })
-      .addCase(registerAsync.pending, (state) => {
-         state.status = 'loading';
-      })
-      .addCase(registerAsync.fulfilled, (state, action) => {
-         state.status = 'idle';
-         state.login.hasLogin = true;
-      })
+         .addCase(loginAsync.pending, (state) => {
+            state.status = 'loading';
+         })
+         .addCase(loginAsync.fulfilled, (state, action) => {
+            state.status = 'idle';
+            state.login.hasLogin = true;
+         })
+         .addCase(registerAsync.pending, (state) => {
+            state.status = 'loading';
+         })
+         .addCase(registerAsync.fulfilled, (state, action) => {
+            state.status = 'idle';
+            state.login.hasLogin = true;
+         })
    },
 });
 
@@ -78,10 +78,11 @@ export const selectGeneral = (state) => state.account.general;
 export const selectLogin = (state) => state.account.login;
 
 // export actions to global
-export const { setGeneralAccountInfo, gotoRegister, gotoLogin, logout } = accountSlice.actions;
+export const { setGeneralAccountInfo, gotoRegister, gotoLogin, signOut } = accountSlice.actions;
 
 // export async function to global
 export { loginAsync, registerAsync }
 
 // export reducer to global
 export default accountSlice.reducer;
+
