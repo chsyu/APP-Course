@@ -50,7 +50,7 @@ const RegisterScreen = () => {
       };
    }, [btnWidth.value]);
 
-   const onPressButton = () => {
+   const onSignUp = () => {
       dispatch(registerAsync({ name, email, password }))
       setLoginRequest(!loginRequest);
       if (loginRequest) {
@@ -117,7 +117,7 @@ const RegisterScreen = () => {
                   borderRadius={loginRequest ? 48 : null}
                   height={loginRequest ? "10" : null}
                   style={animatedButtonStyles}
-                  onPress={onPressButton}
+                  onPress={onSignUp}
                >
                   {
                      loginRequest

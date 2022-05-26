@@ -31,7 +31,6 @@ const initialState = {
    login: {
       hasLogin: false,
       hasAccount: true,
-      testState: "testState"
    },
    status: 'idle',
 };

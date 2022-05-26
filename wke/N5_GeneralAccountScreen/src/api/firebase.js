@@ -1,21 +1,16 @@
 import { getApps, getApp, initializeApp } from 'firebase/app';
 import {
   getAuth,
-  onAuthStateChanged,
-  FacebookAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  updateProfile
 } from 'firebase/auth';
 
 import {
   getFirestore,
-  collection,
   doc,
   setDoc,
   getDoc,
-  addDoc
 } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -52,20 +47,20 @@ export const login = async ({ email, password }) => {
 
 export const register = async ({ name, email, password }) => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = 
+      await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     await setDoc(doc(db, "users", user.uid), {
       name,
+      email: "",
       adrs: "",
       tel: "",
     });
-
     return user;
   } catch (e) {
     console.log('error ...')
     console.log(e)
   }
-
 }
 
 export const logout = () => {
@@ -94,7 +89,7 @@ export const updateUser = async (userInfo) => {
   const { uid } = auth.currentUser;
   try {
     const docRef = doc(db, "users", uid);
-    await setDoc(docRef, { ...userInfo });
+    await setDoc(docRef, userInfo);
     const docSnap = await getDoc(docRef);
     return docSnap.data();
   } catch(e) {

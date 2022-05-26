@@ -23,7 +23,7 @@ const registerAsync = createAsyncThunk(
 const readUserAsync = createAsyncThunk(
    'account/readUser',
    async () => {
-      return  await readUser();
+      return await readUser();
    }
 );
 

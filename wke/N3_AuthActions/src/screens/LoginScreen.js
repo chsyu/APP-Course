@@ -49,7 +49,7 @@ const LoginScreen = () => {
       };
    }, [btnWidth.value]);
 
-   const onPressButton = () => {
+   const onSignIn = () => {
       dispatch(loginAsync({ email, password }))
       setLoginRequest(!loginRequest);
       if (loginRequest) {
@@ -94,7 +94,6 @@ const LoginScreen = () => {
                </Heading>             
             </VStack>
 
-
             <VStack space={3} mt="5">
                <FormControl>
                   <FormControl.Label>Email ID</FormControl.Label>
@@ -110,7 +109,7 @@ const LoginScreen = () => {
                   borderRadius={loginRequest ? 48 : null}
                   height={loginRequest ? "10" : null}
                   style={animatedButtonStyles}
-                  onPress={onPressButton}
+                  onPress={onSignIn}
                >
                   {
                      loginRequest
