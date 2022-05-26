@@ -11,6 +11,7 @@ import {
    HStack,
    Center,
    Pressable,
+   useColorMode,
 } from "native-base";
 import Animated, {
    useAnimatedStyle,
@@ -27,6 +28,8 @@ const AnimatedButton = Animated.createAnimatedComponent(Button);
 const LoginScreen = () => {
    const dispatch = useDispatch();
    const [loginRequest, setLoginRequest] = useState(false);
+   const { colorMode } = useColorMode();
+
    const rotation = useSharedValue(0);
    const btnWidth = useSharedValue("100%");
    const animatedSpinnerStyles = useAnimatedStyle(() => {
@@ -48,11 +51,11 @@ const LoginScreen = () => {
    const onPressButton = () => {
       dispatch(loginAsync())
       setLoginRequest(!loginRequest);
-      if (loginRequest){
+      if (loginRequest) {
          rotation.value = withTiming(0, {
-               duration: 1000,
-               easing: Easing.linear,
-            });
+            duration: 1000,
+            easing: Easing.linear,
+         });
          btnWidth.value = withTiming('100%', {
             duration: 400,
             easing: Easing.linear,
@@ -82,16 +85,14 @@ const LoginScreen = () => {
          _light={{ bg: "white" }}
       >
          <Box safeArea p="2" py="8" w="90%" maxW="290">
-         <Heading mb="3" size="lg" fontWeight="600" color="coolGray.800" _dark={{
-               color: "warmGray.50"
-            }}>
-               SIGN IN PAGE
-            </Heading>
-            <Heading mt="1" _dark={{
-               color: "warmGray.200"
-            }} color="coolGray.600" fontWeight="medium" size="xs">
-               Sign in to continue!
-            </Heading>
+            <VStack alignItems={'center'} mb="4">
+               <Heading size="lg" fontWeight="600" color="coolGray.800" _dark={{
+                  color: "warmGray.50"
+               }}>
+                  SIGN IN
+               </Heading>
+            </VStack>
+
 
             <VStack space={3} mt="5">
                <FormControl>
@@ -101,13 +102,6 @@ const LoginScreen = () => {
                <FormControl>
                   <FormControl.Label>Password</FormControl.Label>
                   <Input type="password" />
-                  <Link _text={{
-                     fontSize: "xs",
-                     fontWeight: "500",
-                     color: "indigo.500"
-                  }} alignSelf="flex-end" mt="1">
-                     Forget Password?
-                  </Link>
                </FormControl>
                <AnimatedButton mt="2" h="10" w="100%" mx="auto" colorScheme="indigo"
                   borderRadius={loginRequest ? 48 : null}
@@ -115,10 +109,10 @@ const LoginScreen = () => {
                   style={animatedButtonStyles}
                   onPress={onPressButton}
                >
-                  {  
+                  {
                      loginRequest
-                     ? <Animated.View style={[styles.spinner, animatedSpinnerStyles]} />
-                     : 'Sign in'
+                        ? <Animated.View style={[styles.spinner, animatedSpinnerStyles]} />
+                        : 'Sign in'
                   }
                </AnimatedButton>
                <HStack mt="6" justifyContent="center" alignItems={"center"}>
@@ -128,8 +122,8 @@ const LoginScreen = () => {
                      I'm a new user.{" "}
                   </Text>
                   <Pressable onPress={goToRegister}>
-                     <Text 
-                        color="indigo.500"
+                     <Text
+                        color={colorMode == 'dark' ? "indigo.300" : "indigo.500"}
                         fontWeight="medium"
                         fontSize="xs"
                      >Sign Up</Text>

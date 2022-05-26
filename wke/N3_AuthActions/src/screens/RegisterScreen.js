@@ -6,10 +6,10 @@ import {
    VStack,
    FormControl,
    Input,
-   Link,
    Button,
    HStack,
    Center,
+   useColorMode,
    Pressable
 } from "native-base";
 import Animated, {
@@ -28,6 +28,10 @@ const AnimatedButton = Animated.createAnimatedComponent(Button);
 const RegisterScreen = () => {
    const dispatch = useDispatch();
    const [loginRequest, setLoginRequest] = useState(false);
+   const [email, setEmail] = useState('');
+   const [password, setPassword] = useState('');
+   const [name, setName] = useState('');
+   const { colorMode } = useColorMode();
    const rotation = useSharedValue(0);
    const btnWidth = useSharedValue("100%");
    const animatedSpinnerStyles = useAnimatedStyle(() => {
@@ -47,7 +51,7 @@ const RegisterScreen = () => {
    }, [btnWidth.value]);
 
    const onPressButton = () => {
-      dispatch(registerAsync())
+      dispatch(registerAsync({ name, email, password }))
       setLoginRequest(!loginRequest);
       if (loginRequest) {
          rotation.value = withTiming(0, {
@@ -85,31 +89,31 @@ const RegisterScreen = () => {
          _light={{ bg: "white" }}
       >
          <Box safeArea p="2" py="8" w="90%" maxW="290">
-            <Heading mb="3" size="lg" fontWeight="600" color="coolGray.800" _dark={{
-               color: "warmGray.50"
-            }}>
-               SIGN UP PAGE
-            </Heading>
-            <Heading mt="1" _dark={{
-               color: "warmGray.200"
-            }} color="coolGray.600" fontWeight="medium" size="xs">
-               Sign up your information!
-            </Heading>
+            <VStack alignItems={'center'} mb="4">
+               <Heading size="lg" fontWeight="600" color="coolGray.800" _dark={{
+                  color: "warmGray.50"
+               }}>
+                  SIGN UP
+               </Heading>             
+            </VStack>
 
             <VStack space={3} mt="5">
                <FormControl>
                   <FormControl.Label>Name</FormControl.Label>
-                  <Input/>
+                  <Input value={name}
+                     onChangeText={text => setName(text)} />
                </FormControl>
                <FormControl>
                   <FormControl.Label>Email ID</FormControl.Label>
-                  <Input />
+                  <Input value={email}
+                     onChangeText={text => setEmail(text)} />
                </FormControl>
                <FormControl>
                   <FormControl.Label>Password</FormControl.Label>
-                  <Input type="password" />
+                  <Input type="password" value={password}
+                     onChangeText={text => setPassword(text)} />
                </FormControl>
-               <AnimatedButton mt="2" h="10" w="100%" mx="auto" colorScheme="indigo"
+               <AnimatedButton mt="12" h="10" w="100%" mx="auto" colorScheme="indigo"
                   borderRadius={loginRequest ? 48 : null}
                   height={loginRequest ? "10" : null}
                   style={animatedButtonStyles}
@@ -121,15 +125,15 @@ const RegisterScreen = () => {
                         : 'Sign up'
                   }
                </AnimatedButton>
-               <HStack mt="6" justifyContent="center" alignItems={"center"}>
+               <HStack mt="2" justifyContent="center" alignItems={"center"}>
                   <Text fontSize="sm" color="coolGray.600" _dark={{
                      color: "warmGray.200"
                   }}>
                      I have an account.{" "}
                   </Text>
                   <Pressable onPress={goToLogin}>
-                     <Text 
-                        color="indigo.500"
+                     <Text
+                        color={colorMode == 'dark'? "indigo.300" : "indigo.500"}
                         fontWeight="medium"
                         fontSize="xs"
                      >Sign In</Text>

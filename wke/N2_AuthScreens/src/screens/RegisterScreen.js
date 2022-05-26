@@ -10,6 +10,7 @@ import {
    Button,
    HStack,
    Center,
+   useColorMode,
    Pressable
 } from "native-base";
 import Animated, {
@@ -28,6 +29,8 @@ const AnimatedButton = Animated.createAnimatedComponent(Button);
 const RegisterScreen = () => {
    const dispatch = useDispatch();
    const [loginRequest, setLoginRequest] = useState(false);
+   const { colorMode } = useColorMode();
+
    const rotation = useSharedValue(0);
    const btnWidth = useSharedValue("100%");
    const animatedSpinnerStyles = useAnimatedStyle(() => {
@@ -85,21 +88,19 @@ const RegisterScreen = () => {
          _light={{ bg: "white" }}
       >
          <Box safeArea p="2" py="8" w="90%" maxW="290">
-            <Heading mb="3" size="lg" fontWeight="600" color="coolGray.800" _dark={{
-               color: "warmGray.50"
-            }}>
-               SIGN UP PAGE
-            </Heading>
-            <Heading mt="1" _dark={{
-               color: "warmGray.200"
-            }} color="coolGray.600" fontWeight="medium" size="xs">
-               Sign up your information!
-            </Heading>
+            <VStack alignItems={'center'} mb="4">
+               <Heading size="lg" fontWeight="600" color="coolGray.800" _dark={{
+                  color: "warmGray.50"
+               }}>
+                  SIGN UP
+               </Heading>
+            </VStack>
+
 
             <VStack space={3} mt="5">
                <FormControl>
                   <FormControl.Label>Name</FormControl.Label>
-                  <Input/>
+                  <Input />
                </FormControl>
                <FormControl>
                   <FormControl.Label>Email ID</FormControl.Label>
@@ -128,8 +129,8 @@ const RegisterScreen = () => {
                      I have an account.{" "}
                   </Text>
                   <Pressable onPress={goToLogin}>
-                     <Text 
-                        color="indigo.500"
+                     <Text
+                        color={colorMode == 'dark' ? "indigo.300" : "indigo.500"}
                         fontWeight="medium"
                         fontSize="xs"
                      >Sign In</Text>

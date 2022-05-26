@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Center, Button } from "native-base";
 import { useDispatch } from "react-redux";
-import { logout } from "../redux/accountSlice"
+import { signOut } from "../redux/accountSlice"
 import ListItem from "../components/ListItem"
 
 const SettingsScreen = ({ navigation }) => {
@@ -22,7 +22,7 @@ const SettingsScreen = ({ navigation }) => {
             </Box>
             <Center>
                 <Button mt={40} colorScheme="indigo" w="90%"
-                    onPress={() => dispatch(logout())}
+                    onPress={() => dispatch(signOut())}
                 >
                     Sign out
                 </Button>

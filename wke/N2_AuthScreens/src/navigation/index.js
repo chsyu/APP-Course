@@ -10,8 +10,7 @@ import { useColorMode } from 'native-base';
 import MyTheme from '../Theme';
 import { MyTabs } from './MyTabs';
 import { MyDrawer } from './MyDrawers';
-import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
+import AuthScreen from '../screens/AuthScreen';
 import { selectLogin } from "../redux/accountSlice";
 import { selectColorMode } from '../redux/settingsSlice';
 
@@ -19,8 +18,6 @@ const Navigation = () => {
   const { colorMode } = useColorMode();
   const initialColorMode = useSelector(selectColorMode);
   const login = useSelector(selectLogin);
-  console.log('login = ')
-  console.log(login)
 
   // Define the config
   const config = {
@@ -40,11 +37,7 @@ const Navigation = () => {
       >
         {
           !login.hasLogin
-          ? (
-              login.hasAccount
-              ? <LoginScreen />
-              : <RegisterScreen />
-            )
+          ? <AuthScreen />
           : (
             <NavigationContainer theme={MyTheme} >
               <StatusBar

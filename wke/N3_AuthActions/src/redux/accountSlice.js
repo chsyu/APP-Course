@@ -85,4 +85,3 @@ export { loginAsync, registerAsync }
 
 // export reducer to global
 export default accountSlice.reducer;
-
