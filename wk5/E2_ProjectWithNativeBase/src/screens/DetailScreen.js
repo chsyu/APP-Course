@@ -1,7 +1,6 @@
 import React from 'react';
-import { Linking } from 'react-native';
-import { Center, ScrollView, Box, AspectRatio, Text, Heading, Image, Button } from "native-base";
-
+import { StyleSheet, ScrollView, View, Image, Button, Linking } from 'react-native';
+import { Text } from 'react-native-paper';
 
 const DetailScreen = ({ route }) => {
   const { title, 
@@ -12,42 +11,69 @@ const DetailScreen = ({ route }) => {
     description
   } = route.params;
   return (
-    <Center>
-      <ScrollView>
-        <AspectRatio w="100%" ratio={16 / 9}>
-          <Image
-            source={{uri: image }}
-            alt='albumImage'
-          />
-        </AspectRatio>
-        <Box bg="#fff" padding="2" margin="2">
-          <Center>
-            <Heading pt={1} fontSize="2xl" color='#6099E4'>Discount Now!</Heading>
-            <Heading fontSize="4xl">Price: ${price}</Heading>
-          </Center>
-          <Button 
-            mt="4"
-            onPress={() => Linking.openURL(url)}
-          >
-            Buy Now !
-          </Button>   
-        </Box>
-        <Box bg="#fff" padding="2" margin="2">
-            <Text>
-              <Text bold>Artist: </Text>
-              {artist}
-            </Text>
-            <Text>            
-              <Text bold>Title: </Text>
-              {title}
-            </Text>
-            <Text mt='15' bold>Descriptions:</Text>
-            <Text>{'\t'}{description}</Text>
-        </Box>
-      </ScrollView>      
-    </Center>
-
+    <ScrollView>
+      <View>
+        <Image
+          style={styles.imageStyle}
+          source={{
+            uri: image
+          }}
+        />
+      </View>
+      <View style={styles.cardContainerStyle}>
+        <Text style={styles.discountStyle} >Discount Now!</Text>
+        <Text style={styles.priceStyle} >Price: ${price}</Text>
+        <Button 
+          onPress={() => Linking.openURL(url)}
+          title="Buy Now !"
+        />  
+      </View>
+      <View style={styles.cardContainerStyle}>
+          <Text style={{color: 'black'}}>
+            <Text style={{color: 'black', ffontWeight:'bold'}}>Artist: </Text>
+            {artist}
+          </Text>
+          <Text>            
+            <Text style={{color: 'black', fontWeight:'bold'}}>Title: </Text>
+            {title}
+          </Text>
+          <Text style={{color: 'black', fmarginTop: 15, fontWeight: 'bold'}}>Descriptions:</Text>
+          <Text style={{color: 'black', flineHeight: 18}}>{'\t'}{description}</Text>
+      </View>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },  
+  imageStyle: {
+    height: 200,
+    width: null
+  },
+  cardContainerStyle: {
+    backgroundColor: '#fff',
+    padding: 10,
+    marginHorizontal: 10,
+    marginTop: 10
+  },
+  discountStyle: {
+    color: '#6099E4',
+    textAlign: 'center',
+    fontSize: 25,
+    fontWeight: 'bold'
+  },
+  priceStyle: {
+    color: 'black',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 40,
+    marginVertical: 20,
+  },
+});
 
 export default DetailScreen;

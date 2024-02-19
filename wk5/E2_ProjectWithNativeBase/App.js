@@ -1,20 +1,18 @@
-import React from 'react';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { NativeBaseProvider } from 'native-base';
-
-import Navigation from './src/navigation';
+import React from "react";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import Navigation from "./src/navigation";
+import { PaperProvider } from "react-native-paper";
 
 const App = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
-        <NativeBaseProvider>
+        <PaperProvider>
           <Navigation />
-        </NativeBaseProvider>
+        </PaperProvider>
       </SafeAreaView>
     </SafeAreaProvider>
-
   );
-}
+};
 
 export default App;
