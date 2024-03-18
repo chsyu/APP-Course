@@ -13,6 +13,8 @@
     "@gluestack-ui/config": "^1.1.16",
     "@gluestack-ui/themed": "^1.1.9",
     "@gluestack-ui/themed-native-base": "^0.1.107-alpha2",
+    "@react-navigation/bottom-tabs": "^6.5.12",
+    "@react-navigation/material-bottom-tabs": "^6.2.20",
     "@react-navigation/native": "^6.1.10",
     "@react-navigation/native-stack": "^6.9.18",
     "expo": "~50.0.6",
