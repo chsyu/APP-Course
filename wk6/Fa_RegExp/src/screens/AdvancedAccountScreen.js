@@ -1,10 +1,8 @@
-import { Center, Text } from 'native-base'
+import { Center, Text } from '@gluestack-ui/themed'
 
 const AdvancedAccountScreen = () => {
    return (
-      <Center flex={1}
-         _dark={{ bg: "blueGray.900" }}
-         _light={{ bg: "blueGray.50" }}>
+      <Center flex={1}>
          <Text>This is an Advanced Account Setting Page</Text>
       </Center>
    );
