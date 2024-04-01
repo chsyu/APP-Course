@@ -1,35 +1,59 @@
-import React from 'react';
-import { Box, Pressable, Actionsheet, useDisclose } from 'native-base';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import React from "react";
+import {
+  Box,
+  Pressable,
+  Text,
+  Actionsheet,
+  ActionsheetBackdrop,
+  ActionsheetDragIndicator,
+  ActionsheetDragIndicatorWrapper,
+  ActionsheetItem,
+  ActionsheetItemText,
+  ActionsheetContent,
+} from "@gluestack-ui/themed";
 
 export default () => {
-  const { isOpen, onOpen, onClose } = useDisclose();
+  const [showActionsheet, setShowActionsheet] = React.useState(false);
+  const handleClose = () => setShowActionsheet(!showActionsheet);
   return (
-    <>
+    <Box>
       <Pressable
-        onPress={onOpen}
-        position="absolute" left={"50%"} right={"50%"} bottom={"5%"} ml={-25}
-        width={50} height={50} borderRadius={300}
-        bg="#0e7490" shadow={2} justifyContent="center" alignItems="center" zIndex={99} 
+        onPress={handleClose}
+        bg="$primary500"
+        width="$10"
+        height="$10"
+        hardShadow="5"
+        borderRadius="$full"
+        justifyContent="center"
+        alignItems="center"
       >
-        <Box>
-          <MaterialCommunityIcons name="plus" color="white" size={30} />
-        </Box>
+        <Text color="white" size="3xl">
+          +
+        </Text>
       </Pressable>
-      <Actionsheet isOpen={isOpen} onClose={onClose}>
-        <Actionsheet.Content>
-          <Actionsheet.Header>Header</Actionsheet.Header>
-          <Actionsheet.Item>Option 1</Actionsheet.Item>
-          <Actionsheet.Item>Option 2</Actionsheet.Item>
-          <Actionsheet.Item>Option 3</Actionsheet.Item>
-          <Actionsheet.Item color="red.500">Delete</Actionsheet.Item>
-        </Actionsheet.Content>
-        <Actionsheet.Footer safeAreaBottom={true}>
-          <Actionsheet.Item pl="6" onPress={onClose}>Cancel</Actionsheet.Item>
-        </Actionsheet.Footer>          
+      <Actionsheet isOpen={showActionsheet} onClose={handleClose} zIndex={999}>
+        <ActionsheetBackdrop />
+        <ActionsheetContent h="$72" zIndex={999}>
+          <ActionsheetDragIndicatorWrapper>
+            <ActionsheetDragIndicator />
+          </ActionsheetDragIndicatorWrapper>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Delete</ActionsheetItemText>
+          </ActionsheetItem>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Share</ActionsheetItemText>
+          </ActionsheetItem>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Play</ActionsheetItemText>
+          </ActionsheetItem>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Favourite</ActionsheetItemText>
+          </ActionsheetItem>
+          <ActionsheetItem onPress={handleClose}>
+            <ActionsheetItemText>Cancel</ActionsheetItemText>
+          </ActionsheetItem>
+        </ActionsheetContent>
       </Actionsheet>
-    </>
+    </Box>
   );
-}
+};

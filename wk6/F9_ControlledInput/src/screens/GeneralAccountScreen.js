@@ -1,68 +1,78 @@
-import { useState } from "react";
-import { ScrollView, FormControl, useColorMode, VStack, Text, Input } from 'native-base'
+import {
+  FormControl,
+  FormControlError,
+  FormControlErrorIcon,
+  FormControlLabel,
+  FormControlLabelText,
+  VStack,
+  Text,
+  Input,
+  InputField,
+  KeyboardAvoidingView,
+} from "@gluestack-ui/themed";
+import React, { useState } from "react";
 
 const GeneralAccountScreen = () => {
-   const [name, setName] = useState("");
-   const [email, setEmail] = useState("");
-   const [adrs, setAdrs] = useState("");
-   const [tel, setTel] = useState("");
-
-   const { colorMode } = useColorMode();
-   const formLabelStyle = {
-      color: colorMode == "light" ? "muted.700" : "white",
-      fontSize: "xs",
-      fontWeight: 600
-   };
-   const focusInputStyle = {
-      borderColor: colorMode == "light" ? "muted.700" : "white",
-   }
-
-   return (
-      <ScrollView flex={1}>
-         <VStack space={2} mt={5} width="80%" alignSelf="center">
-            <Text textAlign="center" fontSize="2xl" pb="4">
-               GENERAL SETTINGS
-            </Text>
-            <FormControl mb={5} isRequired>
-               <FormControl.Label _text={formLabelStyle}>
-                  Name
-               </FormControl.Label>
-               <Input 
-                  variant="underlined" _focus={focusInputStyle} 
-                  value={name} onChangeText={text => setName(text)} 
-               />
-            </FormControl>
-            <FormControl mb={5} isRequired>
-               <FormControl.Label _text={formLabelStyle}>
-                  Email
-               </FormControl.Label>
-               <Input 
-                  variant="underlined" _focus={focusInputStyle} 
-                  value={email} onChangeText={text => setEmail(text)} 
-               />
-            </FormControl>
-            <FormControl mb={5}>
-               <FormControl.Label _text={formLabelStyle}>
-                  Address
-               </FormControl.Label>
-               <Input 
-                  variant="underlined" _focus={focusInputStyle} 
-                  value={adrs} onChangeText={text => setAdrs(text)} 
-               />
-            </FormControl>
-            <FormControl mb={5}>
-               <FormControl.Label _text={formLabelStyle}>
-                  Tel
-               </FormControl.Label>
-               <Input 
-                  variant="underlined" _focus={focusInputStyle} 
-                  value={tel} onChangeText={text => setTel(text)} 
-               />
-            </FormControl>
-         </VStack>         
-      </ScrollView>
-
-   );
-}
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [adrs, setAdrs] = useState("");
+  const [tel, setTel] = useState("");
+  console.log(name, email, adrs, tel);
+  return (
+    <VStack space={2} mt={5} width="80%" alignSelf="center">
+      <Text textAlign="center" size="2xl" pb="$4">
+        GENERAL SETTINGS
+      </Text>
+      <FormControl mb={5} isRequired>
+        <FormControlLabel>
+          <FormControlLabelText>Name</FormControlLabelText>
+        </FormControlLabel>
+        <Input variant="underlined">
+          <InputField
+            placeholder="Input your name"
+            value={name}
+            onChangeText={(text) => setName(text)}
+          />
+        </Input>
+      </FormControl>
+      <FormControl mb={5} isRequired>
+        <FormControlLabel>
+          <FormControlLabelText>Email</FormControlLabelText>
+        </FormControlLabel>
+        <Input variant="underlined">
+          <InputField
+            placeholder="Input your Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          />
+        </Input>
+      </FormControl>
+      <FormControl mb={5}>
+        <FormControlLabel>
+          <FormControlLabelText>Address</FormControlLabelText>
+        </FormControlLabel>
+        <Input variant="underlined">
+          <InputField
+            placeholder="Input your Address"
+            value={adrs}
+            onChangeText={(text) => setAdrs(text)}
+          />
+        </Input>
+      </FormControl>
+      <FormControl mb={5}>
+        <FormControlLabel>
+          <FormControlLabelText>Tel</FormControlLabelText>
+        </FormControlLabel>
+        <Input variant="underlined">
+          <InputField
+            placeholder="Input your Telephone"
+            value={tel}
+            onChangeText={(text) => setTel(text)}
+          />
+        </Input>
+      </FormControl>
+    </VStack>
+  );
+};
 
 export default GeneralAccountScreen;

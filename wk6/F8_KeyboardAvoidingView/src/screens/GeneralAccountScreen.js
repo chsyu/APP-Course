@@ -1,50 +1,56 @@
-import { ScrollView, FormControl, useColorMode, VStack, Text, Input } from 'native-base'
+import {
+  FormControl,
+  FormControlError,
+  FormControlErrorIcon,
+  FormControlLabel,
+  FormControlLabelText,
+  VStack,
+  Text,
+  Input,
+  InputField,
+  KeyboardAvoidingView
+} from "@gluestack-ui/themed";
 
 const GeneralAccountScreen = () => {
-   const { colorMode } = useColorMode();
-   const formLabelStyle = {
-      color: colorMode == "light" ? "muted.700" : "white",
-      fontSize: "xs",
-      fontWeight: 600
-   };
-   const focusInputStyle = {
-      borderColor: colorMode == "light" ? "muted.700" : "white",
-   }
-
-   return (
-      <ScrollView flex={1}>
-         <VStack space={2} mt={5} width="80%" alignSelf="center">
-            <Text textAlign="center" fontSize="2xl" pb="4">
-               GENERAL SETTINGS
-            </Text>
-            <FormControl mb={5} isRequired>
-               <FormControl.Label _text={formLabelStyle}>
-                  Name
-               </FormControl.Label>
-               <Input variant="underlined" _focus={focusInputStyle} />
-            </FormControl>
-            <FormControl mb={5} isRequired>
-               <FormControl.Label _text={formLabelStyle}>
-                  Email
-               </FormControl.Label>
-               <Input variant="underlined" _focus={focusInputStyle} />
-            </FormControl>
-            <FormControl mb={5}>
-               <FormControl.Label _text={formLabelStyle}>
-                  Address
-               </FormControl.Label>
-               <Input variant="underlined" _focus={focusInputStyle} />
-            </FormControl>
-            <FormControl mb={5}>
-               <FormControl.Label _text={formLabelStyle}>
-                  Tel
-               </FormControl.Label>
-               <Input variant="underlined" _focus={focusInputStyle} />
-            </FormControl>
-         </VStack>         
-      </ScrollView>
-
-   );
-}
+  return (
+    <VStack space={2} mt={5} width="80%" alignSelf="center">
+      <Text textAlign="center" size="2xl" pb="$4">
+        GENERAL SETTINGS
+      </Text>
+      <FormControl mb={5} isRequired>
+        <FormControlLabel>
+          <FormControlLabelText>Name</FormControlLabelText>
+        </FormControlLabel>
+        <Input variant="underlined">
+          <InputField placeholder="Input your name" />
+        </Input>
+      </FormControl>
+      <FormControl mb={5} isRequired>
+        <FormControlLabel>
+          <FormControlLabelText>Email</FormControlLabelText>
+        </FormControlLabel>
+        <Input variant="underlined">
+          <InputField placeholder="Input your Email" />
+        </Input>
+      </FormControl>
+      <FormControl mb={5}>
+        <FormControlLabel>
+          <FormControlLabelText>Address</FormControlLabelText>
+        </FormControlLabel>
+        <Input variant="underlined">
+          <InputField placeholder="Input your Address" />
+        </Input>
+      </FormControl>
+      <FormControl mb={5}>
+        <FormControlLabel>
+          <FormControlLabelText>Tel</FormControlLabelText>
+        </FormControlLabel>
+        <Input variant="underlined">
+          <InputField placeholder="Input your Telephone" />
+        </Input>
+      </FormControl>
+    </VStack>
+  );
+};
 
 export default GeneralAccountScreen;

@@ -1,15 +1,12 @@
 import React from "react";
-import { Box } from "native-base";
+import { Box } from "@gluestack-ui/themed"
 import AlbumList from "../components/AlbumList";
 import albumData from "../json/albums.json";
 
-const AlbumScreen = ({ navigation }) => {
+const AlbumScreen = () => {
   return (
     <Box>
-      <AlbumList 
-        list={albumData.albumList}
-        navigation={navigation}
-      />
+      <AlbumList list={albumData.albumList} />
     </Box>
   );
 };

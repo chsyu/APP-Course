@@ -1,13 +1,11 @@
 import React from "react";
-import { FlatList } from "native-base";
+import { FlatList } from "react-native";
 import AlbumDetail from "./AlbumDetail";
 
-const AlbumList = ({ list, navigation }) => {
-  const renderItem = ({ item }) => <AlbumDetail album={item} navigation={navigation} />;
+const AlbumList = ({ list }) => { 
+  const renderItem = ({ item }) => <AlbumDetail album={item} />;
   return (
     <FlatList
-    _dark={{ bg: "blueGray.900" }}
-    _light={{ bg: "white" }}
       data={list}
       renderItem={renderItem}
       keyExtractor={item => item.title}

@@ -1,38 +1,33 @@
 import React from "react";
-import { Box, HStack, VStack, AspectRatio, Text, Image, Pressable } from "native-base"
+import { Box, HStack, VStack, Text, Image, Pressable } from "@gluestack-ui/themed";
+import { useNavigation } from "@react-navigation/native";
 
-const AlbumDetail = ({ album, navigation }) => {
+const AlbumDetail = ({ album }) => {
+  const { navigate } = useNavigation();
   return (
-    <Box 
-      marginX={1} marginBottom={2} borderRadius={3} shadow={2}
-      _dark={{ borderColor: 'blueGray.500', borderWidth: 0.6 }}
-    >
-      <HStack 
-        _dark={{ bg: "blueGray.900"}}
-        _light={{ bg: "white" }}>
-        <AspectRatio w="50" ratio={1}>
+    <Box p={10} marginX={1} marginBottom={2} borderRadius={3} shadow={2}>
+      <HStack bg='#fff'>
           <Image
+            width={50}
+            height={50}
             margin="1"
             source={{ uri: album.thumbnail_image }}
             alt="artist"
           />
-        </AspectRatio>
-        <VStack paddingLeft={2} justifyContent="space-around">
-          <Text>{album.title}</Text>
+        <VStack margin={2} paddingLeft={2} justifyContent="space-between">
+          <Text bold>{album.title}</Text>
           <Text>{album.artist}</Text>
         </VStack>
       </HStack>
-      <Box p={1} _dark={{ bg: "blueGray.900" }}
-        _light={{ bg: "white" }}>
+      <Box bg="#fff">
         <Pressable 
-          onPress={() => navigation.navigate('Detail', album)}
+          onPress={() => navigate('Detail', album)}
         >
-          <AspectRatio w="100%" ratio={1}>
             <Image
+              style={{ width: "100%", height: 300 }}
               source={{ uri: album.image }}
               alt="album"
             />            
-          </AspectRatio>
         </Pressable>
       </Box>   
     </Box>
