@@ -25,16 +25,16 @@ const LoginScreen = () => {
     <Center
       w="100%"
       flex={1}
-      _dark={{ bg: "blueGray.900" }}
+      _dark={{ bg: "blueGray900" }}
       _light={{ bg: "white" }}
     >
       <Box safeArea p="$2" py="$8" w="$90%" maxW="$290">
         <Heading
           size="3xl"
           bold
-          color="coolGray.800"
+          color="$coolGray800"
           _dark={{
-            color: "warmGray.50",
+            color: "$warmGray50",
           }}
         >
           Welcome
@@ -42,9 +42,9 @@ const LoginScreen = () => {
         <Heading
           mt="$1"
           _dark={{
-            color: "warmGray.200",
+            color: "$warmGray200",
           }}
-          color="coolGray.600"
+          color="$coolGray600"
           fontWeight="medium"
           size="$xs"
         >
@@ -71,7 +71,7 @@ const LoginScreen = () => {
               _text={{
                 fontSize: "xs",
                 fontWeight: "500",
-                color: "indigo.500",
+                color: "$indigo500",
               }}
               alignSelf="flex-end"
               mt="$10"
@@ -89,16 +89,16 @@ const LoginScreen = () => {
           <HStack mt="$6" justifyContent="center">
             <Text
               size="$sm"
-              color="coolGray.600"
+              color="$coolGray600"
               _dark={{
-                color: "warmGray.200",
+                color: "$warmGray200",
               }}
             >
               I'm a new user.{" "}
             </Text>
             <Link
               _text={{
-                color: "indigo.500",
+                color: "$indigo.500",
                 fontWeight: "medium",
                 fontSize: "sm",
               }}
