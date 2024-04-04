@@ -18,7 +18,7 @@ export default function App() {
             region={region}
             style={{ flex: 1 }}
             showsTraffic
-            mapType='hybrid'
+            mapType='standard'
           />
         </Box>
       </GluestackUIProvider>

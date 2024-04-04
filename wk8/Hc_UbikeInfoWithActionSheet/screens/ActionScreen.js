@@ -2,7 +2,6 @@ import React from "react";
 import {
   VStack,
   Text,
-  Center,
   Pressable,
   ActionsheetBackdrop,
   ActionsheetDragIndicator,
@@ -10,12 +9,39 @@ import {
   ActionsheetContent,
 } from "@gluestack-ui/themed";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import PieChart from "react-native-pie-chart";
-const widthAndHeight = 250;
+import { PieChart } from "react-native-chart-kit";
+
+import { Dimensions } from "react-native";
 
 const ActionScreen = ({ handleClose, site }) => {
   const { sna, sbi, sarea, mday, lat, lng, ar, bemp } = site;
+  const chartConfig = {
+    backgroundGradientFrom: "#1E2923",
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: "#08130D",
+    backgroundGradientToOpacity: 0.5,
+    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: 0.5,
+  };
+  const screenWidth = Dimensions.get("window").width;
+  const data = [
+    {
+      name: "可還",
+      population: bemp,
+      color: "#ff6c00",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    },    
+    {
+      name: "可借",
+      population: sbi,
+      color: "#fbd203",
+      legendFontColor: "#7F7F7F",
+      legendFontSize: 15,
+    },
 
+  ];
   const getTime = (m) => {
     const mday = String(m);
     const year = mday.slice(0, 4);
@@ -27,9 +53,6 @@ const ActionScreen = ({ handleClose, site }) => {
     const time = `${year}/${month}/${date} ${hour}:${min}:${sec}`;
     return time;
   };
-  console.log({sbi, bemp})
-  const series = [sbi, bemp];
-  const sliceColor = ["#fbd203", "#ff6c00"];
 
   return (
     <>
@@ -48,10 +71,11 @@ const ActionScreen = ({ handleClose, site }) => {
             <MaterialCommunityIcons name="close" color="gray" size={30} />
           </Pressable>
 
-          <Text size="lg" my={6} textAlign="center">
+          <Text size="3xl" mt="$5" textAlign="center">
             {sna} 站
           </Text>
-          <VStack px={6} w={"80%"}>
+          <VStack mt={40} px={6} w={"100%"}>
+            <VStack ml={40}>
             <Text>
               <Text fontWeight={"bold"}>地址：</Text>
               {sarea} {ar}
@@ -64,15 +88,24 @@ const ActionScreen = ({ handleClose, site }) => {
               <Text fontWeight={"bold"}>更新時間：</Text>
               {getTime(mday)}
             </Text>
+            <Text mt={2}>
+              <Text fontWeight={"bold"}>可借/可還：</Text>
+              {sbi}/{bemp}
+            </Text>
+          </VStack>
+            <PieChart
+              data={data}
+              width={screenWidth}
+              height={200}
+              chartConfig={chartConfig}
+              accessor={"population"}
+              backgroundColor={"transparent"}
+              paddingLeft={0}
+              center={[10, 0]}
+              absolute
+            />
           </VStack>
         </VStack>
-        <PieChart
-          widthAndHeight={widthAndHeight}
-          series={series}
-          sliceColor={sliceColor}
-          coverRadius={0.45}
-          coverFill={"#FFF"}
-        />
       </ActionsheetContent>
     </>
   );
