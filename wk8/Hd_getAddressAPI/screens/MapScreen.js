@@ -71,12 +71,6 @@ export default function MapScreen() {
    };
 
    useEffect(() => {
-      if (Platform.OS === "android" && !Device.isDevice) {
-         setMsg(
-            "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
-         );
-         return
-      }
       getLocation();
       getUbikeData();
    }, []);
