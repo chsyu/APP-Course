@@ -1,6 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
-import { setLogin, setLogout } from "../redux/accountSlice";
+import { setLogin, setLogout, setGeneralAccountInfo } from "../redux/accountSlice";
 import { getAlbums, login, logout, register, updateProfile } from "../api";
 
 export const useAlbums = () => {
@@ -45,7 +45,7 @@ export const useUpdateProfile = () => {
   return useMutation({
     mutationFn: updateProfile,
     onSuccess: (user) => {
-      dispatch(setLogin(user));
+      dispatch(setGeneralAccountInfo(user));
     },
   });
 };

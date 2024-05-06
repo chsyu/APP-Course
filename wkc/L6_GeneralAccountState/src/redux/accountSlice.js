@@ -32,7 +32,6 @@ const accountSlice = createSlice({
       setLogin: (state, action) => {
          state.login.hasLogin = true;
          state.general = { ...state.general, ...action.payload};
-         console.log("setLogin: ", {adrs: state.general.adrs, tel: state.general.tel})
       },
       setLogout: (state) => {
          state.login.hasLogin = false;

@@ -15,14 +15,12 @@ import {
   ButtonText,
 } from "@gluestack-ui/themed";
 import React, { useState, useEffect } from "react";
-import { setGeneralAccountInfo } from "../redux/accountSlice";
 import { selectGeneral } from "../redux/accountSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useUpdateProfile } from "../tanstack-query";
 
 const GeneralAccountScreen = () => {
   const general = useSelector(selectGeneral);
-  const dispatch = useDispatch();
   const { mutate } = useUpdateProfile();
   const [name, setName] = useState(general.name);
   const [nameIsError, setNameIsError] = useState(true);
@@ -122,8 +120,6 @@ const GeneralAccountScreen = () => {
         mt="$2"
         action="secondary"
         onPress={() => {
-          console.log("nameIsError: ", nameIsError);
-          console.log("emailIsError: ", emailIsError);
           if (!nameIsError && !emailIsError) mutate({ name, email, adrs, tel });
         }}
       >
