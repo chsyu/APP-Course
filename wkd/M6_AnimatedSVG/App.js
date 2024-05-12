@@ -1,28 +1,36 @@
-import { Dimensions } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { NativeBaseProvider, Button, Center } from 'native-base';
+import React, { useEffect } from "react";
+import { useColorScheme, Dimensions } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import {
+  GluestackUIProvider,
+  Center,
+  Button,
+  ButtonText,
+} from "@gluestack-ui/themed";
+import { config } from "@gluestack-ui/config";
 import Animated, {
   useSharedValue,
   withTiming,
   useAnimatedProps,
-  useDerivedValue
-} from 'react-native-reanimated';
-import { ReText } from 'react-native-redash';
+  useDerivedValue,
+} from "react-native-reanimated";
+import { ReText } from "react-native-redash";
 
-import Svg, { Circle } from 'react-native-svg';
+import Svg, { Circle } from "react-native-svg";
 
-const BACKGROUND_COLOR = '#444B6F';
-const BACKGROUND_STROKE_COLOR = '#303858';
-const STROKE_COLOR = '#A6E1FA';
+const BACKGROUND_COLOR = "#444B6F";
+const BACKGROUND_STROKE_COLOR = "#303858";
+const STROKE_COLOR = "#A6E1FA";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const CIRCLE_LENGTH = 800; // 2PI*R
 const R = CIRCLE_LENGTH / (2 * Math.PI);
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-export default function App() {
+const App = () => {
+  const colorScheme = useColorScheme();
   const progress = useSharedValue(0);
 
   const animatedProps = useAnimatedProps(() => ({
@@ -39,18 +47,18 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <NativeBaseProvider>
+      <GluestackUIProvider config={config} colorMode={colorScheme}>
         <Center flex={1} bg={BACKGROUND_COLOR}>
           <ReText
             style={{
               fontSize: 80,
-              color: 'rgba(256,256,256,0.7)',
+              color: "rgba(256,256,256,0.7)",
               width: 200,
-              textAlign: 'center',
+              textAlign: "center",
             }}
             text={progressText}
           />
-          <Svg style={{ position: 'absolute' }}>
+          <Svg style={{ position: "absolute" }}>
             <Circle
               cx={width / 2}
               cy={height / 2}
@@ -66,22 +74,22 @@ export default function App() {
               strokeWidth={40}
               strokeDasharray={CIRCLE_LENGTH}
               animatedProps={animatedProps}
-              strokeLinecap={'round'}
+              strokeLinecap={"round"}
             />
           </Svg>
-          <Button onPress={onPress}
-            position={'absolute'}
+          <Button
+            onPress={onPress}
+            position={"absolute"}
             bottom={40}
             width={width * 0.7}
             height={60}
-            _text={{
-              fontSize: 26
-            }}
           >
-            Run
+            <ButtonText>Run</ButtonText>
           </Button>
         </Center>
-      </NativeBaseProvider>
+      </GluestackUIProvider>
     </SafeAreaProvider>
   );
-}
+};
+
+export default App;

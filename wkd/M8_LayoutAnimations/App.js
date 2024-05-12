@@ -1,13 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { NativeBaseProvider, Center, Pressable, Text, Box, VStack, ScrollView } from 'native-base';
+import React, { useEffect, useState } from "react";
+import { useColorScheme, StyleSheet } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { GluestackUIProvider, Pressable, Text, Box, VStack, HStack, ScrollView  } from '@gluestack-ui/themed';
+import { config } from "@gluestack-ui/config";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import Animated, {
   useSharedValue,
   FadeIn,
@@ -23,7 +19,9 @@ const LIST_ITEM_COLOR = '#1798DE';
 const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 
-export default function App() {
+const App = () => {
+  const colorScheme = useColorScheme();
+
   const initialMode = useSharedValue(true);
 
   useEffect(() => {
@@ -48,8 +46,8 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <NativeBaseProvider>
-        <VStack flex={1}>
+      <GluestackUIProvider config={config} colorMode={colorScheme}>
+      <VStack flex={1}>
           <Pressable
             onPress={onAdd}
             position="absolute" right={"5%"} bottom={50}
@@ -87,14 +85,9 @@ export default function App() {
             })}
           </ScrollView>
         </VStack>
-      </NativeBaseProvider>
+      </GluestackUIProvider>
     </SafeAreaProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});
+export default App;

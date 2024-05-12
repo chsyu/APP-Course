@@ -1,4 +1,4 @@
-import { Center, Pressable, Box } from 'native-base';
+import { Center, Pressable, Box } from '@gluestack-ui/themed';
 import Animated, {
    useSharedValue,
    withTiming,
@@ -48,6 +48,7 @@ export default function CircleCounter({ size, count, stroke_color }) {
          <Center flex={1} shadow="2">
             <ReText
                style={{
+                  zIndex: 1,
                   fontSize: fontSize,
                   fontWeight: '200',
                   color: stroke_color,
@@ -57,8 +58,9 @@ export default function CircleCounter({ size, count, stroke_color }) {
                text={progressText}
             />
             <AnimatedBox 
-               bg={stroke_color} h={2} width={"30%"} 
-               position="absolute" bottom={9}
+               bg={stroke_color} h={6} width={"30%"} 
+               position="absolute" bottom={35}
+               zIndex={1}
                style={animatedWidth}
             />
             <Svg style={{ position: 'absolute' }}>
@@ -66,6 +68,7 @@ export default function CircleCounter({ size, count, stroke_color }) {
                   cx='50%'
                   cy='50%'
                   r={R}
+                  fill={"blue"}
                   stroke={BACKGROUND_STROKE_COLOR}
                   strokeWidth={strokeWidth}
                />
@@ -78,6 +81,7 @@ export default function CircleCounter({ size, count, stroke_color }) {
                   strokeDasharray={CIRCLE_LENGTH}
                   animatedProps={animatedProps}
                   strokeLinecap={'round'}
+                  fill={"white"}
                />
             </Svg>
          </Center>

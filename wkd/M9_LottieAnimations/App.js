@@ -1,24 +1,26 @@
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Dimensions } from "react-native";
-import { NativeBaseProvider, Center, Box } from 'native-base';
+import React, { useEffect } from "react";
+import { useColorScheme, Dimensions } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { GluestackUIProvider, Box, Center } from "@gluestack-ui/themed";
+import { config } from "@gluestack-ui/config";
 import LottieView from "lottie-react-native";
 
 const App = () => {
-  const WIDTH = Dimensions.get('window').width;
+  const colorScheme = useColorScheme();
+  const WIDTH = Dimensions.get("window").width;
 
   return (
     <SafeAreaProvider>
-      <NativeBaseProvider>
+      <GluestackUIProvider config={config} colorMode={colorScheme}>
         <Center flex={1}>
-          <Box h={WIDTH} w={WIDTH}>
-            <LottieView
-              source={require("./json/download-icon.json")}
-              loop
-              autoPlay
-            />
-          </Box>
+          <LottieView
+            source={require("./json/download-icon.json")}
+            style={{ width: WIDTH, height: WIDTH }}
+            loop
+            autoPlay
+          />
         </Center>
-      </NativeBaseProvider>
+      </GluestackUIProvider>
     </SafeAreaProvider>
   );
 };

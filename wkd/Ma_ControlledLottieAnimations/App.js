@@ -1,12 +1,20 @@
-import React, { useRef } from "react";
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Dimensions } from "react-native";
-import { NativeBaseProvider, Text, Pressable, Center, Box } from 'native-base';
+import React, { useEffect, useRef } from "react";
+import { useColorScheme, Dimensions } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import {
+  GluestackUIProvider,
+  ButtonText,
+  Button,
+  Box,
+  Center,
+} from "@gluestack-ui/themed";
+import { config } from "@gluestack-ui/config";
 import LottieView from "lottie-react-native";
 
 const App = () => {
+  const colorScheme = useColorScheme();
+  const WIDTH = Dimensions.get("window").width;
   const animation = useRef(null);
-  const WIDTH = Dimensions.get('window').width;
 
   const onPress = () => {
     animation.current.play();
@@ -14,31 +22,29 @@ const App = () => {
 
   return (
     <SafeAreaProvider>
-      <NativeBaseProvider>
+      <GluestackUIProvider config={config} colorMode={colorScheme}>
         <Center flex={1}>
-          <Box h={WIDTH} w={WIDTH}>
-            <LottieView
-              ref={animation}
-              source={require("./json/download-icon.json")}
-              loop={false}
-            />
-          </Box>
-          <Pressable onPress={onPress}>
-            {({ isPressed }) => (
-              <Text
-                textAlign={'center'}
-                p={3}
-                w={WIDTH / 2}
-                bg={isPressed ? "coolGray.200" : "coolGray.100"} 
-                borderWidth={1}
-                borderColor={'black'}
-              >
-                PLAY
-              </Text>
-            )}
-          </Pressable>
+          <LottieView
+            ref={animation}
+            source={require("./json/download-icon.json")}
+            style={{ width: WIDTH, height: WIDTH }}
+            loop={false}
+          />
+          <Button 
+            onPress={onPress}
+             action="secondary"
+             variant="outline"
+          >
+            <ButtonText
+              textAlign={"center"}
+              p={3}
+              w={WIDTH / 2}
+            >
+              PLAY
+            </ButtonText>
+          </Button>
         </Center>
-      </NativeBaseProvider>
+      </GluestackUIProvider>
     </SafeAreaProvider>
   );
 };
