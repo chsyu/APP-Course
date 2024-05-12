@@ -1,11 +1,5 @@
 import { Appearance, Dimensions, useColorScheme } from "react-native";
-import {
-  Center,
-  Box,
-  Text,
-  Pressable,
-  useColorMode,
-} from "@gluestack-ui/themed";
+import { Center, Box, Text, Pressable } from "@gluestack-ui/themed";
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
