@@ -1,12 +1,16 @@
-import { Center } from "@gluestack-ui/themed";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   useAnimatedGestureHandler,
 } from "react-native-reanimated";
 import { PanGestureHandler } from "react-native-gesture-handler";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function App() {
+export default function GestureCircle({
+  size = 100,
+  color = "gray",
+  icon = "account-plus",
+}) {
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const translateXOLD = useSharedValue(0);
@@ -35,20 +39,31 @@ export default function App() {
   });
 
   return (
-      <Center flex={1}>
-        <PanGestureHandler onGestureEvent={gestureHandler}>
-          <Animated.Image
-            style={[
-              {
-                width: 150,
-                height: 150,
-                borderRadius: 100,
-              },
-              animatedStyles,
-            ]}
-            source={require("./assets/splash.png")}
-          />
-        </PanGestureHandler>
-      </Center>
+    <PanGestureHandler onGestureEvent={gestureHandler}>
+      <Animated.View
+        style={[
+          {
+            backgroundColor: color,
+            borderRadius: size,
+            width: size,
+            height: size,
+            justifyContent: "center",
+            alignItems: "center",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          },
+          animatedStyles,
+        ]}
+      >
+        <MaterialCommunityIcons 
+         name={icon} color="white" size={size * 0.6} />
+      </Animated.View>
+    </PanGestureHandler>
   );
 }

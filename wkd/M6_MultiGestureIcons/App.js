@@ -1,5 +1,5 @@
 import React from "react";
-import { useColorScheme, StyleSheet } from "react-native";
+import { useColorScheme } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GluestackUIProvider } from "@gluestack-ui/themed";
 import { config } from "@gluestack-ui/config";
@@ -11,11 +11,11 @@ const App = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-    <SafeAreaProvider>
+      <SafeAreaProvider>
         <GluestackUIProvider config={config} colorMode={colorScheme}>
           <HomeScreen />
         </GluestackUIProvider>
-    </SafeAreaProvider>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 };
