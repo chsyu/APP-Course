@@ -3,10 +3,10 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useRouter } from 'expo-router';
 
 export default function DiaryItem({ diary }) {
-  // 截取內容的前50個字作為預覽
+  // 截取內容的前10個字作為預覽
   const previewContent =
-    diary.content.length > 50
-      ? diary.content.substring(0, 50) + "..."
+    diary.content.length > 10
+      ? diary.content.substring(0, 10) + "..."
       : diary.content;
   const router = useRouter();
   return (

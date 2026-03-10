@@ -4,8 +4,8 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 export default function DiaryItem({ diary }) {
   // 截取內容的前10個字作為預覽
   const previewContent =
-    diary.content.length > 20
-      ? diary.content.substring(0, 20) + "..."
+    diary.content.length > 10
+      ? diary.content.substring(0, 10) + "..."
       : diary.content;
 
   return (
