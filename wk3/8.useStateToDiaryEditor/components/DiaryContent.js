@@ -7,7 +7,6 @@ import {
 } from "react-native";
 
 export default function DiaryContent({
-  diaryId,
   diaryTitle,
   diaryContent,
   diaryDate,

@@ -5,8 +5,6 @@ import {
   View,
   TextInput,
   Pressable,
-  KeyboardAvoidingView,
-  Platform,
   Keyboard,
 } from "react-native";
 
