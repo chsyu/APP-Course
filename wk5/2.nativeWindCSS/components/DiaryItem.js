@@ -29,15 +29,12 @@ export default function DiaryItem({ diary }) {
       })}
     >
       <View className="flex-1">
-        {/* 標題 */}
         <Text className="text-lg font-bold text-gray-800 mb-2" numberOfLines={1}>
           {diary.title}
         </Text>
 
-        {/* 日期 */}
         <Text className="text-xs text-gray-500 mb-2">{diary.date}</Text>
 
-        {/* 內容預覽 */}
         <Text className="text-sm text-gray-600 leading-5" numberOfLines={2}>
           {previewContent}
         </Text>

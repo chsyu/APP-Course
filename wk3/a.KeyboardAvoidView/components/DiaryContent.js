@@ -4,10 +4,9 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity,
+  Pressable,
   KeyboardAvoidingView,
   Platform,
-  TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
 
@@ -20,11 +19,9 @@ export default function DiaryContent({
   // 1. 定義狀態：日記內容與是否正在編輯
   const [title, setTitle] = useState(diaryTitle);
   const [content, setContent] = useState(diaryContent);
-  const [isEditing, setIsEditing] = useState(false);
 
   // 2. 實作儲存邏輯
   const handleSave = () => {
-    setIsEditing(false);
     console.log("Saved:", title, content);
   };
 
@@ -33,7 +30,10 @@ export default function DiaryContent({
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <Pressable 
+        onPress={Keyboard.dismiss}
+        style={{flex: 1}}
+      >
         <View style={styles.inner}>
           {/* 標題輸入區域 */}
           <TextInput
@@ -51,30 +51,18 @@ export default function DiaryContent({
           />
           <Text style={styles.label}>{diaryDate} &nbsp; 儲存</Text>
 
-          {/* 3. 核心切換邏輯 */}
-          {isEditing ? (
-            <View style={styles.editContainer}>
-              <TextInput
-                style={styles.input}
-                value={content}
-                onChangeText={setContent}
-                multiline
-                autoFocus // 進入編輯模式時自動彈出鍵盤
-                onBlur={handleSave} // 點擊其他地方或鍵盤收起時自動儲存
-              />
-            </View>
-          ) : (
-            <TouchableOpacity
-              style={styles.previewContainer}
-              onPress={() => setIsEditing(true)}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.previewText}>{content}</Text>
-              <Text style={styles.editHint}>點擊內容以編輯...</Text>
-            </TouchableOpacity>
-          )}
+          <View style={styles.editContainer}>
+            <TextInput
+              style={styles.input}
+              value={content}
+              onChangeText={setContent}
+              multiline
+              autoFocus // 進入編輯模式時自動彈出鍵盤
+              onBlur={handleSave} // 點擊其他地方或鍵盤收起時自動儲存
+            />
+          </View>
         </View>
-      </TouchableWithoutFeedback>
+      </Pressable>
     </KeyboardAvoidingView>
   );
 }

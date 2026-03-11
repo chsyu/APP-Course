@@ -1,5 +1,5 @@
 // app/diary/[id].jsx
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { useLocalSearchParams, Stack } from "expo-router";
 import DiaryContent from '../../components/DiaryContent';
 
