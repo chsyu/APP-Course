@@ -15,19 +15,32 @@ export default function DiaryListScreen() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen 
-        options={{ 
+      <Stack.Screen
+        options={{
           title: `我的日記`,
-        }} 
-      />      
+          headerStyle: {
+            backgroundColor: "#e5e5e5",
+            elevation: 0, // Android 移除 shadow
+            shadowOpacity: 0, // iOS 移除 shadow
+            shadowOffset: { width: 0, height: 0 },
+            shadowRadius: 0,
+          },
+          headerShadowVisible: false, // 移除分隔線
+        }}
+      />
 
       {/* 日記列表 */}
       <FlatList
         data={diaries}
         renderItem={renderDiaryItem}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={{ padding: 16 }}
         showsVerticalScrollIndicator={false}
+        style={{
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
+          backgroundColor: '#ffffff' // FlatList 保持白色背景
+        }}
       />
     </View>
   );
@@ -36,7 +49,7 @@ export default function DiaryListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#e5e5e5',
   },
   header: {
     backgroundColor: '#ffffff',

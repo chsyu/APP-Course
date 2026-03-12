@@ -1,18 +1,16 @@
 import '../global.css';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 export default function RootLayout() {
-
   return (
-    <SafeAreaProvider>
-      <Stack>        
+    <KeyboardProvider>
+      <Stack>
         <Stack.Screen name="index" />
         <Stack.Screen name="diary/[id]" />
       </Stack>
       <StatusBar style="auto" />
-    </SafeAreaProvider>
+    </KeyboardProvider>
   );
 }

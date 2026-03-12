@@ -4,12 +4,11 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
+  Pressable,
   Keyboard,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+
 import { useDiaryStore } from "../store/useDiaryStore";
 
 export default function DiaryContent({
@@ -21,14 +20,12 @@ export default function DiaryContent({
   // 1. 定義狀態：日記內容與是否正在編輯
   const [title, setTitle] = useState(diaryTitle);
   const [content, setContent] = useState(diaryContent);
-  const [isEditing, setIsEditing] = useState(false);
 
   // 從 Zustand store 獲取更新函數
   const updateDiary = useDiaryStore((state) => state.updateDiary);
 
   // 2. 實作儲存邏輯
   const handleSave = () => {
-    setIsEditing(false);
     // 調用 Zustand store 的更新函數
     if (diaryId) {
       updateDiary(diaryId, title, content);
@@ -37,11 +34,8 @@ export default function DiaryContent({
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <KeyboardAwareScrollView bottomOffset={50}>
+      <Pressable onPress={Keyboard.dismiss} style={styles.pressable}>
         <View style={styles.inner}>
           {/* 標題輸入區域 */}
           <TextInput
@@ -59,38 +53,31 @@ export default function DiaryContent({
           />
           <Text style={styles.label}>{diaryDate} &nbsp; 儲存</Text>
 
-          {/* 3. 核心切換邏輯 */}
-          {isEditing ? (
-            <View style={styles.editContainer}>
-              <TextInput
-                style={styles.input}
-                value={content}
-                onChangeText={setContent}
-                multiline
-                autoFocus // 進入編輯模式時自動彈出鍵盤
-                onBlur={handleSave} // 點擊其他地方或鍵盤收起時自動儲存
-              />
-            </View>
-          ) : (
-            <TouchableOpacity
-              style={styles.previewContainer}
-              onPress={() => setIsEditing(true)}
-              activeOpacity={0.7}
-            >
-              <Text style={styles.previewText}>{content}</Text>
-              <Text style={styles.editHint}>點擊內容以編輯...</Text>
-            </TouchableOpacity>
-          )}
+          <View style={styles.editContainer}>
+            <TextInput
+              style={styles.input}
+              value={content}
+              onChangeText={setContent}
+              multiline
+              scrollEnabled={false}
+              autoFocus
+              onBlur={handleSave}
+            />
+          </View>
         </View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+      </Pressable>
+    </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //  backgroundColor: '#f9f9f9',
+    backgroundColor: "#e5e5e5",
+  },
+  pressable: {
+    flex: 1,
+    minHeight: 400,
   },
   inner: {
     padding: 24,
