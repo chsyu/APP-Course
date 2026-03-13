@@ -37,7 +37,7 @@ export default function DiaryListScreen() {
       <Header length={diaries.length} />
       <FlatList
         data={diaries}
-        renderItem={(item) => <DiaryItem diary={item} />}
+        renderItem={({item}) => <DiaryItem diary={item} />}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
