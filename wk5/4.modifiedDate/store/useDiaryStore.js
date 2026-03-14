@@ -40,7 +40,7 @@ const initialDiaries = [
 ];
 
 // 創建 Zustand store
-export const useDiaryStore = create(
+const useDiaryStore = create(
   persist(
     (set) => ({
       // State
@@ -63,3 +63,5 @@ export const useDiaryStore = create(
     }
   ),
 );
+
+export default useDiaryStore;

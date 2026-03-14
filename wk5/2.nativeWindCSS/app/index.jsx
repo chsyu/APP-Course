@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList, View } from 'react-native';
 import { Stack } from 'expo-router';
 import DiaryItem from '../components/DiaryItem';
-import { useDiaryStore } from '../store/useDiaryStore';
+import useDiaryStore from '../store/useDiaryStore';
 import { colors } from '../utils/color';
 
 export default function DiaryListScreen() {

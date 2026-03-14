@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { Stack } from 'expo-router';
 import DiaryItem from '../components/DiaryItem';
-import { useDiaryStore } from '../store/useDiaryStore';
+import useDiaryStore from '../store/useDiaryStore';
 
 export default function DiaryListScreen() {
   // 使用 Zustand store 獲取日記列表

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Text, View, TextInput, Keyboard, Pressable } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
-import { useDiaryStore } from "../store/useDiaryStore";
+import useDiaryStore from "../store/useDiaryStore";
 
 export default function DiaryContent({
   diaryId,
