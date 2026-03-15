@@ -60,7 +60,7 @@ export default function DiaryContent({
           {photoUri && (
             <Image 
               source={{ uri: photoUri }} 
-              style={{ width: 100, height: 100 }} 
+              style={{ width: '100%', height: 200 }} 
             />
           )}
           <View className="flex-1">
