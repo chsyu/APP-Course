@@ -10,12 +10,12 @@ export default function DiaryContent({
   diaryContent,
   diaryDate,
   diaryModifiedDate,
-  diaryPhotoUri,
+  diaryPhoto,
 }) {
   // 1. 定義狀態：日記內容與是否正在編輯
   const [title, setTitle] = useState(diaryTitle);
   const [content, setContent] = useState(diaryContent);
-  const [photoUri, setPhotoUri] = useState(diaryPhotoUri);
+  const [photo, setPhoto] = useState(diaryPhoto);
   
   // 從 Zustand store 獲取更新函數
   const updateDiary = useDiaryStore((state) => state.updateDiary);
@@ -23,13 +23,13 @@ export default function DiaryContent({
   // 2. 實作儲存邏輯
   const handleSave = () => {
     if (diaryId) {
-      updateDiary(diaryId, title, content, photoUri);
+      updateDiary(diaryId, title, content, photo);
     }
   };
 
   const handleSelectPhoto = async () => {
     const base64String = await pickImage();
-    setPhotoUri(base64String);
+    setPhoto(base64String);
   };
 
   return (
@@ -57,9 +57,9 @@ export default function DiaryContent({
             )}
           </View>
           <Button title="選擇照片" onPress={handleSelectPhoto} />
-          {photoUri && (
+          {photo && (
             <Image 
-              source={{ uri: photoUri }} 
+              source={{ uri: photo }} 
               style={{ width: '100%', height: 200 }} 
             />
           )}

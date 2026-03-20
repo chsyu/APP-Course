@@ -13,7 +13,7 @@ const initialDiaries = [
       "今天早上起床時，陽光透過窗戶灑進來，感覺特別美好。決定去公園散步，呼吸新鮮空氣。",
     date: "2024年01月15日 08:30",
     modifiedDate: null,
-    photoUri: null,
+    photo: null,
   },
   {
     id: "2",
@@ -22,7 +22,7 @@ const initialDiaries = [
       "今天開始學習 React Native，感覺很有趣。學會了如何使用 FlatList 來顯示列表資料。",
     date: "2024年01月14日 14:20",
     modifiedDate: null,
-    photoUri: null,
+    photo: null,
   },
   {
     id: "3",
@@ -30,7 +30,7 @@ const initialDiaries = [
     content: "晚上和朋友一起去吃火鍋，聊了很多有趣的話題。好久沒有這麼開心了！",
     date: "2024年01月13日 19:00",
     modifiedDate: null,
-    photoUri: null,
+    photo: null,
   },
   {
     id: "4",
@@ -39,7 +39,7 @@ const initialDiaries = [
       "今天是新的一年的開始，對未來充滿了期待。希望今年能夠達成自己的目標。",
     date: "2024年01月01日 00:00",
     modifiedDate: null,
-    photoUri: null,
+    photo: null,
   },
 ];
 
@@ -52,7 +52,7 @@ const useDiaryStore = create(
         diaries: initialDiaries,
 
         // Actions
-        updateDiary: (id, title, content, photoUri) =>
+        updateDiary: (id, title, content, photo) =>
           set((state) => ({
             diaries: state.diaries.map((diary) =>
               diary.id === id
@@ -60,7 +60,7 @@ const useDiaryStore = create(
                     ...diary,
                     title,
                     content,
-                    photoUri,
+                    photo,
                     modifiedDate: formatDiaryDate(),
                   }
                 : diary,
@@ -76,7 +76,7 @@ const useDiaryStore = create(
             content,
             date: formatDiaryDate(),
             modifiedDate: null,
-            photoUri: null,
+            photo: null,
           };
           set((state) => ({
             diaries: [newDiary, ...state.diaries], // 新日記放在最前面
@@ -87,6 +87,20 @@ const useDiaryStore = create(
       {
         name: "diary-storage-photo1",
         storage: createJSONStorage(() => AsyncStorage),
+        version: 1,
+        // 遷移：將舊的 photoUri 改為 photo（因專案使用 base64 儲存照片）
+        migrate: (persistedState, version) => {
+          if (version < 1 && persistedState?.diaries) {
+            return {
+              ...persistedState,
+              diaries: persistedState.diaries.map((d) => {
+                const { photoUri, ...rest } = d;
+                return { ...rest, photo: photoUri ?? d.photo ?? null };
+              }),
+            };
+          }
+          return persistedState;
+        },
         // 只持久化 diaries 陣列
         partialize: (state) => ({ diaries: state.diaries }),
       },

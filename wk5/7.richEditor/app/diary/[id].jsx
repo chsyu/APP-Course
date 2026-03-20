@@ -34,8 +34,7 @@ export default function Diary() {
         diaryTitle={diary.title}
         diaryContent={diary.content} 
         diaryDate={diary.date}
-        diaryModifiedDate={diary.modifiedDate}
-        diaryPhoto={diary.photo}
+        diaryModifiedDate={diary.modifiedDate || ''}
       />
     </View>
   );
