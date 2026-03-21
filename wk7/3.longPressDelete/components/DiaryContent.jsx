@@ -19,7 +19,7 @@ import {
   Images,
 } from '@10play/tentap-editor';
 import useDiaryStore from '../store/useDiaryStore';
-import { pickImageAndConvertToBase64 } from '../utils/photoHandler';
+import { pickImage } from '../utils/photoHandler';
 
 const PLACEHOLDER = '開始輸入您的日記...';
 const EMPTY_CONTENT = '<p></p>';
@@ -73,11 +73,8 @@ export default function DiaryContent({
     if (isProcessingPhoto) return;
     setIsProcessingPhoto(true);
     try {
-      const result = await pickImageAndConvertToBase64();
-      if (result?.base64) {
-        const imageUri = result.base64.startsWith('data:image')
-          ? result.base64
-          : `data:image/jpeg;base64,${result.base64}`;
+      const imageUri = await pickImage();
+      if (imageUri) {
         editor?.focus();
         editor?.setImage(imageUri);
       }
