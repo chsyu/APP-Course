@@ -1,10 +1,25 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, UrlTile } from 'react-native-maps';
 import { LocationDiarySheet } from '../../components/LocationDiarySheet';
 import useDiaryStore from '../../store/useDiaryStore';
+import { colors } from '../../utils/color';
 import { roundCoordinates } from '../../utils/locationHelper';
+
+// Android 地圖圖磚選項（修改下面網址即可切換）：
+// --- Carto ---
+//   voyager (彩色): https://cartodb-basemaps-a.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png
+//   light_all (極淺灰): https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png
+//   dark_all (全黑): https://cartodb-basemaps-a.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png
+// --- 其他（基於 OSM）---
+//   opentopomap (地形圖，暖色調): https://a.tile.opentopomap.org/{z}/{x}/{y}.png
+//   humanitarian (人道風格，對比較高): https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
+//   cyclosm (單車風格): https://a.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png
+//   memomaps (交通圖): https://tile.memomaps.de/tilegen/{z}/{x}/{y}.png
+//   stamen_watercolor (水彩藝術風): https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg
+const ANDROID_TILE_URL =
+  'https://cartodb-basemaps-a.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.pngs';
 
 export default function MapScreen() {
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -89,13 +104,20 @@ export default function MapScreen() {
   };
 
   return (
-    <View className="flex-1">
+    <View style={{ flex: 1 }}>
       <MapView
         style={{ flex: 1 }}
         initialRegion={initialRegion}
+        mapType={Platform.OS === 'android' ? 'none' : 'standard'}
         showsUserLocation={false}
         showsMyLocationButton={false}
       >
+        {Platform.OS === 'android' && (
+          <UrlTile
+            urlTemplate={ANDROID_TILE_URL}
+            maximumZ={19}
+          />
+        )}
         {locationMarkers.map((marker, index) => (
           <Marker
             key={`${marker.latitude}-${marker.longitude}-${index}`}
@@ -103,11 +125,24 @@ export default function MapScreen() {
               latitude: marker.latitude,
               longitude: marker.longitude,
             }}
+            anchor={Platform.OS === 'android' ? { x: 0.5, y: 0.6 } : { x: 0.5, y: 0.5 }}
             onPress={() => handleMarkerPress(marker)}
           >
-            <View className="items-center justify-center">
-              <View className="bg-fab rounded-[20px] min-w-[40px] h-10 px-3 justify-center items-center border-[3px] border-white shadow-lg">
-                <Text className="text-white text-base font-bold">{marker.count}</Text>
+            <View style={styles.markerContainer}>
+              <View
+                style={[
+                  styles.markerBubble,
+                  Platform.OS === 'android' && styles.markerBubbleAndroid,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.markerText,
+                    Platform.OS === 'android' && styles.markerTextAndroid,
+                  ]}
+                >
+                  {marker.count}
+                </Text>
               </View>
             </View>
           </Marker>
@@ -115,13 +150,10 @@ export default function MapScreen() {
       </MapView>
 
       {locationMarkers.length === 0 && (
-        <View
-          className="absolute inset-0 justify-center items-center"
-          pointerEvents="box-none"
-        >
-          <View className="bg-white/95 rounded-2xl p-6 m-5 items-center shadow-lg">
-            <Text className="text-lg font-bold text-gray-800 mb-2">沒有位置資料</Text>
-            <Text className="text-sm text-gray-500 text-center leading-5">
+        <View style={styles.emptyMapOverlay} pointerEvents="box-none">
+          <View style={styles.emptyMapCard}>
+            <Text style={styles.emptyMapTitle}>沒有位置資料</Text>
+            <Text style={styles.emptyMapSubtitle}>
               {diaries.length === 0
                 ? '還沒有任何日記'
                 : '現有的日記沒有位置資訊，創建新日記時會自動記錄位置'}
@@ -131,7 +163,15 @@ export default function MapScreen() {
       )}
 
       <TouchableOpacity
-        className="absolute right-10 bottom-20 w-16 h-16 rounded-full items-center justify-center bg-fab shadow-xl"
+        className="absolute right-10 bottom-20 w-16 h-16 rounded-full items-center justify-center"
+        style={{
+          backgroundColor: colors.fab,
+          elevation: 8,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.3,
+          shadowRadius: 4.65,
+        }}
         onPress={handleCreateDiary}
         activeOpacity={0.8}
       >
@@ -151,3 +191,74 @@ export default function MapScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  markerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  markerBubble: {
+    backgroundColor: colors.fab,
+    borderRadius: 20,
+    minWidth: 40,
+    height: 40,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  markerBubbleAndroid: {
+    minWidth: 32,
+    height: 32,
+    borderRadius: 16,
+    paddingHorizontal: 8,
+    borderWidth: 2,
+  },
+  markerText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  markerTextAndroid: {
+    fontSize: 12,
+  },
+  emptyMapOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyMapCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 16,
+    padding: 24,
+    margin: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  emptyMapTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    marginBottom: 8,
+  },
+  emptyMapSubtitle: {
+    fontSize: 14,
+    color: '#6B7280',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+});
