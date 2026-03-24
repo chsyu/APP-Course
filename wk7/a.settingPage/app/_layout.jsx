@@ -1,6 +1,6 @@
 import '../global.css';
 import { Stack, useRouter } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
@@ -19,12 +19,22 @@ export default function RootLayout() {
           options={{
             title: '我的日記',
             headerRight: () => (
-              <Pressable
-                onPress={() => router.push('/search')}
-                style={{ marginRight: 16 }}
-              >
-                <Ionicons name="search" size={24} color="#000" />
-              </Pressable>
+              <View className="flex-row items-center gap-4">
+                <Pressable
+                  onPress={() => router.push('/search')}
+                  style={{ marginRight: 0 }}
+                >
+                  <Ionicons name="search" size={24} color="#000" />
+                </Pressable>
+                <Pressable
+                  onPress={() => router.push('/settings')}
+                  style={{ marginRight: 16 }}
+                >
+                  <View className="w-8 h-8 rounded-full bg-gray-200 items-center justify-center">
+                    <Ionicons name="person" size={24} color="#000" />
+                  </View>
+                </Pressable>
+              </View>
             ),
             headerStyle: {
               backgroundColor: colors.primary,
@@ -33,6 +43,20 @@ export default function RootLayout() {
               shadowOffset: { width: 0, height: 0 },
               shadowRadius: 0,
             },
+            headerShadowVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="settings"
+          options={{
+            headerStyle: { backgroundColor: colors.primary },
+            headerShadowVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="profile"
+          options={{
+            headerStyle: { backgroundColor: colors.primary },
             headerShadowVisible: false,
           }}
         />

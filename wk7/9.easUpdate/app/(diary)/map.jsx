@@ -1,10 +1,24 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, UrlTile } from 'react-native-maps';
 import { LocationDiarySheet } from '../../components/LocationDiarySheet';
 import useDiaryStore from '../../store/useDiaryStore';
 import { roundCoordinates } from '../../utils/locationHelper';
+
+// Android 地圖圖磚選項（修改下面網址即可切換）：
+// --- Carto ---
+//   voyager (彩色): https://cartodb-basemaps-a.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png
+//   light_all (極淺灰): https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png
+//   dark_all (全黑): https://cartodb-basemaps-a.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png
+// --- 其他（基於 OSM）---
+//   opentopomap (地形圖，暖色調): https://a.tile.opentopomap.org/{z}/{x}/{y}.png
+//   humanitarian (人道風格，對比較高): https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
+//   cyclosm (單車風格): https://a.tile.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png
+//   memomaps (交通圖): https://tile.memomaps.de/tilegen/{z}/{x}/{y}.png
+//   stamen_watercolor (水彩藝術風): https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg
+const ANDROID_TILE_URL =
+  'https://cartodb-basemaps-a.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.pngs';
 
 export default function MapScreen() {
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -67,9 +81,16 @@ export default function MapScreen() {
       <MapView
         style={{ flex: 1 }}
         initialRegion={initialRegion}
+        mapType={Platform.OS === 'android' ? 'none' : 'standard'}
         showsUserLocation={false}
         showsMyLocationButton={false}
       >
+        {Platform.OS === 'android' && (
+          <UrlTile
+            urlTemplate={ANDROID_TILE_URL}
+            maximumZ={19}
+          />
+        )}
         {locationMarkers.map((marker, index) => (
           <Marker
             key={`${marker.latitude}-${marker.longitude}-${index}`}

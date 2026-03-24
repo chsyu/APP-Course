@@ -1,14 +1,12 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text } from 'react-native';
+import FabButton from '../../components/FabButton';
 import { useRouter } from 'expo-router';
 import MapView, { Marker } from 'react-native-maps';
-import { LocationDiarySheet } from '../../components/LocationDiarySheet';
 import useDiaryStore from '../../store/useDiaryStore';
 import { roundCoordinates } from '../../utils/locationHelper';
 
 export default function MapScreen() {
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [sheetVisible, setSheetVisible] = useState(false);
 
   const diaries = useDiaryStore((state) => state.diaries);
   const createDiary = useDiaryStore((state) => state.createDiary);
@@ -57,11 +55,6 @@ export default function MapScreen() {
     longitudeDelta: 0.1,
   };
 
-  const handleMarkerPress = (marker) => {
-    setSelectedLocation(marker);
-    setSheetVisible(true);
-  };
-
   return (
     <View className="flex-1">
       <MapView
@@ -77,51 +70,16 @@ export default function MapScreen() {
               latitude: marker.latitude,
               longitude: marker.longitude,
             }}
-            onPress={() => handleMarkerPress(marker)}
           >
             <View className="items-center justify-center">
-              <View className="bg-fab rounded-[20px] min-w-[32px] h-10 px-3 justify-center items-center border-[3px] border-white shadow-lg">
+              <View className="bg-fab rounded-[20px] min-w-[30px] h-10 px-3 justify-center items-center border-[3px] border-white shadow-lg">
                 <Text className="text-white text-base font-bold">{marker.count}</Text>
               </View>
             </View>
           </Marker>
         ))}
       </MapView>
-
-      {locationMarkers.length === 0 && (
-        <View
-          className="absolute inset-0 justify-center items-center"
-          pointerEvents="box-none"
-        >
-          <View className="bg-white/95 rounded-2xl p-6 m-5 items-center shadow-lg">
-            <Text className="text-lg font-bold text-gray-800 mb-2">沒有位置資料</Text>
-            <Text className="text-sm text-gray-500 text-center leading-5">
-              {diaries.length === 0
-                ? '還沒有任何日記'
-                : '現有的日記沒有位置資訊，創建新日記時會自動記錄位置'}
-            </Text>
-          </View>
-        </View>
-      )}
-
-      <TouchableOpacity
-        className="absolute right-10 bottom-20 w-16 h-16 rounded-full items-center justify-center bg-fab shadow-xl"
-        onPress={handleCreateDiary}
-        activeOpacity={0.8}
-      >
-        <Text className="text-white text-[40px] font-light leading-[40px]">
-          +
-        </Text>
-      </TouchableOpacity>
-
-      <LocationDiarySheet
-        visible={sheetVisible}
-        diaries={selectedLocation?.diaries || []}
-        onClose={() => {
-          setSheetVisible(false);
-          setSelectedLocation(null);
-        }}
-      />
+      <FabButton onPress={handleCreateDiary} />
     </View>
   );
 }
