@@ -20,18 +20,15 @@ export default function DiaryListScreen() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View className="flex-1">
       <FlatList
         data={diaries}
         renderItem={renderDiaryItem}
         keyExtractor={(item) => item.id}
         extraData={diaries}
-        contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+        contentContainerClassName="p-4 pb-[100px]"
         showsVerticalScrollIndicator={false}
-        style={{
-          flex: 1,
-          backgroundColor: '#ffffff',
-        }}
+        className="flex-1 bg-white"
       />
       <FabButton onPress={handleCreateDiary} />
     </View>

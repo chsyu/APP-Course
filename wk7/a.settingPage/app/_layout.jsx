@@ -12,34 +12,34 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <KeyboardProvider>
-        <Stack>
-          <Stack.Screen
-            name="(diary)"
-            options={{
-              title: '我的日記',
-              headerRight: () => (
-                <Pressable
-                  onPress={() => router.push('/search')}
-                  style={{ marginRight: 16 }}
-                >
-                  <Ionicons name="search" size={24} color="#000" />
-                </Pressable>
-              ),
-              headerStyle: {
-                backgroundColor: colors.primary,
-                elevation: 0,
-                shadowOpacity: 0,
-                shadowOffset: { width: 0, height: 0 },
-                shadowRadius: 0,
-              },
-              headerShadowVisible: false,
-            }}
-          />
-          <Stack.Screen name="diary/[id]" />
-        </Stack>
-        <StatusBar style="auto" />
-      </KeyboardProvider>
+    <KeyboardProvider>
+      <Stack>
+        <Stack.Screen
+          name="(diary)"
+          options={{
+            title: '我的日記',
+            headerRight: () => (
+              <Pressable
+                onPress={() => router.push('/search')}
+                style={{ marginRight: 16 }}
+              >
+                <Ionicons name="search" size={24} color="#000" />
+              </Pressable>
+            ),
+            headerStyle: {
+              backgroundColor: colors.primary,
+              elevation: 0,
+              shadowOpacity: 0,
+              shadowOffset: { width: 0, height: 0 },
+              shadowRadius: 0,
+            },
+            headerShadowVisible: false,
+          }}
+        />
+        <Stack.Screen name="diary/[id]" />
+      </Stack>
+      <StatusBar style="auto" />
+    </KeyboardProvider>
     </GestureHandlerRootView>
   );
 }

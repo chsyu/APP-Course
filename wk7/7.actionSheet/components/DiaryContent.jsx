@@ -40,10 +40,11 @@ export default function DiaryContent({
 
   const handleSave = async () => {
     if (!editor) return;
+    editor.blur();
+    Keyboard.dismiss();
     const content = await editor.getHTML();
     if (diaryId)
       updateDiary(diaryId, title, content);
-    Keyboard.dismiss();
   };
 
   const handleInsertImage = async () => {

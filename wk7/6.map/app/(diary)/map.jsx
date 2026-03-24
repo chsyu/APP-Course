@@ -50,38 +50,12 @@ export default function MapScreen() {
     return Array.from(locationMap.values());
   }, [diaries]);
 
-  // 計算地圖初始區域（基於所有日記的位置）
-  const initialRegion = useMemo(() => {
-    const diariesWithLocation = diaries.filter(
-      (diary) => diary.latitude != null && diary.longitude != null
-    );
-
-    if (diariesWithLocation.length === 0) {
-      return {
-        latitude: 25.033,
-        longitude: 121.5654,
-        latitudeDelta: 0.1,
-        longitudeDelta: 0.1,
-      };
-    }
-
-    const latitudes = diariesWithLocation.map((d) => d.latitude);
-    const longitudes = diariesWithLocation.map((d) => d.longitude);
-    const minLat = Math.min(...latitudes);
-    const maxLat = Math.max(...latitudes);
-    const minLng = Math.min(...longitudes);
-    const maxLng = Math.max(...longitudes);
-
-    const latDelta = (maxLat - minLat) * 1.5 || 0.1;
-    const lngDelta = (maxLng - minLng) * 1.5 || 0.1;
-
-    return {
-      latitude: (minLat + maxLat) / 2,
-      longitude: (minLng + maxLng) / 2,
-      latitudeDelta: Math.max(latDelta, 0.05),
-      longitudeDelta: Math.max(lngDelta, 0.05),
-    };
-  }, [diaries]);
+  const initialRegion = {
+    latitude: 25.033,
+    longitude: 121.5654,
+    latitudeDelta: 0.1,
+    longitudeDelta: 0.1,
+  };
 
   const handleMarkerPress = (marker) => {
     setSelectedLocation(marker);
@@ -106,7 +80,7 @@ export default function MapScreen() {
             onPress={() => handleMarkerPress(marker)}
           >
             <View className="items-center justify-center">
-              <View className="bg-fab rounded-[20px] min-w-[40px] h-10 px-3 justify-center items-center border-[3px] border-white shadow-lg">
+              <View className="bg-fab rounded-[20px] min-w-[32px] h-10 px-3 justify-center items-center border-[3px] border-white shadow-lg">
                 <Text className="text-white text-base font-bold">{marker.count}</Text>
               </View>
             </View>
