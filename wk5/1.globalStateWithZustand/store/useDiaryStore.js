@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { formatDiaryDate } from '../utils/dateFormatter';
+
 
 
 // 初始的日記資料（硬編碼，供示範使用）
@@ -47,20 +46,14 @@ const useDiaryStore = create(
       diaries: initialDiaries,
 
       // Actions
-      updateDiary: (id, title, content, photoUri = null) => set((state) => ({
+      updateDiary: (id, title, content) => set((state) => ({
         diaries: state.diaries.map(diary => 
           diary.id === id 
-            ? { ...diary, title, content, photoUri, modifiedDate: formatDiaryDate() } 
+            ? { ...diary, title, content} 
             : diary
         )
       })),
-    }),
-    {
-      name: 'diary-storage',
-      storage: createJSONStorage(() => AsyncStorage),
-      // 只持久化 diaries 陣列
-      partialize: (state) => ({ diaries: state.diaries }),
-    }
+    })
   ),
 );
 
