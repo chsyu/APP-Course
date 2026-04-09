@@ -3,10 +3,14 @@ import { View, Text, Pressable } from 'react-native';
 import { Stack, useRouter, usePathname } from 'expo-router';
 import { colors } from '../../utils/color';
 
+const TABS = [
+  { id: 'list', path: '/', label: '列表' },
+  { id: 'stats', path: '/stats', label: '統計' },
+];
+
 export default function DiaryLayout() {
   const router = useRouter();
   const pathname = usePathname();
-  const isList = pathname === '/' || pathname === '/(diary)';
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.primary }}>
@@ -14,28 +18,23 @@ export default function DiaryLayout() {
         {/* 自訂 Tab bar */}
         <View className="px-4 pt-4 pb-3">
           <View className="flex-row items-center justify-center gap-6">
-            <Pressable
-              onPress={() => router.replace('/')}
-              className="pb-2"
-            >
-              <Text
-                className={`text-base font-medium ${isList ? 'text-gray-900' : 'text-gray-600'}`}
-                style={isList ? { borderBottomWidth: 2, borderBottomColor: '#000' } : {}}
-              >
-                列表
-              </Text>
-            </Pressable>
-            <Pressable
-              onPress={() => router.replace('/stats')}
-              className="pb-2"
-            >
-              <Text
-                className={`text-base font-medium ${!isList ? 'text-gray-900' : 'text-gray-600'}`}
-                style={!isList ? { borderBottomWidth: 2, borderBottomColor: '#000' } : {}}
-              >
-                統計
-              </Text>
-            </Pressable>
+            {TABS.map((tab) => {
+              const isActive = tab.path === pathname;
+              return (
+                <Pressable
+                  key={tab.id}
+                  onPress={() => router.replace(tab.path)}
+                  className="pb-2"
+                >
+                  <Text
+                    className={`text-base font-medium ${isActive ? 'text-gray-900' : 'text-gray-600'}`}
+                    style={isActive ? { borderBottomWidth: 2, borderBottomColor: '#000' } : {}}
+                  >
+                    {tab.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
           </View>
           {/* 分隔線 */}
           <View className="border-b border-gray-200 mt-2" style={{ borderBottomWidth: 1, borderBottomColor: '#E5E7EB' }} />

@@ -11,8 +11,6 @@ const TABS = [
 export default function DiaryLayout() {
   const router = useRouter();
   const pathname = usePathname();
-  const normalizedPath = pathname === '/(diary)' ? '/' : pathname;
-  const activeTabId = TABS.find((t) => t.path === normalizedPath)?.id ?? TABS[0].id;
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.primary }}>
@@ -21,7 +19,7 @@ export default function DiaryLayout() {
         <View className="px-4 pt-4 pb-3">
           <View className="flex-row items-center justify-center gap-6">
             {TABS.map((tab) => {
-              const isActive = activeTabId === tab.id;
+              const isActive = tab.path === pathname;
               return (
                 <Pressable
                   key={tab.id}

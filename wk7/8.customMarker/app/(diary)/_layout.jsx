@@ -6,6 +6,7 @@ import { colors } from '../../utils/color';
 const TABS = [
   { id: 'list', path: '/', label: '列表' },
   { id: 'stats', path: '/stats', label: '統計' },
+  { id: 'map', path: '/map', label: '地圖' },
 ];
 
 export default function DiaryLayout() {
@@ -17,9 +18,9 @@ export default function DiaryLayout() {
       <View className="flex-1 bg-white rounded-t-[40px] overflow-hidden">
         {/* 自訂 Tab bar */}
         <View className="px-4 pt-4 pb-3">
-          <View className="flex-row items-center justify-center gap-6">
+          <View className="flex-row items-center justify-center gap-16">
             {TABS.map((tab) => {
-              const isActive = tab.path === pathname;
+              const isActive = pathname === tab.path;
               return (
                 <Pressable
                   key={tab.id}
@@ -42,6 +43,7 @@ export default function DiaryLayout() {
         <Stack screenOptions={{ headerShown: false, animation: 'none' }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="stats" />
+          <Stack.Screen name="map" />
         </Stack>
       </View>
     </View>
