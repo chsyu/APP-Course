@@ -6,34 +6,32 @@ import { colors } from '../utils/color';
 import { logout } from '../services/authService';
 import { useUserStore } from '../store/useUserStore';
 
-// 假数据
-const mockUser = {
-  name: '張三',
-  email: 'zhangsan@example.com',
-  avatar: null, // 暂时使用占位符
-};
-
 export default function ProfileScreen() {
   const router = useRouter();
   const user = useUserStore((s) => s.user);
-  const setUser = useUserStore((s) => s.setUser);
+  const clearUser = useUserStore((s) => s.clearUser);
   const isLoggedIn = Boolean(user?.uid);
+
+  const displayName =
+    user?.displayName ||
+    user?.email?.split('@')[0] ||
+    '用戶';
 
   const handleEditPhoto = () => {
     // TODO: 实现编辑照片功能
     console.log('编辑照片按钮被点击');
   };
 
-  const handleLogout = () => {
-    logout().then(() => {
-      setUser(null);
+  const handleLogout = async () => {
+    const result = await logout();
+    if (!result.error) {
+      clearUser();
       router.replace('/settings');
-    });
+    }
   };
 
   const handleLogin = () => {
-    // TODO: 实现登入功能
-    console.log('登入按钮被点击');
+    router.push('/login');
   };
 
   return (
@@ -56,9 +54,9 @@ export default function ProfileScreen() {
         {/* 头像区域 */}
         <View className="items-center mb-8">
           <View className="w-32 h-32 rounded-full bg-gray-300 items-center justify-center mb-4">
-            {mockUser.avatar ? (
+            {user?.avatar ? (
               <Image
-                source={{ uri: mockUser.avatar }}
+                source={{ uri: user.avatar }}
                 className="w-32 h-32 rounded-full"
                 style={{ width: 128, height: 128 }}
               />
@@ -72,11 +70,13 @@ export default function ProfileScreen() {
         <View className="mx-4 mb-4 bg-white rounded-xl overflow-hidden">
           <View className="px-4 py-4 border-b border-gray-100">
             <Text className="text-sm text-gray-500 mb-1">名稱</Text>
-            <Text className="text-base text-gray-900">{mockUser.name}</Text>
+            <Text className="text-base text-gray-900">{displayName}</Text>
           </View>
           <View className="px-4 py-4">
             <Text className="text-sm text-gray-500 mb-1">Email</Text>
-            <Text className="text-base text-gray-900">{mockUser.email}</Text>
+            <Text className="text-base text-gray-900">
+              {user?.email ?? '—'}
+            </Text>
           </View>
         </View>
 

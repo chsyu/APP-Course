@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { colors } from '../utils/color';
+import AuthBootstrap from '../components/AuthBootstrap';
 
 export default function RootLayout() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <KeyboardProvider>
+        <AuthBootstrap />
         <Stack>
           <Stack.Screen
             name="(diary)"

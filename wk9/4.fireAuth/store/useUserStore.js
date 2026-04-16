@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { auth } from '../config/firebase';
+import { getUserProfile } from '../services/userService';
 
 export const useUserStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
 
       setUser: (next) => {
@@ -17,8 +19,21 @@ export const useUserStore = create(
         }));
       },
 
-      /** 前端範例無遠端資料，保留介面供 login 呼叫 */
-      syncUser: async () => {},
+      syncUser: async () => {
+        const uid = auth?.currentUser?.uid;
+        if (!uid) return;
+        const profile = await getUserProfile(uid);
+        const email = auth.currentUser?.email ?? get().user?.email;
+        set((state) => ({
+          user: {
+            ...(state.user ?? {}),
+            uid,
+            email,
+            displayName: profile?.displayName ?? state.user?.displayName,
+            avatar: profile?.avatar ?? state.user?.avatar ?? null,
+          },
+        }));
+      },
 
       clearUser: () => set({ user: null }),
     }),
