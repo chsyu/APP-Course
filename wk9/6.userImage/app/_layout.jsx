@@ -1,15 +1,19 @@
 import '../global.css';
 import { Stack, useRouter } from 'expo-router';
-import { Pressable, View } from 'react-native';
+import { Image, Pressable, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { colors } from '../utils/color';
 import AuthBootstrap from '../components/AuthBootstrap';
+import { useUserStore } from '../store/useUserStore';
 
 export default function RootLayout() {
   const router = useRouter();
+  const user = useUserStore((state) => state.user);
+  const avatar = user?.avatar;
+  const isLoggedIn = Boolean(user?.uid);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -32,8 +36,12 @@ export default function RootLayout() {
                     onPress={() => router.push('/settings')}
                     style={{ marginRight: 16 }}
                   >
-                    <View className="w-8 h-8 rounded-full bg-gray-200 items-center justify-center">
-                      <Ionicons name="person" size={24} color="#000" />
+                    <View className="w-8 h-8 rounded-full bg-gray-200 items-center justify-center overflow-hidden">
+                      {isLoggedIn && avatar ? (
+                        <Image source={{ uri: avatar }} className="w-full h-full" resizeMode="cover" />
+                      ) : (
+                        <Ionicons name="person" size={24} color="#000" />
+                      )}
                     </View>
                   </Pressable>
                 </View>

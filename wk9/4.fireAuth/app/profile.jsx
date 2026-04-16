@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Pressable, Image } from 'react-native';
+import { View, Text, ScrollView, Pressable } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../utils/color';
@@ -11,16 +11,6 @@ export default function ProfileScreen() {
   const user = useUserStore((s) => s.user);
   const clearUser = useUserStore((s) => s.clearUser);
   const isLoggedIn = Boolean(user?.uid);
-
-  const displayName =
-    user?.displayName ||
-    user?.email?.split('@')[0] ||
-    '用戶';
-
-  const handleEditPhoto = () => {
-    // TODO: 实现编辑照片功能
-    console.log('编辑照片按钮被点击');
-  };
 
   const handleLogout = async () => {
     const result = await logout();
@@ -54,23 +44,15 @@ export default function ProfileScreen() {
         {/* 头像区域 */}
         <View className="items-center mb-8">
           <View className="w-32 h-32 rounded-full bg-gray-300 items-center justify-center mb-4">
-            {user?.avatar ? (
-              <Image
-                source={{ uri: user.avatar }}
-                className="w-32 h-32 rounded-full"
-                style={{ width: 128, height: 128 }}
-              />
-            ) : (
-              <Ionicons name="person" size={64} color="#9CA3AF" />
-            )}
+            <Ionicons name="person" size={64} color="#9CA3AF" />
           </View>
         </View>
 
         {/* 用户信息区域 */}
         <View className="mx-4 mb-4 bg-white rounded-xl overflow-hidden">
           <View className="px-4 py-4 border-b border-gray-100">
-            <Text className="text-sm text-gray-500 mb-1">名稱</Text>
-            <Text className="text-base text-gray-900">{displayName}</Text>
+            <Text className="text-sm text-gray-500 mb-1">UID</Text>
+            <Text className="text-base text-gray-900">{user?.uid ?? '—'}</Text>
           </View>
           <View className="px-4 py-4">
             <Text className="text-sm text-gray-500 mb-1">Email</Text>
@@ -78,19 +60,6 @@ export default function ProfileScreen() {
               {user?.email ?? '—'}
             </Text>
           </View>
-        </View>
-
-        {/* 编辑照片按钮 */}
-        <View className="mx-4 mb-4">
-          <Pressable
-            onPress={handleEditPhoto}
-            className="bg-white rounded-xl px-4 py-4 items-center"
-            style={({ pressed }) => ({
-              opacity: pressed ? 0.7 : 1,
-            })}
-          >
-            <Text className="text-base font-medium text-blue-600">編輯照片</Text>
-          </Pressable>
         </View>
 
         {/* 登出/登入按钮 */}

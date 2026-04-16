@@ -1,44 +1,45 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Pressable,
-  Alert,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, Pressable, Alert, ActivityIndicator } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, Stack } from 'expo-router';
 import { colors } from '../utils/color';
 import { loginSchema, signupSchema } from '../utils/authSchemas';
-import { signIn, signUp } from '../services/authService';
+import { signUp, signIn } from '../services/authService';
+import { createUserProfile } from '../services/userService';
 import { useUserStore } from '../store/useUserStore';
-import { EmailField, PasswordField } from '../components/auth/AuthFields';
+import AuthModeTabs from '../components/auth/AuthModeTabs';
+import {
+  DisplayNameField,
+  EmailField,
+  PasswordField,
+} from '../components/auth/AuthFields';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const [mode, setMode] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [userName, setUserName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const setUser = useUserStore((s) => s.setUser);
+
+  const { setUser, syncUser } = useUserStore();
 
   const validateForm = () => {
     const payload =
       mode === 'signup'
         ? {
-          email: email.trim(),
-          password,
-          confirmPassword,
-        }
+            email: email.trim(),
+            password,
+            userName: userName.trim(),
+            confirmPassword,
+          }
         : {
-          email: email.trim(),
-          password,
-        };
+            email: email.trim(),
+            password,
+          };
 
     const result =
       mode === 'signup'
@@ -59,47 +60,67 @@ export default function LoginScreen() {
 
     setIsLoading(true);
     try {
-      const result =
-        mode === 'login'
-          ? await signIn(email.trim(), password)
-          : await signUp(email.trim(), password);
-      if (!result.user) {
-        Alert.alert(
-          mode === 'login' ? '登入失敗' : '註冊失敗',
-          result.error || '請檢查您的郵箱和密碼'
-        );
+      if (mode === 'login') {
+        const result = await signIn(email.trim(), password);
+        if (!result.user) {
+          Alert.alert('登入失敗', result.error || '請檢查您的郵箱和密碼');
+          return;
+        }
+        setUser({
+          uid: result.user.uid,
+          email: result.user.email || email.trim(),
+        });
+        await syncUser();
+        router.replace('/');
+        return;
+      }
+
+      const authResult = await signUp(email.trim(), password);
+      if (!authResult.user) {
+        Alert.alert('註冊失敗', authResult.error || '請檢查您的輸入');
+        return;
+      }
+      // Ensure auth state/token is fully ready before first Firestore write.
+      await authResult.authUser?.getIdToken?.(true);
+
+      const userData = {
+        email: email.trim(),
+        userName: userName.trim(),
+        avatar: null,
+      };
+
+      const profileResult = await createUserProfile(authResult.user.uid, userData);
+      if (!profileResult.success) {
+        Alert.alert('註冊失敗', profileResult.error || '創建用戶資料失敗');
         return;
       }
 
       setUser({
-        uid: result.user.uid,
-        email: result.user.email ?? email.trim(),
+        uid: authResult.user.uid,
+        email: authResult.user.email,
+        ...userData,
       });
       router.replace('/');
     } catch (_error) {
-      Alert.alert('錯誤', '登入時發生錯誤，請重試');
+      Alert.alert(
+        '錯誤',
+        mode === 'login' ? '登入時發生錯誤，請重試' : '註冊時發生錯誤，請重試'
+      );
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleCancel = () => {
-    if (typeof router.canGoBack === 'function' && router.canGoBack()) {
-      router.back();
-      return;
-    }
-
-    router.replace('/settings');
   };
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.primary }}>
       <Stack.Screen
         options={{
+          headerShown: true,
           title: mode === 'login' ? '登入' : '註冊',
           headerStyle: {
             backgroundColor: colors.primary,
           },
+          headerShadowVisible: false,
           headerBackButtonDisplayMode: 'minimal',
         }}
       />
@@ -108,35 +129,24 @@ export default function LoginScreen() {
         bottomOffset={40}
         className="flex-1"
         contentContainerStyle={{
-          paddingTop: insets.top + 16,
+          paddingTop: 40,
           paddingBottom: 40,
           paddingHorizontal: 24,
         }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-
-        <View className="flex-row mb-8 justify-center">
-          <Pressable
-            onPress={() => setMode('login')}
-            className={`px-6 py-2 rounded-full ${mode === 'login' ? 'bg-gray-600' : 'bg-gray-200'}`}
-          >
-            <Text className={`text-base font-medium ${mode === 'login' ? 'text-white' : 'text-gray-700'}`}>
-              登入
-            </Text>
-          </Pressable>
-          <View className="w-4" />
-          <Pressable
-            onPress={() => setMode('signup')}
-            className={`px-6 py-2 rounded-full ${mode === 'signup' ? 'bg-gray-600' : 'bg-gray-200'}`}
-          >
-            <Text className={`text-base font-medium ${mode === 'signup' ? 'text-white' : 'text-gray-700'}`}>
-              註冊
-            </Text>
-          </Pressable>
-        </View>
+        <AuthModeTabs mode={mode} onChangeMode={setMode} />
 
         <View className="bg-white rounded-xl p-6 mb-6">
+          {mode === 'signup' && (
+            <DisplayNameField
+              value={userName}
+              onChangeText={setUserName}
+              editable={!isLoading}
+            />
+          )}
+
           <EmailField
             value={email}
             onChangeText={setEmail}
@@ -179,7 +189,7 @@ export default function LoginScreen() {
             )}
           </Pressable>
         </View>
-        {/* 提示信息 */}
+
         <Text className="text-sm text-gray-500 text-center">
           {mode === 'login'
             ? '還沒有帳號？點擊上方「註冊」按鈕'
@@ -189,4 +199,3 @@ export default function LoginScreen() {
     </View>
   );
 }
-
