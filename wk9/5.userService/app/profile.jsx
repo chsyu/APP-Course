@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, Pressable, TextInput, Alert, ActivityIndicator } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,16 +13,8 @@ export default function ProfileScreen() {
   const setUser = useUserStore((s) => s.setUser);
   const clearUser = useUserStore((s) => s.clearUser);
   const isLoggedIn = Boolean(user?.uid);
-  const initialUserName = useMemo(
-    () => user?.userName || user?.displayName || '',
-    [user?.displayName, user?.userName]
-  );
-  const [userName, setUserName] = useState(initialUserName);
+  const [userName, setUserName] = useState(user?.userName ?? '');
   const [isSaving, setIsSaving] = useState(false);
-
-  useEffect(() => {
-    setUserName(initialUserName);
-  }, [initialUserName]);
 
   const handleLogout = async () => {
     const result = await logout();

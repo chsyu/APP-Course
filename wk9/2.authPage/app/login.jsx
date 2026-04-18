@@ -86,7 +86,7 @@ export default function LoginScreen() {
       return;
     }
     console.log('handleLogin');
-    router.replace('/');
+    router.dismissTo('/');
   };
 
   const handleSignUp = async () => {
@@ -94,7 +94,7 @@ export default function LoginScreen() {
       return;
     }
     console.log('handleSignUp');
-    router.replace('/');
+    router.dismissTo('/');
   };
 
   return (

@@ -71,7 +71,7 @@ export default function LoginScreen() {
           email: result.user.email || email.trim(),
         });
         await syncUser();
-        router.replace('/');
+        router.dismissTo('/');
         return;
       }
 
@@ -100,7 +100,7 @@ export default function LoginScreen() {
         email: authResult.user.email,
         ...userData,
       });
-      router.replace('/');
+      router.dismissTo('/');
     } catch (_error) {
       Alert.alert(
         '錯誤',

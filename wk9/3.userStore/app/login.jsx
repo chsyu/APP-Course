@@ -107,7 +107,7 @@ export default function LoginScreen() {
         await syncUser();
         
         // 导航到主页
-        router.replace('/');
+        router.dismissTo('/');
       } else {
         Alert.alert('登入失敗', result.error || '請檢查您的郵箱和密碼');
       }
@@ -149,7 +149,7 @@ export default function LoginScreen() {
           });
           
           // 导航到主页
-          router.replace('/');
+          router.dismissTo('/');
         } else {
           Alert.alert('註冊失敗', profileResult.error || '創建用戶資料失敗');
         }

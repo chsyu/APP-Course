@@ -75,7 +75,7 @@ export default function LoginScreen() {
         uid: result.user.uid,
         email: result.user.email ?? email.trim(),
       });
-      router.replace('/');
+      router.dismissTo('/');
     } catch (_error) {
       Alert.alert('錯誤', '登入時發生錯誤，請重試');
     } finally {

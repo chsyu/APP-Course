@@ -71,7 +71,8 @@ export default function LoginScreen() {
           email: result.user.email || email.trim(),
         });
         await syncUser();
-        router.replace('/');
+        // Pop settings/login (etc.) so the diary root is focused; replace('/') alone only swaps the top screen.
+        router.dismissTo('/');
         return;
       }
 
@@ -100,7 +101,7 @@ export default function LoginScreen() {
         email: authResult.user.email,
         ...userData,
       });
-      router.replace('/');
+      router.dismissTo('/');
     } catch (_error) {
       Alert.alert(
         '錯誤',

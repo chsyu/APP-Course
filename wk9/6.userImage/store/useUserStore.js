@@ -13,9 +13,16 @@ export const useUserStore = create(
           set({ user: null });
           return;
         }
-        set((state) => ({
-          user: { ...(state.user ?? {}), ...next },
-        }));
+        const merged = { ...(get().user ?? {}), ...next };
+        if (!merged.uid) return;
+        set({
+          user: {
+            uid: merged.uid,
+            email: merged.email,
+            userName: merged.userName ?? '',
+            avatar: merged.avatar ?? null,
+          },
+        });
       },
 
       syncUser: async () => {
@@ -24,14 +31,18 @@ export const useUserStore = create(
         const profile = await getUserProfile(current.uid);
         if (!profile) return;
 
-        set((state) => ({
-          user: {
-            ...(state.user ?? {}),
-            ...profile,
-            // Backward compatibility for existing displayName field in old data.
-            userName: profile.userName ?? profile.displayName ?? state.user?.userName ?? '',
-          },
-        }));
+        set((state) => {
+          const prev = state.user ?? {};
+          return {
+            user: {
+              uid: prev.uid,
+              email: profile.email ?? prev.email,
+              userName: profile.userName ?? prev.userName ?? '',
+              avatar:
+                profile.avatar !== undefined ? profile.avatar : (prev.avatar ?? null),
+            },
+          };
+        });
       },
 
       clearUser: () => set({ user: null }),

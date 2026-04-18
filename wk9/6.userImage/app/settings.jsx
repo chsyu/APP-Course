@@ -14,8 +14,8 @@ export default function SettingsScreen() {
 
   const isLoggedIn = Boolean(user?.uid);
 
-  const displayName = isLoggedIn
-    ? user.userName || user.displayName || user.email?.split('@')[0] || '用戶'
+  const accountTitle = isLoggedIn
+    ? (user.userName?.trim() ? user.userName : '用戶')
     : '未登入';
 
   const avatarUri = isLoggedIn ? user.avatar : null;
@@ -81,7 +81,7 @@ export default function SettingsScreen() {
             {/* 账户信息 */}
             <View className="flex-1">
               <Text className="text-base font-medium text-gray-900">
-                {displayName}
+                {accountTitle}
               </Text>
             </View>
 
