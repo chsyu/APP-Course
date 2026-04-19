@@ -1,0 +1,99 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function sharedJournalDocPath(journalId) {
+      return /databases/$(database)/documents/sharedJournals/$(journalId);
+    }
+
+    function authEmailLower() {
+      return request.auth.token.email.lower();
+    }
+
+    // 須與 client 的 where('memberEmails','array-contains', auth.currentUser.email 小寫) 對齊；陣列元素須為字串且與 JWT email 小寫完全一致
+    function isEmailMemberOfSharedJournal(data) {
+      return request.auth != null
+        && request.auth.token.email != null
+        && data.memberEmails is list
+        && data.memberEmails.size() > 0
+        && data.memberEmails.hasAny([authEmailLower()]);
+    }
+
+    function isSharedJournalMember(journalId) {
+      return request.auth != null
+        && exists(sharedJournalDocPath(journalId))
+        && isEmailMemberOfSharedJournal(get(sharedJournalDocPath(journalId)).data);
+    }
+
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      match /diaries/{diaryId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    match /publicProfiles/{profileUid} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == profileUid;
+    }
+
+    match /publicProfilesByEmail/{emailKey} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.auth.token.email != null
+        && authEmailLower() == emailKey;
+    }
+
+    // 每位使用者依「小寫 email」子路徑列出自己的分享日誌 id，避免僅依賴 sharedJournals 的 array-contains list 查詢在部分環境整段 permission-denied
+    match /userSharedJournalRefs/{emailKey}/journals/{journalId} {
+      allow read: if request.auth != null
+        && request.auth.token.email != null
+        && emailKey == authEmailLower();
+
+      allow create, delete: if request.auth != null
+        && exists(sharedJournalDocPath(journalId))
+        && get(/databases/$(database)/documents/sharedJournals/$(journalId)).data.ownerUid == request.auth.uid;
+    }
+
+    // 讀：成員可讀 meta；須與 client 查詢 where('memberEmails','array-contains',小寫email) 及 request.auth.token.email 一致
+    match /sharedJournals/{journalId} {
+      allow read: if isEmailMemberOfSharedJournal(resource.data);
+
+      allow create: if request.auth != null
+        && request.auth.token.email != null
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.memberEmails is list
+        && request.resource.data.memberEmails.size() > 0
+        && isEmailMemberOfSharedJournal(request.resource.data);
+
+      allow update: if request.auth != null
+        && request.auth.token.email != null
+        && resource.data.ownerUid == request.auth.uid
+        && request.resource.data.ownerUid == resource.data.ownerUid
+        && request.resource.data.memberEmails is list
+        && request.resource.data.memberEmails.size() > 0
+        && isEmailMemberOfSharedJournal(request.resource.data);
+
+      allow delete: if request.auth != null && resource.data.ownerUid == request.auth.uid;
+
+      match /diaries/{diaryId} {
+        allow read: if isSharedJournalMember(journalId);
+
+        allow create: if isSharedJournalMember(journalId)
+          && request.resource.data.keys().hasAll(['createdByEmail'])
+          && request.resource.data.createdByEmail is string
+          && request.resource.data.createdByEmail.lower() == authEmailLower();
+
+        allow update: if isSharedJournalMember(journalId)
+          && resource.data.createdByEmail is string
+          && resource.data.createdByEmail.lower() == authEmailLower()
+          && request.resource.data.createdByEmail == resource.data.createdByEmail;
+
+        allow delete: if isSharedJournalMember(journalId)
+          && resource.data.createdByEmail is string
+          && resource.data.createdByEmail.lower() == authEmailLower();
+      }
+    }
+  }
+}

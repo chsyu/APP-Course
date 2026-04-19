@@ -1,7 +1,17 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { formatDiaryDate } from '../utils/dateFormatter';
+import { formatDiaryDate, sortDiariesByEntryDateDesc } from '../utils/dateFormatter';
+import { useUserStore } from './useUserStore';
+import {
+  upsertDiaryToFirestore,
+  deleteDiaryFromFirestore,
+} from '../services/diarySyncService';
+
+/** @param {{ updatedAtMs?: number } | undefined} d */
+function diaryUpdatedMs(d) {
+  return typeof d?.updatedAtMs === 'number' ? d.updatedAtMs : 0;
+}
 
 // 初始的日記資料（硬編碼，供示範使用）
 const initialDiaries = [
@@ -146,39 +156,102 @@ const initialDiaries = [
 const useDiaryStore = create(
   persist(
     (set, get) => ({
-      // State
-      diaries: initialDiaries,
+      // State（依日記 date 由新到舊）
+      diaries: sortDiariesByEntryDateDesc(initialDiaries),
+
+      mergeRemoteDiaries: (remoteList) => {
+        if (!Array.isArray(remoteList) || remoteList.length === 0) {
+          return;
+        }
+        set((state) => {
+          const byId = new Map();
+          for (const d of state.diaries) {
+            byId.set(d.id, { ...d });
+          }
+          for (const r of remoteList) {
+            const cur = byId.get(r.id);
+            const remoteMs = diaryUpdatedMs(r);
+            if (!cur || remoteMs > diaryUpdatedMs(cur)) {
+              byId.set(r.id, {
+                id: r.id,
+                title: r.title,
+                content: r.content,
+                date: r.date,
+                modifiedDate: r.modifiedDate ?? null,
+                updatedAtMs: remoteMs,
+                ...(r.latitude != null && r.longitude != null
+                  ? { latitude: r.latitude, longitude: r.longitude }
+                  : {}),
+              });
+            }
+          }
+          const merged = sortDiariesByEntryDateDesc(Array.from(byId.values()));
+          return { diaries: merged };
+        });
+      },
 
       // Actions
-      updateDiary: (id, title, content) => set((state) => ({
-        diaries: state.diaries.map(diary => 
-          diary.id === id 
-            ? { ...diary, title, content, modifiedDate: formatDiaryDate() } 
-            : diary
-        )
-      })),
+      updateDiary: (id, title, content) => {
+        /** @type {{ id: string, title: string, content: string, date: string, modifiedDate: string | null, updatedAtMs: number, latitude?: number, longitude?: number } | null} */
+        let nextDiary = null;
+        set((state) => ({
+          diaries: state.diaries.map((diary) => {
+            if (diary.id !== id) return diary;
+            nextDiary = {
+              ...diary,
+              title,
+              content,
+              modifiedDate: formatDiaryDate(),
+              updatedAtMs: Date.now(),
+            };
+            return nextDiary;
+          }),
+        }));
+        const uid = useUserStore.getState().user?.uid;
+        if (uid && nextDiary) {
+          upsertDiaryToFirestore(uid, nextDiary).catch((e) =>
+            console.warn('[diary sync] upsert after update failed', e)
+          );
+        }
+      },
 
       // 創建新日記
       createDiary: async (title = '新日記', content = '') => {
         const newId = String(Date.now()); // 使用時間戳作為 ID
-        
+        const now = Date.now();
+
         const newDiary = {
           id: newId,
           title,
           content: content || '<p></p>', // 默認為空 HTML
           date: formatDiaryDate(),
           modifiedDate: null,
+          updatedAtMs: now,
         };
         set((state) => ({
-          diaries: [newDiary, ...state.diaries], // 新日記放在最前面
+          diaries: sortDiariesByEntryDateDesc([newDiary, ...state.diaries]),
         }));
+        const uid = useUserStore.getState().user?.uid;
+        if (uid) {
+          upsertDiaryToFirestore(uid, newDiary).catch((e) =>
+            console.warn('[diary sync] upsert after create failed', e)
+          );
+        }
         return newDiary; // 返回新日記對象，用於導航
       },
 
       // 刪除日記
-      deleteDiary: (id) => set((state) => ({
-        diaries: state.diaries.filter(diary => diary.id !== id)
-      })),
+      deleteDiary: (id) => {
+        const uid = useUserStore.getState().user?.uid;
+        if (uid) {
+          deleteDiaryFromFirestore(uid, id).catch((e) =>
+            console.warn('[diary sync] delete remote failed', e)
+          );
+        }
+        set((state) => ({
+          diaries: state.diaries.filter((diary) => diary.id !== id),
+        }));
+      },
 
       // 根據 ID 獲取日記
       getDiaryById: (id) => {
@@ -187,10 +260,15 @@ const useDiaryStore = create(
       },
     }),
     {
-      name: 'diary-storage-map',
+      name: 'diary-storage-v1',
       storage: createJSONStorage(() => AsyncStorage),
       // 只持久化 diaries 陣列
       partialize: (state) => ({ diaries: state.diaries }),
+      merge: (persistedState, currentState) => {
+        const merged = { ...currentState, ...persistedState };
+        merged.diaries = sortDiariesByEntryDateDesc(merged.diaries ?? []);
+        return merged;
+      },
     }
   )
 );

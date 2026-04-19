@@ -7,6 +7,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { colors } from '../utils/color';
 import AuthBootstrap from '../components/AuthBootstrap';
+import DiarySyncBootstrap from '../components/DiarySyncBootstrap';
 import { useUserStore } from '../store/useUserStore';
 
 export default function RootLayout() {
@@ -19,6 +20,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <KeyboardProvider>
         <AuthBootstrap />
+        <DiarySyncBootstrap />
         <Stack>
           <Stack.Screen
             name="(diary)"
@@ -69,6 +71,14 @@ export default function RootLayout() {
             options={{
               headerStyle: { backgroundColor: colors.primary },
               headerShadowVisible: false,
+            }}
+          />
+          <Stack.Screen
+            name="backup"
+            options={{
+              headerStyle: { backgroundColor: colors.primary },
+              headerShadowVisible: false,
+              headerBackButtonDisplayMode: 'minimal',
             }}
           />
           <Stack.Screen
