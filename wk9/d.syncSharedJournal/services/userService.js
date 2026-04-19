@@ -1,5 +1,5 @@
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { db, ensureAuthReady } from '../config/firebase';
 
 const USERS_COLLECTION = 'users';
 const PUBLIC_PROFILES_COLLECTION = 'publicProfiles';
@@ -17,6 +17,7 @@ export function normalizeAuthEmail(email) {
  */
 async function upsertPublicProfile(uid, slice) {
   if (!db || !uid) return;
+  await ensureAuthReady();
   await setDoc(
     doc(db, PUBLIC_PROFILES_COLLECTION, uid),
     {
@@ -34,6 +35,7 @@ async function upsertPublicProfile(uid, slice) {
  */
 async function upsertPublicProfileByEmailDoc(emailKey, slice) {
   if (!db || !emailKey) return;
+  await ensureAuthReady();
   await setDoc(
     doc(db, PUBLIC_PROFILES_BY_EMAIL_COLLECTION, emailKey),
     {
@@ -53,6 +55,7 @@ async function upsertPublicProfileByEmailDoc(emailKey, slice) {
 export async function getUserProfile(uid) {
   if (!db || !uid) return null;
   try {
+    await ensureAuthReady();
     const ref = doc(db, USERS_COLLECTION, uid);
     const snap = await getDoc(ref);
     if (!snap.exists()) return null;
@@ -63,13 +66,14 @@ export async function getUserProfile(uid) {
 }
 
 /**
- * 供協作者顯示用（不含 email）
+ * 供協作者顯示用（不含 email）；以 uid 查詢
  * @param {string} uid
  * @returns {Promise<{ userName?: string, avatar?: string | null } | null>}
  */
 export async function getPublicProfile(uid) {
   if (!db || !uid) return null;
   try {
+    await ensureAuthReady();
     const snap = await getDoc(doc(db, PUBLIC_PROFILES_COLLECTION, uid));
     if (!snap.exists()) return null;
     return snap.data();
@@ -86,6 +90,7 @@ export async function getPublicProfileByEmail(email) {
   const key = normalizeAuthEmail(email);
   if (!db || !key) return null;
   try {
+    await ensureAuthReady();
     const snap = await getDoc(doc(db, PUBLIC_PROFILES_BY_EMAIL_COLLECTION, key));
     if (!snap.exists()) return null;
     return snap.data();
@@ -95,13 +100,14 @@ export async function getPublicProfileByEmail(email) {
 }
 
 /**
- * 將 users/{uid} 的顯示欄位同步到 publicProfiles / publicProfilesByEmail
+ * 將 users/{uid} 的顯示欄位同步到 publicProfiles 與 publicProfilesByEmail（email 路徑僅在有 email 時寫入）
  * @param {string} uid
  * @param {{ userName?: string, avatar?: string | null, email?: string | null }} fields
  */
 export async function syncPublicProfileFromUserFields(uid, fields) {
   if (!db || !uid || !fields) return;
   try {
+    await ensureAuthReady();
     await upsertPublicProfile(uid, {
       userName: fields.userName ?? '',
       avatar: fields.avatar ?? null,
@@ -128,6 +134,7 @@ export async function createUserProfile(uid, userData) {
     return { success: false, error: '無法連線至資料庫' };
   }
   try {
+    await ensureAuthReady();
     await setDoc(
       doc(db, USERS_COLLECTION, uid),
       {
@@ -174,6 +181,7 @@ export async function updateUserProfile(uid, profileData) {
     return { success: false, error: '無法連線至資料庫' };
   }
   try {
+    await ensureAuthReady();
     await setDoc(
       doc(db, USERS_COLLECTION, uid),
       {

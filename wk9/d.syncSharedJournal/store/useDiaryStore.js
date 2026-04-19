@@ -298,9 +298,13 @@ const useDiaryStore = create(
         if (!j) return;
         const uid = useUserStore.getState().user?.uid;
         if (normalizeJournal(j).kind === 'shared' && j.ownerUid === uid) {
-          updateSharedJournalMeta(journalId, { name: trimmed }).catch((e) =>
-            console.warn('[shared journal] rename remote failed', e)
-          );
+          updateSharedJournalMeta(journalId, {
+            name: trimmed,
+            ownerUid: j.ownerUid,
+            ...(Array.isArray(j.memberEmails) && j.memberEmails.length > 0
+              ? { memberEmails: j.memberEmails }
+              : {}),
+          }).catch((e) => console.warn('[shared journal] rename remote failed', e));
         }
         set((state) => ({
           journals: sortJournals(
@@ -322,6 +326,9 @@ const useDiaryStore = create(
         if (j.ownerUid !== uid) {
           return { success: false, error: '僅擁有者可編輯成員' };
         }
+        if (!j.ownerUid || typeof j.ownerUid !== 'string') {
+          return { success: false, error: '日誌擁有者資料異常，請建立新的分享日誌' };
+        }
         if (!myEmail) {
           return { success: false, error: '需要 Email 帳號' };
         }
@@ -329,7 +336,11 @@ const useDiaryStore = create(
           new Set((memberEmailsInput || []).map((e) => normalizeAuthEmail(e)).filter(Boolean))
         );
         if (!unique.includes(myEmail)) unique.unshift(myEmail);
-        const res = await updateSharedJournalMeta(journalId, { memberEmails: unique });
+        const res = await updateSharedJournalMeta(journalId, {
+          memberEmails: unique,
+          ownerUid: j.ownerUid,
+          name: j.name,
+        });
         if (!res.success) return { success: false, error: res.error || '更新失敗' };
 
         const previousKeys = (j.memberEmails || [])
@@ -341,7 +352,13 @@ const useDiaryStore = create(
             await deleteSharedJournalMemberRef(journalId, em);
           }
         }
-        await syncSharedJournalMemberRefs(journalId, unique);
+        const syncRes = await syncSharedJournalMemberRefs(journalId, unique);
+        if (!syncRes.success) {
+          return {
+            success: false,
+            error: syncRes.error || '成員索引（userSharedJournalRefs）同步失敗，請確認規則已部署',
+          };
+        }
 
         const prev = j.memberSummaries;
         const memberSummaries = await buildMemberSummaries(unique, prev);

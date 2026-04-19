@@ -4,14 +4,14 @@ import ActionSheet from 'react-native-actions-sheet';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useDiaryStore from '../store/useDiaryStore';
-import { normalizeAuthEmail } from '../services/userService';
 
 const AVATAR_SIZE = 28;
 const AVATAR_OVERLAP = 10;
 const MAX_STACK = 5;
+const SHEET_ROW_AVATAR = 48;
 
 /**
- * 根 Stack 的 headerTitle：日誌名稱 +（分享日誌）堆疊頭像；點頭像列開 ActionSheet 顯示名稱與 email。
+ * 根 Stack 的 headerTitle：日誌名稱 +（分享日誌）堆疊頭像；點頭像開 ActionSheet 顯示頭像與姓名。
  */
 export default function SharedJournalStackHeaderTitle() {
   const sheetRef = useRef(null);
@@ -48,15 +48,34 @@ export default function SharedJournalStackHeaderTitle() {
   const stackMembers = members.slice(0, MAX_STACK);
 
   const renderSheetRow = ({ item }) => {
-    const em = normalizeAuthEmail(item.email);
     const name = (item.userName || '').trim();
+    const displayName = name || '尚未設定名稱';
     return (
-      <View className="px-5 py-3 border-b border-gray-100">
-        <Text className="text-base font-semibold text-gray-900" numberOfLines={1}>
-          {name || em || '—'}
-        </Text>
-        <Text className="text-sm text-gray-500 mt-1" numberOfLines={1}>
-          {em || '—'}
+      <View className="px-5 py-3 border-b border-gray-100 flex-row items-center">
+        <View
+          style={{
+            width: SHEET_ROW_AVATAR,
+            height: SHEET_ROW_AVATAR,
+            borderRadius: SHEET_ROW_AVATAR / 2,
+            overflow: 'hidden',
+            backgroundColor: '#D1FAE5',
+            marginRight: 12,
+          }}
+        >
+          {item.avatar ? (
+            <Image
+              source={{ uri: item.avatar }}
+              style={{ width: '100%', height: '100%' }}
+              resizeMode="cover"
+            />
+          ) : (
+            <View className="w-full h-full items-center justify-center">
+              <Ionicons name="person" size={26} color="#047857" />
+            </View>
+          )}
+        </View>
+        <Text className="text-base font-semibold text-gray-900 flex-1" numberOfLines={2}>
+          {displayName}
         </Text>
       </View>
     );

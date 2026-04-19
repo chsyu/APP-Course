@@ -6,7 +6,7 @@ import {
   setDoc,
   serverTimestamp,
 } from 'firebase/firestore';
-import { db, ensureAuthReady } from '../config/firebase';
+import { auth, db, ensureAuthReady } from '../config/firebase';
 import { deleteSharedDiary, upsertSharedDiary } from './sharedJournalService';
 
 /** 日記條目歸屬的日記本 id；舊文件無此欄位時視為 default */
@@ -47,6 +47,13 @@ export async function fetchDiariesFromFirestore(uid) {
 
   try {
     await ensureAuthReady();
+    if (auth?.currentUser?.uid === uid) {
+      try {
+        await auth.currentUser.getIdToken(true);
+      } catch {
+        // ignore
+      }
+    }
     const snap = await getDocs(collection(db, 'users', uid, 'diaries'));
     const diaries = snap.docs.map((d) => {
       const data = d.data();
@@ -100,6 +107,14 @@ export async function upsertDiaryToFirestore(uid, diary) {
   }
 
   try {
+    await ensureAuthReady();
+    if (auth?.currentUser?.uid === uid) {
+      try {
+        await auth.currentUser.getIdToken(true);
+      } catch {
+        // ignore
+      }
+    }
     const payload = {
       id: diary.id,
       title: diary.title,
@@ -144,6 +159,14 @@ export async function deleteDiaryFromFirestore(uid, diaryId) {
   }
 
   try {
+    await ensureAuthReady();
+    if (auth?.currentUser?.uid === uid) {
+      try {
+        await auth.currentUser.getIdToken(true);
+      } catch {
+        // ignore
+      }
+    }
     await deleteDoc(doc(db, 'users', uid, 'diaries', diaryId));
     return { success: true };
   } catch (e) {

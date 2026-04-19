@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { auth } from '../config/firebase';
+import { auth, ensureAuthReady } from '../config/firebase';
 import { fetchDiariesFromFirestore, DIARY_LAST_CLOUD_SYNC_AT_KEY } from './diarySyncService';
 import { fetchSharedJournalsForUser, fetchSharedDiaries } from './sharedJournalService';
 import useDiaryStore from '../store/useDiaryStore';
@@ -37,6 +37,13 @@ export async function pullRemoteDiariesAndMerge(opts = {}) {
   const storeUid = useUserStore.getState().user?.uid;
   if (!firebaseUser?.uid || !storeUid || firebaseUser.uid !== storeUid) {
     return { success: false, error: '尚未登入' };
+  }
+
+  await ensureAuthReady();
+  try {
+    await firebaseUser.getIdToken(true);
+  } catch {
+    // ignore
   }
 
   const uid = firebaseUser.uid;

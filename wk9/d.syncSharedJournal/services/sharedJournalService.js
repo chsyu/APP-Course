@@ -58,7 +58,7 @@ function mapDiaryDoc(journalId, docSnap) {
 }
 
 /**
- * 每位成員一筆 `userSharedJournalRefs/{小寫email}/journals/{journalId}`，list 僅掃描自己 email 子路徑，規則易與查詢對齊（避開 sharedJournals 上 array-contains 整段 permission-denied）。
+ * 每位成員一筆 `userSharedJournalRefs/{小寫email}/journals/{journalId}`；list 僅掃描自己 email 子路徑，規則易與查詢對齊。
  */
 export async function syncSharedJournalMemberRefs(journalId, memberEmails) {
   if (!db || !journalId || !Array.isArray(memberEmails)) return { success: false };
@@ -77,7 +77,16 @@ export async function syncSharedJournalMemberRefs(journalId, memberEmails) {
     );
     return { success: true };
   } catch (e) {
-    if (__DEV__) console.warn('[syncSharedJournalMemberRefs]', e?.code, e?.message);
+    if (__DEV__) {
+      console.warn('[syncSharedJournalMemberRefs]', e?.code, e?.message);
+    }
+    if (e?.code === 'permission-denied' || e?.code === 'firestore/permission-denied') {
+      return {
+        success: false,
+        error:
+          '資料庫權限不足：請確認 Firestore rules 已部署，且帳號為分享日誌的擁有者（寫入成員索引須先能讀取 sharedJournals）。',
+      };
+    }
     return { success: false, error: e?.message || 'sync refs failed' };
   }
 }
@@ -125,22 +134,86 @@ export async function createSharedJournal({ name, ownerUid, memberEmails }) {
 }
 
 /**
+ * 遠端 `sharedJournals/{journalId}` 若已被刪除，`merge` 會變成「建立」不完整文件 → 規則拒絕。
+ * 此時須帶齊 `ownerUid` 與 `memberEmails`（由本機 journal 傳入）以整份重建 meta。
+ *
  * @param {string} journalId
- * @param {{ name?: string, memberEmails?: string[] }} patch
+ * @param {{ name?: string, memberEmails?: string[], ownerUid?: string }} patch
  */
 export async function updateSharedJournalMeta(journalId, patch) {
   if (!db) return { success: false, error: '無法連線至資料庫' };
   await ensureAuthReady();
+  if (auth?.currentUser) {
+    try {
+      await auth.currentUser.getIdToken(true);
+    } catch {
+      // ignore
+    }
+  }
   if (!journalId) return { success: false, error: '日誌 id 無效' };
   try {
     const ref = doc(db, SHARED_JOURNALS, journalId);
+    let snap;
+    try {
+      snap = await getDoc(ref);
+    } catch (readErr) {
+      if (readErr?.code === 'permission-denied' || readErr?.code === 'firestore/permission-denied') {
+        if (__DEV__) {
+          console.warn(
+            '[updateSharedJournalMeta] getDoc denied, will try rebuild',
+            journalId,
+            readErr?.message
+          );
+        }
+        snap = { exists: () => false, data: () => null };
+      } else {
+        throw readErr;
+      }
+    }
+    const prev = snap.exists() ? snap.data() : null;
+
     const payload = { updatedAt: serverTimestamp() };
     if (typeof patch.name === 'string') payload.name = patch.name.trim() || '分享日誌';
     if (Array.isArray(patch.memberEmails)) payload.memberEmails = patch.memberEmails;
+
+    // 主控台刪除集合後可能殘留空文件，或僅有部分欄位；此時 merge update 會違反規則，改為整份覆寫
+    const metaLooksValid =
+      snap.exists() &&
+      typeof prev?.ownerUid === 'string' &&
+      prev.ownerUid.length > 0 &&
+      Array.isArray(prev.memberEmails) &&
+      prev.memberEmails.length > 0;
+
+    if (!metaLooksValid) {
+      const ownerUid = patch.ownerUid;
+      if (!ownerUid || typeof ownerUid !== 'string') {
+        return {
+          success: false,
+          error:
+            '雲端找不到此分享日誌（可能已在主控台刪除）。請擁有者在此日誌「編輯成員」再按儲存一次，以用本機資料重建雲端；或改建立新的分享日誌。',
+        };
+      }
+      if (!Array.isArray(payload.memberEmails) || payload.memberEmails.length === 0) {
+        return {
+          success: false,
+          error: '重建雲端分享日誌時須包含成員 email 列表（請由編輯成員儲存，勿僅改日誌名稱）。',
+        };
+      }
+      payload.ownerUid = ownerUid;
+      if (typeof payload.name !== 'string' || !payload.name) {
+        payload.name = '分享日誌';
+      }
+      await setDoc(ref, payload);
+      return { success: true };
+    }
+
     await setDoc(ref, payload, { merge: true });
     return { success: true };
   } catch (e) {
     if (e?.code === 'permission-denied' || e?.code === 'firestore/permission-denied') {
+      if (__DEV__) {
+        console.warn('[updateSharedJournalMeta] write denied', journalId, e?.code, e?.message);
+      }
       return permissionError();
     }
     return { success: false, error: e?.message || '更新分享日誌失敗' };
@@ -151,6 +224,7 @@ export async function updateSharedJournalMeta(journalId, patch) {
  * 查詢條件必須與 Firestore rules 使用的 `request.auth.token.email`（小寫）一致，
  * 否則 rules 會認定查詢與身分不一致而整段 permission-denied。
  * 因此一律以 `auth.currentUser.email` 為準，忽略呼叫端傳入的參數（僅在 __DEV__ 比對提示）。
+ * 優先讀 `userSharedJournalRefs/{小寫email}/journals`（與規則對齊）；無資料時再 fallback `array-contains`。
  *
  * @param {string} [_userEmailLower] 已廢棄作為查詢值，保留參數避免既有呼叫點改動
  */
@@ -213,7 +287,6 @@ export async function fetchSharedJournalsForUser(_userEmailLower) {
       };
     };
 
-    // 1) 依 email 子路徑列索引（規則：emailKey == token.email），通常可避開 sharedJournals 上 array-contains list 的 permission-denied
     try {
       const refSnap = await getDocs(
         collection(db, USER_SHARED_JOURNAL_REFS, keyFromAuth, 'journals')
@@ -233,7 +306,6 @@ export async function fetchSharedJournalsForUser(_userEmailLower) {
       }
     }
 
-    // 2) 舊資料：僅 sharedJournals.memberEmails（擁有者需在成員畫面再儲存一次以寫入 ref 索引）
     const q = query(
       collection(db, SHARED_JOURNALS),
       where('memberEmails', 'array-contains', keyFromAuth)
@@ -259,6 +331,13 @@ export async function fetchSharedJournalsForUser(_userEmailLower) {
 export async function fetchSharedDiaries(journalId) {
   if (!db) return { success: false, error: '無法連線至資料庫' };
   await ensureAuthReady();
+  if (auth?.currentUser) {
+    try {
+      await auth.currentUser.getIdToken(true);
+    } catch {
+      // ignore
+    }
+  }
   if (!journalId) return { success: false, error: '日誌 id 無效' };
   try {
     const snap = await getDocs(collection(db, SHARED_JOURNALS, journalId, 'diaries'));
@@ -279,8 +358,24 @@ export async function fetchSharedDiaries(journalId) {
 export async function upsertSharedDiary(journalId, diary) {
   if (!db) return { success: false, error: '無法連線至資料庫' };
   await ensureAuthReady();
+  if (auth?.currentUser) {
+    try {
+      await auth.currentUser.getIdToken(true);
+    } catch {
+      // ignore
+    }
+  }
   if (!journalId || !diary?.id) return { success: false, error: '參數無效' };
   try {
+    const metaSnap = await getDoc(doc(db, SHARED_JOURNALS, journalId));
+    if (!metaSnap.exists()) {
+      return {
+        success: false,
+        error:
+          '此分享日誌在雲端不存在（可能已在主控台刪除）。請擁有者先於「編輯成員」儲存以重建雲端，再同步。',
+      };
+    }
+
     const payload = {
       id: diary.id,
       title: diary.title,

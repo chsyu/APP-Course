@@ -7,7 +7,9 @@ service cloud.firestore {
     }
 
     function authEmailLower() {
-      return request.auth.token.email.lower();
+      return request.auth != null && request.auth.token.email != null
+        ? request.auth.token.email.lower()
+        : '';
     }
 
     // 須與 client 的 where('memberEmails','array-contains', auth.currentUser.email 小寫) 對齊；陣列元素須為字串且與 JWT email 小寫完全一致
@@ -19,10 +21,21 @@ service cloud.firestore {
         && data.memberEmails.hasAny([authEmailLower()]);
     }
 
+    function sharedJournalData(journalId) {
+      return get(sharedJournalDocPath(journalId)).data;
+    }
+
+    // 成員可依 memberEmails；擁有者另允許（雲端殘缺／被移出列表時仍可讀寫以修復）
     function isSharedJournalMember(journalId) {
       return request.auth != null
         && exists(sharedJournalDocPath(journalId))
-        && isEmailMemberOfSharedJournal(get(sharedJournalDocPath(journalId)).data);
+        && (
+          isEmailMemberOfSharedJournal(sharedJournalData(journalId))
+          || (
+            sharedJournalData(journalId).ownerUid is string
+            && sharedJournalData(journalId).ownerUid == request.auth.uid
+          )
+        );
     }
 
     match /users/{userId} {
@@ -33,6 +46,7 @@ service cloud.firestore {
       }
     }
 
+    // uid 查頭像／暱稱（與 publicProfilesByEmail 分工，無法合併為單一集合而不犧牲查詢路徑）
     match /publicProfiles/{profileUid} {
       allow read: if request.auth != null;
       allow write: if request.auth != null && request.auth.uid == profileUid;
@@ -45,20 +59,25 @@ service cloud.firestore {
         && authEmailLower() == emailKey;
     }
 
-    // 每位使用者依「小寫 email」子路徑列出自己的分享日誌 id，避免僅依賴 sharedJournals 的 array-contains list 查詢在部分環境整段 permission-denied
+    // 每位使用者依「小寫 email」子路徑列出自己的分享日誌 id；setDoc(merge) 已存在文件時為 update，須一併允許
     match /userSharedJournalRefs/{emailKey}/journals/{journalId} {
       allow read: if request.auth != null
         && request.auth.token.email != null
         && emailKey == authEmailLower();
 
-      allow create, delete: if request.auth != null
+      allow create, update, delete: if request.auth != null
         && exists(sharedJournalDocPath(journalId))
-        && get(/databases/$(database)/documents/sharedJournals/$(journalId)).data.ownerUid == request.auth.uid;
+        && sharedJournalData(journalId).ownerUid is string
+        && sharedJournalData(journalId).ownerUid == request.auth.uid;
     }
 
-    // 讀：成員可讀 meta；須與 client 查詢 where('memberEmails','array-contains',小寫email) 及 request.auth.token.email 一致
+    // 讀：成員可讀 meta；擁有者亦必須能讀（否則殘缺文件會讓 getDoc 權限錯誤、無法重建）
     match /sharedJournals/{journalId} {
-      allow read: if isEmailMemberOfSharedJournal(resource.data);
+      allow read: if request.auth != null
+        && (
+          isEmailMemberOfSharedJournal(resource.data)
+          || (resource.data.ownerUid is string && resource.data.ownerUid == request.auth.uid)
+        );
 
       allow create: if request.auth != null
         && request.auth.token.email != null
@@ -67,6 +86,7 @@ service cloud.firestore {
         && request.resource.data.memberEmails.size() > 0
         && isEmailMemberOfSharedJournal(request.resource.data);
 
+      // 擁有者可更新（含修復 memberEmails）；須維持 ownerUid 不變且更新後仍為有效分享日誌
       allow update: if request.auth != null
         && request.auth.token.email != null
         && resource.data.ownerUid == request.auth.uid
