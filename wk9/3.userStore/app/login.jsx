@@ -22,9 +22,7 @@ const loginSchema = z.object({
   email: z
     .string()
     .min(1, { message: '請輸入郵箱' })
-    .refine((value) => z.email().safeParse(value).success, {
-      message: '請輸入有效的郵箱格式',
-    }),
+    .email('請輸入有效的郵箱格式'),
   password: z
     .string()
     .min(1, { message: '請輸入密碼' })
