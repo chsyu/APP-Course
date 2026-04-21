@@ -80,8 +80,7 @@ export default function LoginScreen() {
         Alert.alert('註冊失敗', authResult.error || '請檢查您的輸入');
         return;
       }
-      // Ensure auth state/token is fully ready before first Firestore write.
-      await authResult.authUser?.getIdToken?.(true);
+
 
       const userData = {
         email: email.trim(),

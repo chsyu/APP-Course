@@ -1,24 +1,18 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Pressable, Image, Switch } from 'react-native';
+import { View, Text, ScrollView, Pressable, Switch } from 'react-native';
 import { useRouter, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../utils/color';
 import { useUserStore } from '../store/useUserStore';
 
-const mockLastSyncTime = '2024年01月15日 14:30';
-
 export default function SettingsScreen() {
   const router = useRouter();
   const user = useUserStore((s) => s.user);
-  const [isDarkMode, setIsDarkMode] = useState(false); // 假数据：主题状态
+  const [isDarkMode, setIsDarkMode] = useState(false); 
 
   const isLoggedIn = Boolean(user?.uid);
 
-  const displayName = isLoggedIn
-    ? user.displayName || user.email?.split('@')[0] || '用戶'
-    : '未登入';
-
-  const avatarUri = isLoggedIn ? user.avatar : null;
+  const accountTitle = isLoggedIn ? user.userName : '未登入';
 
   const handleProfilePress = () => {
     if (isLoggedIn) {
@@ -28,14 +22,12 @@ export default function SettingsScreen() {
     }
   };
 
-  const handleSyncPress = () => {
-    // TODO: 实现同步功能
-    console.log('同步按钮被点击');
+  const handleCloudSyncPress = () => {
+    console.log('handleCloudSyncPress');
   };
 
   const handleThemeToggle = (value) => {
     setIsDarkMode(value);
-    // TODO: 实现主题切换功能
     console.log('主题切换:', value ? 'Dark' : 'Light');
   };
 
@@ -66,22 +58,14 @@ export default function SettingsScreen() {
             })}
           >
             {/* 头像 */}
-            <View className="w-16 h-16 rounded-full bg-gray-300 items-center justify-center mr-4">
-              {avatarUri ? (
-                <Image
-                  source={{ uri: avatarUri }}
-                  className="w-16 h-16 rounded-full"
-                  style={{ width: 64, height: 64 }}
-                />
-              ) : (
-                <Ionicons name="person" size={32} color="#9CA3AF" />
-              )}
+            <View className="w-16 h-16 rounded-full bg-gray-300 items-center justify-center mr-4">              
+              <Ionicons name="person" size={32} color="#9CA3AF" />
             </View>
 
             {/* 账户信息 */}
             <View className="flex-1">
               <Text className="text-base font-medium text-gray-900">
-                {displayName}
+                {accountTitle}
               </Text>
             </View>
 
@@ -90,22 +74,17 @@ export default function SettingsScreen() {
           </Pressable>
         </View>
 
-        {/* 同步区域 */}
         <View className="mx-4 mb-4 bg-white rounded-xl overflow-hidden">
           <Pressable
-            onPress={handleSyncPress}
-            className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100"
+            onPress={handleCloudSyncPress}
+            className="flex-row items-center justify-between px-4 py-4"
             style={({ pressed }) => ({
               opacity: pressed ? 0.7 : 1,
             })}
           >
-            <Text className="text-base text-gray-900">同步</Text>
+            <Text className="text-base text-gray-900">雲端同步</Text>
             <Ionicons name="chevron-forward" size={20} color="#C7C7CC" />
           </Pressable>
-          <View className="px-4 py-3">
-            <Text className="text-sm text-gray-500">上次同步時間</Text>
-            <Text className="text-sm text-gray-700 mt-1">{mockLastSyncTime}</Text>
-          </View>
         </View>
 
         {/* 主题区域 */}

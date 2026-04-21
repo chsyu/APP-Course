@@ -1,23 +1,31 @@
 import { useEffect } from 'react';
-import { subscribeToAuthState } from '../services/authService';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../config/firebase';
 import { useUserStore } from '../store/useUserStore';
 
-/**
- * 將 Firebase Auth 狀態同步至 Zustand（單一真相來源）。
- */
 export default function AuthBootstrap() {
+
+  const handleAuthStateChanged = async (user) => {
+    const { setUser, clearUser } = useUserStore.getState();
+    if (user) {
+      setUser({
+        uid: user.uid,
+        email: user.email ?? undefined,
+      });
+    } else {
+      clearUser();
+    }
+  }
+
   useEffect(() => {
-    return subscribeToAuthState(async (user) => {
-      const { setUser, clearUser } = useUserStore.getState();
-      if (user) {
-        setUser({
-          uid: user.uid,
-          email: user.email ?? undefined,
-        });
-      } else {
-        clearUser();
-      }
-    });
+    if (!auth) {
+      const { clearUser } = useUserStore.getState();
+      clearUser();
+    } else {
+      const unsubscribe = onAuthStateChanged(auth, handleAuthStateChanged);
+      return unsubscribe;
+    }
+
   }, []);
 
   return null;

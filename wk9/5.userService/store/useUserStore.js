@@ -9,10 +9,6 @@ export const useUserStore = create(
       user: null,
 
       setUser: (next) => {
-        if (next === null) {
-          set({ user: null });
-          return;
-        }
         set((state) => ({
           user: { ...(state.user ?? {}), ...next },
         }));

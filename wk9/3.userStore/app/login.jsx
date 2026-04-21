@@ -1,28 +1,24 @@
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  Pressable, 
-  ScrollView, 
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
   Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { useRouter, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { z } from 'zod';
 import { colors } from '../utils/color';
-import { signUp, signIn } from '../services/authService';
-import { createUserProfile } from '../services/userService';
 import { useUserStore } from '../store/useUserStore';
 
 const loginSchema = z.object({
   email: z
     .string()
     .min(1, { message: '請輸入郵箱' })
-    .email('請輸入有效的郵箱格式'),
+    .email({ message: '請輸入有效的郵箱格式' }),
   password: z
     .string()
     .min(1, { message: '請輸入密碼' })
@@ -31,7 +27,7 @@ const loginSchema = z.object({
 
 const signupSchema = loginSchema
   .extend({
-    displayName: z.string().min(1, { message: '請輸入名稱' }),
+    userName: z.string().min(1, { message: '請輸入名稱' }),
     confirmPassword: z.string().min(1, { message: '請輸入密碼' }),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -41,31 +37,30 @@ const signupSchema = loginSchema
 
 export default function LoginScreen() {
   const router = useRouter();
-  const [mode, setMode] = useState('login'); // 'login' 或 'signup'
+  const [mode, setMode] = useState('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [displayName, setDisplayName] = useState('');
+  const [userName, setUserName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const { setUser, syncUser } = useUserStore();
+  const setUser = useUserStore((s) => s.setUser);
 
-  // 表单验证
   const validateForm = () => {
     const payload =
       mode === 'signup'
         ? {
-            email: email.trim(),
-            password,
-            displayName: displayName.trim(),
-            confirmPassword,
-          }
+          email: email.trim(),
+          password,
+          userName: userName.trim(),
+          confirmPassword,
+        }
         : {
-            email: email.trim(),
-            password,
-          };
+          email: email.trim(),
+          password,
+        };
 
     const result =
       mode === 'signup'
@@ -81,144 +76,98 @@ export default function LoginScreen() {
     return true;
   };
 
-  // 处理登录
-  const handleLogin = async () => {
-    console.log('handleLogin');
-    if (!validateForm()) {
-      console.log('validateForm failed');
-      return;
-    }
+  const handleAuth = async () => {
+    if (!validateForm()) return;
 
     setIsLoading(true);
-    try {
-      const result = await signIn(email.trim(), password);
-      
-      if (result.user) {
-        console.log('result.user', result.user);
-        // 先设置基本用户状态（确保认证状态立即更新）
-        setUser({
-          uid: result.user.uid,
-          email: result.user.email || email.trim(),
-        });
-        
-        // 然后同步用户数据（从 Firestore 获取完整信息）
-        await syncUser();
-        
-        // 导航到主页
-        router.dismissTo('/');
-      } else {
-        Alert.alert('登入失敗', result.error || '請檢查您的郵箱和密碼');
-      }
-    } catch (_error) {
-      Alert.alert('錯誤', '登入時發生錯誤，請重試');
-    } finally {
-      console.log('setIsLoading(false)');
-      setIsLoading(false);
-    }
-  };
+    const normalizedEmail = email.trim();
+    const localUid = 'local-uid';
 
-  // 处理注册
-  const handleSignUp = async () => {
-    if (!validateForm()) {
-      return;
+    if (mode === 'login') {
+      setUser({
+        uid: localUid,
+        email: normalizedEmail,
+      });
+    } else {
+      setUser({
+        uid: localUid,
+        email: normalizedEmail,
+        userName: userName.trim(),
+        avatar: null,
+      });
     }
+    router.dismissTo('/');
+    setIsLoading(false);
 
-    setIsLoading(true);
-    try {
-      // 1. 创建认证账户
-      const authResult = await signUp(email.trim(), password);
-      
-      if (authResult.user) {
-        // 2. 在 Firestore 创建用户文档
-        const userData = {
-          email: email.trim(),
-          displayName: displayName.trim(),
-          avatar: null,
-        };
-        
-        const profileResult = await createUserProfile(authResult.user.uid, userData);
-        
-        if (profileResult.success) {
-          // 3. 更新本地状态
-          setUser({
-            uid: authResult.user.uid,
-            email: authResult.user.email,
-            ...userData,
-          });
-          
-          // 导航到主页
-          router.dismissTo('/');
-        } else {
-          Alert.alert('註冊失敗', profileResult.error || '創建用戶資料失敗');
-        }
-      } else {
-        Alert.alert('註冊失敗', authResult.error || '請檢查您的輸入');
-      }
-    } catch (_error) {
-      Alert.alert('錯誤', '註冊時發生錯誤，請重試');
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   return (
-    <KeyboardAvoidingView 
-      className="flex-1" 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ backgroundColor: colors.primary }}
-    >
+    <View className='flex-1' style={{ backgroundColor: colors.primary }}>
       <Stack.Screen
         options={{
+          headerShown: true,
           title: mode === 'login' ? '登入' : '註冊',
           headerStyle: {
             backgroundColor: colors.primary,
           },
+          headerShadowVisible: false,
           headerBackButtonDisplayMode: 'minimal',
         }}
       />
 
-      <ScrollView
-        className="flex-1"
-        contentContainerStyle={{ 
-          paddingTop: 40, 
+      <KeyboardAwareScrollView
+        bottomOffset={40}
+        className='flex-1'
+        contentContainerStyle={{
+          paddingTop: 40,
           paddingBottom: 40,
           paddingHorizontal: 24,
         }}
         showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
+        keyboardShouldPersistTaps='handled'
       >
-        {/* 切换模式按钮 */}
-        <View className="flex-row mb-8 justify-center">
+        <View className='flex-row mb-8 justify-center'>
           <Pressable
             onPress={() => setMode('login')}
-            className={`px-6 py-2 rounded-full ${mode === 'login' ? 'bg-gray-600' : 'bg-gray-200'}`}
+            className={
+              'px-6 py-2 rounded-full ' + (mode === 'login' ? 'bg-gray-600' : 'bg-gray-200')
+            }
           >
-            <Text className={`text-base font-medium ${mode === 'login' ? 'text-white' : 'text-gray-700'}`}>
+            <Text
+              className={
+                'text-base font-medium ' + (mode === 'login' ? 'text-white' : 'text-gray-700')
+              }
+            >
               登入
             </Text>
           </Pressable>
-          <View className="w-4" />
+          <View className='w-4' />
           <Pressable
             onPress={() => setMode('signup')}
-            className={`px-6 py-2 rounded-full ${mode === 'signup' ? 'bg-gray-600' : 'bg-gray-200'}`}
+            className={
+              'px-6 py-2 rounded-full ' + (mode === 'signup' ? 'bg-gray-600' : 'bg-gray-200')
+            }
           >
-            <Text className={`text-base font-medium ${mode === 'signup' ? 'text-white' : 'text-gray-700'}`}>
+            <Text
+              className={
+                'text-base font-medium ' + (mode === 'signup' ? 'text-white' : 'text-gray-700')
+              }
+            >
               註冊
             </Text>
           </Pressable>
         </View>
 
-        {/* 表单 */}
-        <View className="bg-white rounded-xl p-6 mb-6">
+        <View className='bg-white rounded-xl p-6 mb-6'>
           {mode === 'signup' && (
-            <View className="mb-4">
-              <Text className="text-sm text-gray-600 mb-2">名稱</Text>
+            <View className='mb-4'>
+              <Text className='text-sm text-gray-600 mb-2'>用戶名稱</Text>
               <TextInput
-                className="border border-gray-300 rounded-lg px-4 text-base"
-                placeholder="請輸入您的名稱"
-                value={displayName}
-                onChangeText={setDisplayName}
-                autoCapitalize="words"
+                className='border border-gray-300 rounded-lg px-4 text-base'
+                placeholder='請輸入名稱'
+                value={userName}
+                onChangeText={setUserName}
+                autoCapitalize='words'
                 editable={!isLoading}
                 style={{
                   paddingTop: 8,
@@ -229,15 +178,15 @@ export default function LoginScreen() {
             </View>
           )}
 
-          <View className="mb-4">
-            <Text className="text-sm text-gray-600 mb-2">郵箱</Text>
+          <View className='mb-4'>
+            <Text className='text-sm text-gray-600 mb-2'>郵箱</Text>
             <TextInput
-              className="border border-gray-300 rounded-lg px-4 text-base"
-              placeholder="請輸入郵箱"
+              className='border border-gray-300 rounded-lg px-4 text-base'
+              placeholder='請輸入郵箱'
               value={email}
               onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
+              keyboardType='email-address'
+              autoCapitalize='none'
               autoCorrect={false}
               editable={!isLoading}
               style={{
@@ -248,12 +197,12 @@ export default function LoginScreen() {
             />
           </View>
 
-          <View className="mb-4">
-            <Text className="text-sm text-gray-600 mb-2">密碼</Text>
-            <View className="relative">
+          <View className='mb-4'>
+            <Text className='text-sm text-gray-600 mb-2'>密碼</Text>
+            <View className='relative'>
               <TextInput
-                className="border border-gray-300 rounded-lg px-4 pr-12 text-base"
-                placeholder="請輸入密碼"
+                className='border border-gray-300 rounded-lg px-4 pr-12 text-base'
+                placeholder='請輸入密碼'
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
@@ -266,24 +215,24 @@ export default function LoginScreen() {
               />
               <Pressable
                 onPress={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-0 bottom-0 justify-center"
+                className='absolute right-4 top-0 bottom-0 justify-center'
               >
-                <Ionicons 
-                  name={showPassword ? 'eye-off' : 'eye'} 
-                  size={20} 
-                  color="#6B7280" 
+                <Ionicons
+                  name={showPassword ? 'eye-off' : 'eye'}
+                  size={20}
+                  color='#6B7280'
                 />
               </Pressable>
             </View>
           </View>
 
           {mode === 'signup' && (
-            <View className="mb-4">
-              <Text className="text-sm text-gray-600 mb-2">確認密碼</Text>
-              <View className="relative">
+            <View className='mb-4'>
+              <Text className='text-sm text-gray-600 mb-2'>確認密碼</Text>
+              <View className='relative'>
                 <TextInput
-                  className="border border-gray-300 rounded-lg px-4 pr-12 text-base"
-                  placeholder="請再次輸入密碼"
+                  className='border border-gray-300 rounded-lg px-4 pr-12 text-base'
+                  placeholder='請再次輸入密碼'
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
                   secureTextEntry={!showConfirmPassword}
@@ -297,12 +246,12 @@ export default function LoginScreen() {
                 />
                 <Pressable
                   onPress={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-4 top-0 bottom-0 justify-center"
+                  className='absolute right-4 top-0 bottom-0 justify-center'
                 >
-                  <Ionicons 
-                    name={showConfirmPassword ? 'eye-off' : 'eye'} 
-                    size={20} 
-                    color="#6B7280" 
+                  <Ionicons
+                    name={showConfirmPassword ? 'eye-off' : 'eye'}
+                    size={20}
+                    color='#6B7280'
                   />
                 </Pressable>
               </View>
@@ -310,28 +259,26 @@ export default function LoginScreen() {
           )}
 
           <Pressable
-            onPress={mode === 'login' ? handleLogin : handleSignUp}
+            onPress={handleAuth}
             disabled={isLoading}
-            className={`bg-gray-600 rounded-lg py-4 items-center ${isLoading ? 'opacity-50' : ''}`}
+            className={'bg-gray-600 rounded-lg py-4 items-center ' + (isLoading ? 'opacity-50' : '')}
           >
             {isLoading ? (
-              <ActivityIndicator color="#FFFFFF" />
+              <ActivityIndicator color='#FFFFFF' />
             ) : (
-              <Text className="text-white text-base font-semibold">
+              <Text className='text-white text-base font-semibold'>
                 {mode === 'login' ? '登入' : '註冊'}
               </Text>
             )}
           </Pressable>
         </View>
 
-        {/* 提示信息 */}
-        <Text className="text-sm text-gray-500 text-center">
-          {mode === 'login' 
-            ? '還沒有帳號？點擊上方「註冊」按鈕' 
+        <Text className='text-sm text-gray-500 text-center'>
+          {mode === 'login'
+            ? '還沒有帳號？點擊上方「註冊」按鈕'
             : '已有帳號？點擊上方「登入」按鈕'}
         </Text>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }
-

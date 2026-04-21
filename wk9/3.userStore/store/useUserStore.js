@@ -8,17 +8,10 @@ export const useUserStore = create(
       user: null,
 
       setUser: (next) => {
-        if (next === null) {
-          set({ user: null });
-          return;
-        }
         set((state) => ({
           user: { ...(state.user ?? {}), ...next },
         }));
       },
-
-      /** 前端範例無遠端資料，保留介面供 login 呼叫 */
-      syncUser: async () => {},
 
       clearUser: () => set({ user: null }),
     }),

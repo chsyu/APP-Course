@@ -83,15 +83,6 @@ export default function LoginScreen() {
     }
   };
 
-  const handleCancel = () => {
-    if (typeof router.canGoBack === 'function' && router.canGoBack()) {
-      router.back();
-      return;
-    }
-
-    router.replace('/settings');
-  };
-
   return (
     <View className="flex-1" style={{ backgroundColor: colors.primary }}>
       <Stack.Screen

@@ -2,7 +2,6 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  onAuthStateChanged,
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
 
@@ -65,14 +64,3 @@ export async function logout() {
   }
 }
 
-/**
- * @param {(user: import('firebase/auth').User | null) => void} callback
- * @returns {() => void} unsubscribe
- */
-export function subscribeToAuthState(callback) {
-  if (!auth) {
-    callback(null);
-    return () => {};
-  }
-  return onAuthStateChanged(auth, callback);
-}
