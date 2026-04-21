@@ -72,7 +72,7 @@ export default function RootLayout() {
             }}
           />
           <Stack.Screen
-            name="sync"
+            name="backup"
             options={{
               headerStyle: { backgroundColor: colors.primary },
               headerShadowVisible: false,
