@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { Stack, useFocusEffect } from 'expo-router';
+import { Stack } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format, parseISO, isValid } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
@@ -35,16 +35,13 @@ export default function SyncScreen() {
   const [lastBackupLabel, setLastBackupLabel] = useState('尚未備份');
   const [backingUp, setBackingUp] = useState(false);
 
-  const refreshLastBackup = useCallback(async () => {
-    const raw = await AsyncStorage.getItem(DIARY_LAST_BACKUP_AT_KEY);
-    setLastBackupLabel(formatBackupDisplay(raw ?? ''));
+  useEffect(() => {
+    const loadLastBackup = async () => {
+      const raw = await AsyncStorage.getItem(DIARY_LAST_BACKUP_AT_KEY);
+      setLastBackupLabel(formatBackupDisplay(raw ?? ''));
+    };
+    loadLastBackup();
   }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      refreshLastBackup();
-    }, [refreshLastBackup])
-  );
 
   const uid = user?.uid;
   const canBackup = Boolean(uid);
