@@ -1,0 +1,56 @@
+openapi: 3.0.0
+info:
+  title: Book Inventory API
+  description: 取得書籍清單 book.json 的 API 介面
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: 主要伺服器
+
+paths:
+  /books:
+    get:
+      summary: 取得所有書籍清單
+      description: 回傳一份包含所有書籍詳細資訊的 JSON 陣列 (book.json)
+      responses:
+        '200':
+          description: 成功取得書籍資料
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '500':
+          description: 伺服器內部錯誤
+
+components:
+  schemas:
+    Book:
+      type: object
+      required:
+        - id
+        - title
+        - author
+      properties:
+        id:
+          type: string
+          description: 書籍唯一識別碼 (UUID 或 ISBN)
+          example: "978-3-16-148410-0"
+        title:
+          type: string
+          description: 書名
+          example: "深度的技術設計"
+        author:
+          type: string
+          description: 作者姓名
+          example: "余教授"
+        published_date:
+          type: string
+          format: date
+          description: 出版日期
+          example: "2026-05-14"
+        category:
+          type: string
+          description: 書籍分類
+          example: "Digital Technology"
