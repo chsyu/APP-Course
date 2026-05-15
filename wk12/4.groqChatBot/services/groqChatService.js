@@ -1,12 +1,9 @@
 import axios from 'axios';
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const DEFAULT_MODEL = 'llama-3.3-70b-versatile';
+const DEFAULT_MODEL = 'llama-3.1-8b-instant';
 
-/**
- * @param {{ role: string; content: string }[]} messages
- * @returns {Promise<string>}
- */
+
 export async function sendGroqChat(messages) {
   const key = process.env.EXPO_PUBLIC_GROQ_API_KEY;
   if (!key) {

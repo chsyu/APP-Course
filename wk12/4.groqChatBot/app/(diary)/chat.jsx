@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -18,10 +18,6 @@ const SYSTEM_PROMPT = {
     '你是一位友善的助理，請用繁體中文（台灣用語）簡潔、有條理地回答。',
 };
 
-function makeId() {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-}
-
 export default function ChatScreen() {
   const insets = useSafeAreaInsets();
   const listRef = useRef(null);
@@ -30,34 +26,31 @@ export default function ChatScreen() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
 
-  const send = useCallback(async () => {
+  async function send() {
     const trimmed = input.trim();
     if (!trimmed || sending) return;
 
     setError(null);
     setInput('');
-    const userRow = { id: makeId(), role: 'user', content: trimmed };
+    const userRow = { role: 'user', content: trimmed };
     const nextRows = [...rows, userRow];
     setRows(nextRows);
     setSending(true);
 
-    const apiMessages = [
-      SYSTEM_PROMPT,
-      ...nextRows.map(({ role, content }) => ({ role, content })),
-    ];
+    const apiMessages = [SYSTEM_PROMPT, ...nextRows];
 
     try {
       const reply = await sendGroqChat(apiMessages);
-      setRows((r) => [...r, { id: makeId(), role: 'assistant', content: reply }]);
+      setRows((r) => [...r, { role: 'assistant', content: reply }]);
     } catch (e) {
       const message = e instanceof Error ? e.message : '發生錯誤';
       setError(message);
     } finally {
       setSending(false);
     }
-  }, [input, rows, sending]);
+  }
 
-  const renderItem = useCallback(({ item }) => {
+  function renderItem({ item }) {
     const isUser = item.role === 'user';
     return (
       <View className={`mb-3 px-4 ${isUser ? 'items-end' : 'items-start'}`}>
@@ -72,7 +65,7 @@ export default function ChatScreen() {
         </View>
       </View>
     );
-  }, []);
+  }
 
   return (
     <KeyboardAvoidingView
@@ -83,7 +76,7 @@ export default function ChatScreen() {
       <FlatList
         ref={listRef}
         data={rows}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(_, index) => String(index)}
         renderItem={renderItem}
         contentContainerClassName="py-4"
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 8 }}
