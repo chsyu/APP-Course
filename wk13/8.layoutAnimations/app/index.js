@@ -16,11 +16,8 @@ const App = () => {
   }, []);
 
   const [items, setItems] = useState([
-    { id: 0 },
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
+    { id: 0 },{ id: 1 },{ id: 2 },
+    { id: 3 },{ id: 4 },
   ]);
 
   const onAdd = () => {
@@ -28,16 +25,14 @@ const App = () => {
       ...items,
       {
         id:
-          items[items.length - 1]?.id >= 0
-            ? items[items.length - 1].id + 1
-            : 0,
+          items[items.length - 1]?.id >= 0 ? items[items.length - 1].id + 1 : 0,
       },
     ]);
   };
 
   const onDelete = (itemId) => {
     setItems((currentItems) =>
-      currentItems.filter((item) => item.id !== itemId)
+      currentItems.filter((item) => item.id !== itemId),
     );
   };
 

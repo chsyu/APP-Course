@@ -1,14 +1,13 @@
-import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
 import Animated, {
   Easing,
-  runOnJS,
   useAnimatedProps,
-  useAnimatedReaction,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { ReText } from "react-native-redash";
 import Svg, { Circle } from "react-native-svg";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -25,16 +24,6 @@ export default function CircleCounter({ size, count, stroke_color }) {
 
   const progress = useSharedValue(0);
   const barWidth = useSharedValue(0);
-  const [progressLabel, setProgressLabel] = useState("0");
-
-  useAnimatedReaction(
-    () => Math.floor(progress.value * count),
-    (value, prev) => {
-      if (value !== prev) {
-        runOnJS(setProgressLabel)(String(value));
-      }
-    },
-  );
 
   const animatedProps = useAnimatedProps(() => ({
     strokeDashoffset: circleLength * (1 - progress.value),
@@ -43,6 +32,10 @@ export default function CircleCounter({ size, count, stroke_color }) {
   const animatedBarStyle = useAnimatedStyle(() => ({
     width: `${barWidth.value}%`,
   }));
+
+  const progressText = useDerivedValue(() => {
+    return `${Math.floor(progress.value * count)}`;
+  });
 
   const onPress = () => {
     progress.value = withTiming(progress.value > 0 ? 0 : 1, {
@@ -62,12 +55,17 @@ export default function CircleCounter({ size, count, stroke_color }) {
       className="items-center justify-center active:opacity-80"
     >
       <View className="flex-1 items-center justify-center shadow-md">
-        <Text
-          className="absolute z-10 text-center font-extralight"
-          style={{ fontSize, color: stroke_color }}
-        >
-          {progressLabel}
-        </Text>
+        <ReText
+          style={{
+            position: "absolute",
+            zIndex: 10,
+            fontSize,
+            fontWeight: "200",
+            color: stroke_color,
+            textAlign: "center",
+          }}
+          text={progressText}
+        />
 
         <AnimatedView
           className="absolute bottom-[35px] z-10 h-1.5 w-[30%] rounded-full"

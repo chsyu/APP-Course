@@ -1,15 +1,14 @@
 import "../global.css";
 
-import { useState } from "react";
 import { Dimensions, Pressable, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import Animated, {
-  runOnJS,
   useAnimatedProps,
-  useAnimatedReaction,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { ReText } from "react-native-redash";
 import Svg, { Circle } from "react-native-svg";
 
 const { width, height } = Dimensions.get("window");
@@ -21,20 +20,14 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 export default function App() {
   const progress = useSharedValue(0);
-  const [progressLabel, setProgressLabel] = useState("0");
-
-  useAnimatedReaction(
-    () => Math.floor(progress.value * 100),
-    (value, prev) => {
-      if (value !== prev) {
-        runOnJS(setProgressLabel)(String(value));
-      }
-    },
-  );
 
   const animatedProps = useAnimatedProps(() => ({
     strokeDashoffset: CIRCLE_LENGTH * (1 - progress.value),
   }));
+
+  const progressText = useDerivedValue(() => {
+    return `${Math.floor(progress.value * 100)}`;
+  });
 
   const onPress = () => {
     progress.value = withTiming(progress.value > 0 ? 0 : 1, { duration: 2000 });
@@ -44,9 +37,15 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView className="flex-1 bg-app-bg">
         <View className="flex-1 items-center justify-center">
-          <Text className="w-[200px] text-center text-[80px] text-white/70">
-            {progressLabel}
-          </Text>
+          <ReText
+            style={{
+              width: 200,
+              fontSize: 80,
+              color: "rgba(255, 255, 255, 0.7)",
+              textAlign: "center",
+            }}
+            text={progressText}
+          />
 
           <Svg style={{ position: "absolute" }}>
             <Circle
