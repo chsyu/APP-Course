@@ -1,0 +1,77 @@
+{
+  "expo": {
+    "name": "日記",
+    "slug": "diary",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "diary",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "com.ntuedtd.chsyu.diary",
+      "appleTeamId": "2YHJU85VP6",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.ntuedtd.chsyu.diary",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#29303a"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "@reactvision/react-viro",
+        {
+          "provider": "none",
+          "ios": {
+            "cameraUsagePermission": "需要相機權限才能顯示 AR 日記效果。"
+          },
+          "android": {
+            "xRMode": [
+              "AR"
+            ],
+            "cameraPermission": "需要相機權限才能顯示 AR 日記效果。"
+          }
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#29303a",
+          "enableFullScreenImage_legacy": true,
+          "dark": {
+            "backgroundColor": "#29303a"
+          }
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "需要相機權限才能顯示 AR 日記效果。"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "允許 $(PRODUCT_NAME) 使用你的位置，以便在日記與地圖上標記建立地點。"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}
