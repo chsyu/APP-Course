@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ViroARScene } from '@reactvision/react-viro/dist/components/AR/ViroARScene';
 import { ViroARSceneNavigator } from '@reactvision/react-viro/dist/components/AR/ViroARSceneNavigator';
@@ -16,14 +16,14 @@ function ARStickerScene() {
   );
 }
 
-export default function DiaryARSceneView() {
-  const initialScene = useMemo(() => ({ scene: ARStickerScene }), []);
+const INITIAL_SCENE = { scene: ARStickerScene };
 
+export default function DiaryARSceneView() {
   return (
     <View style={styles.container}>
       <ViroARSceneNavigator
         autofocus
-        initialScene={initialScene}
+        initialScene={INITIAL_SCENE}
         provider="none"
         style={styles.arView}
       />
